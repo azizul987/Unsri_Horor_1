@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://ceeayny1krlwd"]
+
+[ext_resource type="Texture2D" uid="uid://bdqgaavrc6lxm" path="res://Asset/Light/texture_06.png" id="1_ig7tw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_texture = ExtResource("1_ig7tw")
+uv1_scale = Vector3(2.837, 4.17, 2.837)
+uv1_offset = Vector3(1.725, 4.11, 0)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ig7tw"]
+
+[node name="Main" type="Node3D" unique_id=448454425]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1998856713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5220718, -0.2944336, 6.9324007)
+material_override = SubResource("StandardMaterial3D_0xm2m")
+use_collision = true
+size = Vector3(67.18971, 0.4111328, 48.179123)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=861928305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_ig7tw")
