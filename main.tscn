@@ -1,15 +1,46 @@
 [gd_scene format=3 uid="uid://ceeayny1krlwd"]
 
 [ext_resource type="Texture2D" uid="uid://bdqgaavrc6lxm" path="res://Asset/Light/texture_06.png" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://cr7p3xpcs0m2a" path="res://Skrip/character_body_3d.gd" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://bty4jfhkb03af" path="res://Asset/Red/texture_05.png" id="3_lquwl"]
+[ext_resource type="Script" uid="uid://bi4608udhce61" path="res://Skrip/camera_3d.gd" id="4_7mycd"]
+[ext_resource type="PackedScene" uid="uid://cbawf1c0v54g4" path="res://rusun1.fbx" id="5_lquwl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_lquwl"]
+sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
+
+[sub_resource type="Environment" id="Environment_7mycd"]
+background_mode = 1
+sky = SubResource("Sky_lquwl")
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
 albedo_texture = ExtResource("1_ig7tw")
 uv1_scale = Vector3(2.837, 4.17, 2.837)
 uv1_offset = Vector3(1.725, 4.11, 0)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_272bh"]
+albedo_texture = ExtResource("3_lquwl")
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ig7tw"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
+
 [node name="Main" type="Node3D" unique_id=448454425]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=618706464]
+transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938414, 0.66315246, 0.7091713, -0.5181915, 0.7049452, -0.48428264, 0, 11.240326, 0)
+light_energy = 0.683
+shadow_enabled = true
+shadow_opacity = 0.9
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=747896932]
+environment = SubResource("Environment_7mycd")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1998856713]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5220718, -0.2944336, 6.9324007)
@@ -17,6 +48,23 @@ material_override = SubResource("StandardMaterial3D_0xm2m")
 use_collision = true
 size = Vector3(67.18971, 0.4111328, 48.179123)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=861928305]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1199465831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.070261, 0.5683775)
+script = ExtResource("2_1bvp3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=861928305]
+material_override = SubResource("StandardMaterial3D_272bh")
 mesh = SubResource("CapsuleMesh_ig7tw")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1481125246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.59197164, -0.5165683)
+script = ExtResource("4_7mycd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=311514290]
+shape = SubResource("CapsuleShape3D_5vw27")
+
+[node name="rusun1" parent="." unique_id=1793972815 instance=ExtResource("5_lquwl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.200167, 7.849045, 14.766182)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=557163454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.557081, 1.3698826, 28.932804)
