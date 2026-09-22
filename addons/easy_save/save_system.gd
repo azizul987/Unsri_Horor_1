@@ -1,4 +1,3 @@
-class_name SaveSystem
 extends Node
 
 ## Sistem penyimpanan (Save System) modular berbasis slot, key-value data store,
@@ -36,7 +35,7 @@ signal autosaved(slot: int)
 ## Gunakan format JSON rapi (indentasi) untuk mempermudah inspect/debugging.
 @export var pretty_json: bool = true
 
-static var instance: SaveSystem
+static var instance: Node
 
 ## Slot yang sedang aktif (-1 jika belum memilih slot).
 var current_slot: int = -1
