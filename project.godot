@@ -17,12 +17,13 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-SaveSystem="*res://addons/easy_save/save_system.gd"
+SaveSystem="*uid://csyla44pue250"
 sp="*uid://cxmb1j6o5lray"
+gd="*uid://2juixsd1cldy"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg")
+enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg")
 
 [input]
 
