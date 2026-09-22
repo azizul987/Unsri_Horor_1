@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dyge3g7m61n1y"
+path="res://.godot/imported/2021_HSV1_Tomb_of_the_Forgotten.wav-1ba257f43d85bbc12eb6366fc99a990b.sample"
+
+[deps]
+
+source_file="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav"
+dest_files=["res://.godot/imported/2021_HSV1_Tomb_of_the_Forgotten.wav-1ba257f43d85bbc12eb6366fc99a990b.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

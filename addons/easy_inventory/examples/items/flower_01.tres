@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "flower_01"
+name = "Kuncup Putih (Bunga 1)"
+description = "Bunga pertama dari delapan bunga kehidupan yang dirusak api. Aromanya yang tenang membantu meredakan kepanikan dan distorsi kamera."
+item_type = 3
+max_stack = 1
+is_usable = false
+is_droppable = false
+flower_index = 1
+passive_buff_id = "calm_mind"
+buff_value = 0.3
+custom_properties = {
+"location": "Kamar Kosong"
+}

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bsf7j2okhrugs"
+path="res://.godot/imported/2021_HSV1_Cave_of_Agony.wav-0df601ba492d2d5d093e4d09a152ab93.sample"
+
+[deps]
+
+source_file="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Cave_of_Agony.wav"
+dest_files=["res://.godot/imported/2021_HSV1_Cave_of_Agony.wav-0df601ba492d2d5d093e4d09a152ab93.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

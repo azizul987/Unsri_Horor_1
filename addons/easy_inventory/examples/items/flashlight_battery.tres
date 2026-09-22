@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "battery"
+name = "Baterai Senter"
+description = "Baterai tabung cadangan. Gunakan untuk mengisi ulang daya senter yang hampir habis."
+item_type = 1
+max_stack = 3
+is_usable = true
+is_droppable = true
+flower_index = 0
+passive_buff_id = ""
+buff_value = 100.0
+custom_properties = {}

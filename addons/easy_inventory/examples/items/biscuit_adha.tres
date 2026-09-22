@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "biscuit_adha"
+name = "Biskuit Adha"
+description = "Biskuit kaleng dengan rasa yang meragukan. Lempar ke arah tertentu untuk menghentikan Amir selama 3–5 detik."
+item_type = 4
+max_stack = 5
+is_usable = true
+is_droppable = true
+flower_index = 0
+passive_buff_id = ""
+buff_value = 0.0
+custom_properties = {}

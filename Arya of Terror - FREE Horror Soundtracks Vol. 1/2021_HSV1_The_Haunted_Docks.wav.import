@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dqyu3l7dtslga"
+path="res://.godot/imported/2021_HSV1_The_Haunted_Docks.wav-985782ca99ed19bbac3db4b72abd71cd.sample"
+
+[deps]
+
+source_file="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_The_Haunted_Docks.wav"
+dest_files=["res://.godot/imported/2021_HSV1_The_Haunted_Docks.wav-985782ca99ed19bbac3db4b72abd71cd.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

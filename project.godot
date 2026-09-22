@@ -20,10 +20,11 @@ config/icon="res://icon.svg"
 SaveSystem="*uid://csyla44pue250"
 sp="*uid://cxmb1j6o5lray"
 gd="*uid://2juixsd1cldy"
+Inventory="*uid://be3ur17f438xl"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg")
+enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_inventory/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg")
 
 [input]
 
@@ -66,4 +67,5 @@ ui_down={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
