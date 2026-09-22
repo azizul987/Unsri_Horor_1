@@ -361,6 +361,9 @@ SaveSystem.load_nodes_in_group("saveable")
 *Inherits:* `Node`  
 *Autoload Singleton:* `SaveSystem`
 
+> [!NOTE]
+> `SaveSystem` terdaftar sebagai **Autoload Singleton** murni di SceneTree project kamu. Kamu dapat memanggil fungsinya secara langsung dari skrip mana pun tanpa perlu instansiasi manual (`SaveSystem.set_value()`, `SaveSystem.save_game()`, dsb). Hal ini juga mencegah konflik nama kelas global (*class name collision*) di Godot 4.
+
 #### Sinyal:
 * `save_started(slot: int)` — Dipancarkan sesaat sebelum proses penulisan file save dimulai.
 * `save_completed(slot: int)` — Dipancarkan setelah data berhasil ditulis ke disk.
@@ -434,3 +437,6 @@ Jika diisi, file JSON akan dienkripsi secara otomatis menggunakan algoritma enkr
 * **Windows:** `%APPDATA%\Godot\app_userdata\[Nama_Project]\saves\`
 * **Linux:** `~/.local/share/godot/app_userdata/[Nama_Project]/saves/`
 * **macOS:** `~/Library/Application Support/Godot/app_userdata/[Nama_Project]/saves/`
+
+### Q: Mengapa saat mengaktifkan plugin EasySave tidak terjadi pesan bentrok "collide with an existing global script class name"?
+**A:** Karena skrip `save_system.gd` tidak menggunakan deklarasi `class_name SaveSystem`, melainkan murni didaftarkan sebagai Autoload Singleton bernama `SaveSystem`. Dengan demikian, Godot 4 dapat mendaftarkan nama `SaveSystem` secara bersih ke dalam SceneTree tanpa bentrok nama kelas, dan kamu bisa memanggil seluruh metodenya secara langsung (`SaveSystem.set_slot()`, `SaveSystem.get_value()`, `SaveSystem.save_game()`).

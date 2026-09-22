@@ -189,9 +189,9 @@ Efek animasi yang dihasilkan:
 
 Tombol **"Simpan Game"** pada EasyPause sudah dirancang cerdas:
 1. Secara otomatis mendeteksi apakah project kamu memiliki singleton:
-   * [`SaveSystem`](file:///home/g/Sawit-io/addons/easy_save/save_system.gd) (dari addon `EasySave`), atau
-   * [`SaveManager`](file:///home/g/Sawit-io/Logic/skrip/SaveManager.gd) bawaan.
-2. Jika terdeteksi, fungsi `save_game()` akan langsung dipanggil.
+   * `SaveSystem` (dari addon `EasySave`), atau
+   * `SaveManager` bawaan di project kamu.
+2. Jika terdeteksi, fungsi `save_game()` pada singleton tersebut akan langsung dipanggil secara otomatis.
 3. Memberikan feedback teks pada tombol: **"Tersimpan! ✓"** selama 1.2 detik lalu kembali ke teks semula.
 
 Jika kamu menggunakan sistem save kustom sendiri, kamu cukup mendengarkan sinyal `save_pressed`:
