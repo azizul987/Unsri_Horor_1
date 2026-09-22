@@ -28,9 +28,12 @@ glow_enabled = true
 albedo_texture = ExtResource("3_lquwl")
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ig7tw"]
+radius = 0.3
+height = 1.7
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
-radius = 0.08496094
+radius = 0.3
+height = 1.5267578
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lquwl"]
 size = Vector3(48.311966, 0.8192749, 77.51749)
@@ -189,6 +192,7 @@ size = Vector3(1.4979553, 0.47607327, 1.4484863)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=618706464]
 transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938414, 0.66315246, 0.7091713, -0.5181915, 0.7049452, -0.48428264, 0, 11.240326, 0)
+light_energy = 0.0
 shadow_enabled = true
 shadow_opacity = 0.97
 
@@ -196,7 +200,7 @@ shadow_opacity = 0.97
 environment = SubResource("Environment_7mycd")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1199465831]
-transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 10.377047, 1.7723212, 13.961655)
+transform = Transform3D(-0.06247697, 0, -0.9980464, 0, 1, 0, 0.9980464, 0, -0.06247697, 18.171743, 1.2265204, 9.489549)
 script = ExtResource("2_1bvp3")
 max_step_height = 1.005
 step_check_distance = 0.435
@@ -206,11 +210,19 @@ material_override = SubResource("StandardMaterial3D_272bh")
 mesh = SubResource("CapsuleMesh_ig7tw")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1481125246]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.59197164, -0.5165683)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4964955, -0.3433876)
+fov = 78.0
 script = ExtResource("4_7mycd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=311514290]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)
 shape = SubResource("CapsuleShape3D_5vw27")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="CharacterBody3D" unique_id=1441273246]
+light_color = Color(0.75783265, 0.9138803, 0.580256, 1)
+light_energy = 2.109
+spot_range = 7.7504406
+spot_angle = 51.540096
 
 [node name="Node" type="Node" parent="." unique_id=1952745223]
 
