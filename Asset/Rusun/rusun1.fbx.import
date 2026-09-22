@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cbawf1c0v54g4"
-path="res://.godot/imported/rusun1.fbx-3b6e07af512c82b476ffbc006df61250.scn"
+path="res://.godot/imported/rusun1.fbx-0e116bb59169b07bbd27fc684c292b4b.scn"
 
 [deps]
 
 source_file="res://Asset/Rusun/rusun1.fbx"
-dest_files=["res://.godot/imported/rusun1.fbx-3b6e07af512c82b476ffbc006df61250.scn"]
+dest_files=["res://.godot/imported/rusun1.fbx-0e116bb59169b07bbd27fc684c292b4b.scn"]
 
 [params]
 
@@ -34,10 +34,77 @@ animation/trimming=true
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
-materials/extract=1
+materials/extract=0
 materials/extract_format=2
 materials/extract_path="res://Asset/Rusun/Materials"
-_subresources={}
+_subresources={
+"materials": {
+"Besi Kuning": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Besi Kuning.material"
+},
+"Biru": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Biru.material"
+},
+"Biru muDA": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Biru muDA.material"
+},
+"Dinding": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Dinding.material"
+},
+"Material.001": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Material.001.material"
+},
+"Material.002": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Material.002.material"
+},
+"Material.003": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Material.003.material"
+},
+"Material.005": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Material.005.material"
+},
+"Material.006": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Material.006.material"
+},
+"Meta": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Meta.material"
+},
+"Meta.001": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Meta.001.material"
+},
+"Meta.003": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Meta.003.material"
+},
+"Oren": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Oren.material"
+},
+"Pink": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Pink.material"
+},
+"Warna__genteng": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Warna__genteng.material"
+},
+"Wood": {
+"use_external/enabled": true,
+"use_external/path": "res://Asset/Rusun/Materials/Wood.material"
+}
+}
+}
 fbx/importer=0
 fbx/allow_geometry_helper_nodes=false
 fbx/embedded_image_handling=1
