@@ -41,67 +41,83 @@ _subresources={
 "materials": {
 "Besi Kuning": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Besi Kuning.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Besi Kuning.material",
+"use_external/path": "uid://qtp1xklkg8s3"
 },
 "Biru": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Biru.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Biru.material",
+"use_external/path": "uid://biqba7acab4l1"
 },
 "Biru muDA": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Biru muDA.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Biru muDA.material",
+"use_external/path": "uid://cdvxrjy173hk8"
 },
 "Dinding": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Dinding.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Dinding.material",
+"use_external/path": "uid://k0w7cqetwurr"
 },
 "Material.001": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Material.001.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Material.001.material",
+"use_external/path": "uid://r5a3u5wpfrdq"
 },
 "Material.002": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Material.002.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Material.002.material",
+"use_external/path": "uid://bphpcyc7p14cd"
 },
 "Material.003": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Material.003.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Material.003.material",
+"use_external/path": "uid://dhajv3bykhrr2"
 },
 "Material.005": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Material.005.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Material.005.material",
+"use_external/path": "uid://cpxu6gwvjvw24"
 },
 "Material.006": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Material.006.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Material.006.material",
+"use_external/path": "uid://cjgyhla4quhiv"
 },
 "Meta": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Meta.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Meta.material",
+"use_external/path": "uid://cbuoxslyubnt2"
 },
 "Meta.001": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Meta.001.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Meta.001.material",
+"use_external/path": "uid://dlmthbsc2co37"
 },
 "Meta.003": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Meta.003.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Meta.003.material",
+"use_external/path": "uid://b033kjpnhme51"
 },
 "Oren": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Oren.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Oren.material",
+"use_external/path": "uid://f2ih1dvrslt"
 },
 "Pink": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Pink.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Pink.material",
+"use_external/path": "uid://kdc5nc7p1hdk"
 },
 "Warna__genteng": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Warna__genteng.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Warna__genteng.material",
+"use_external/path": "uid://ds53d31xdpxm5"
 },
 "Wood": {
 "use_external/enabled": true,
-"use_external/path": "res://Asset/Rusun/Materials/Wood.material"
+"use_external/fallback_path": "res://Asset/Rusun/Materials/Wood.material",
+"use_external/path": "uid://41odlkorqb8o"
 }
 }
 }
