@@ -3,12 +3,13 @@ extends CharacterBody3D
 
 @export_group("Movement")
 @export var speed: float = 5.0
+@export var enable_jump: bool = false
 @export var jump_velocity: float = 4.5
 
 @export_group("Auto Step Up / Tangga")
 @export var enable_step_up: bool = true
 ## Tinggi maksimal tangga atau mesh yang bisa dinaiki otomatis (dalam meter)
-@export var max_step_height: float = 0.5
+@export var max_step_height: float = 0.25
 ## Jarak deteksi tangga ke depan (dari batas collider)
 @export var step_check_distance: float = 0.35
 ## Haluskan pergerakan kamera saat naik/turun tangga agar tidak patah-patah
@@ -53,7 +54,7 @@ func _physics_process(delta: float) -> void:
 			floor_snap_length = max_step_height
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if enable_jump and Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = jump_velocity
 		is_jumping = true
 		floor_snap_length = 0.0 # Matikan snap saat melompat agar tidak tertarik ke bawah
