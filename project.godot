@@ -26,6 +26,10 @@ Inventory="*uid://be3ur17f438xl"
 
 enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_inventory/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg")
 
+[global_group]
+
+player=""
+
 [input]
 
 ui_left={

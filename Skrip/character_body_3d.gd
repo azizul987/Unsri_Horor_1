@@ -26,6 +26,7 @@ var was_on_floor: bool = false
 var is_jumping: bool = false
 
 func _ready() -> void:
+	add_to_group(&"player")
 	# Aktifkan floor snap agar saat turun tangga karakter tidak melayang/membal
 	floor_snap_length = max_step_height
 	floor_constant_speed = true
