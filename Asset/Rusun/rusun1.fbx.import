@@ -8,7 +8,7 @@ path="res://.godot/imported/rusun1.fbx-3b6e07af512c82b476ffbc006df61250.scn"
 
 [deps]
 
-source_file="res://rusun1.fbx"
+source_file="res://Asset/Rusun/rusun1.fbx"
 dest_files=["res://.godot/imported/rusun1.fbx-3b6e07af512c82b476ffbc006df61250.scn"]
 
 [params]
@@ -36,7 +36,7 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 materials/extract=1
 materials/extract_format=2
-materials/extract_path="res://"
+materials/extract_path="res://Asset/Rusun/Materials"
 _subresources={}
 fbx/importer=0
 fbx/allow_geometry_helper_nodes=false
