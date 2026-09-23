@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://bprologday001"]
+
+[ext_resource type="Script" uid="uid://b0rl4rr64a57t" path="res://addons/horror_dialogue/resources/dialogue_line.gd" id="1_line"]
+[ext_resource type="Script" uid="uid://d0xu2py7ql38q" path="res://addons/horror_dialogue/resources/dialogue_data.gd" id="2_data"]
+
+[sub_resource type="Resource" id="Resource_p1"]
+script = ExtResource("1_line")
+speaker_name = "MC"
+speaker_color = Color(0.85, 0.88, 0.95, 1)
+text = "Mir, lu kenapa dari tadi garuk-garuk lengan terus? Panuan ya lu?"
+typing_speed = 0.035
+
+[sub_resource type="Resource" id="Resource_p2"]
+script = ExtResource("1_line")
+speaker_name = "Amir"
+speaker_color = Color(0.95, 0.75, 0.4, 1)
+text = "Bukan panu, bego. Tadi pas buang sampah ke belakang semak, ada kupu-kupu aneh hinggap di lengan gua."
+typing_speed = 0.035
+
+[sub_resource type="Resource" id="Resource_p3"]
+script = ExtResource("1_line")
+speaker_name = "MC"
+speaker_color = Color(0.85, 0.88, 0.95, 1)
+text = "Kupu-kupu? Sejak kapan kupu-kupu gigit orang? Coba gua liat..."
+typing_speed = 0.035
+
+[sub_resource type="Resource" id="Resource_p4"]
+script = ExtResource("1_line")
+speaker_name = "Amir"
+speaker_color = Color(0.95, 0.75, 0.4, 1)
+text = "Nih. Dua titik ungu kecil... rasanya nyut-nyutan. Kayak ada sesuatu yang jalan di bawah kulit gua."
+typing_speed = 0.04
+
+[sub_resource type="Resource" id="Resource_p5"]
+script = ExtResource("1_line")
+speaker_name = "MC"
+speaker_color = Color(0.85, 0.88, 0.95, 1)
+text = "Geli amat anjir. Jangan-jangan gara-gara kita main bakar ilalang kemarin? Kualat lu sama penunggu rawa Unsri."
+typing_speed = 0.035
+
+[sub_resource type="Resource" id="Resource_p6"]
+script = ExtResource("1_line")
+speaker_name = "Amir"
+speaker_color = Color(0.95, 0.75, 0.4, 1)
+text = "Hahaha... santai, paling alergi debu. Tapi kepala gua mendadak pusing banget. Gua rebahan dulu di kamar ya."
+typing_speed = 0.035
+
+[sub_resource type="Resource" id="Resource_p7"]
+script = ExtResource("1_line")
+speaker_name = "PETUNJUK KELANGSUNGAN HIDUP"
+speaker_color = Color(1.0, 0.85, 0.2, 1)
+text = "[color=yellow][b]KONTROL & SURVIVAL:[/b][/color]\n• [b]WASD[/b]: Bergerak | [b]Shift[/b]: Lari (bikin suara)\n• [b]E[/b]: Interaksi / [color=green]Sembunyi di Bawah Kasur[/color]\n• Kupu-kupu malam adalah peringatan jarak bahaya."
+typing_speed = 0.025
+event_signal = "prologue_tutorial_shown"
+
+[resource]
+script = ExtResource("2_data")
+dialogue_id = "prologue_day"
+lines = Array[ExtResource("1_line")]([SubResource("Resource_p1"), SubResource("Resource_p2"), SubResource("Resource_p3"), SubResource("Resource_p4"), SubResource("Resource_p5"), SubResource("Resource_p6"), SubResource("Resource_p7")])
+repeatable = false
+on_finish_event = "prologue_day_completed"

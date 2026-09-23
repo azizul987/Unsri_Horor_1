@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://uo3w3bwttagf"]
+
+[ext_resource type="Script" uid="uid://b0rl4rr64a57t" path="res://addons/horror_dialogue/resources/dialogue_line.gd" id="1_line"]
+[ext_resource type="Script" uid="uid://d0xu2py7ql38q" path="res://addons/horror_dialogue/resources/dialogue_data.gd" id="2_data"]
+
+[sub_resource type="Resource" id="Resource_n1"]
+script = ExtResource("1_line")
+speaker_name = "MC"
+speaker_color = Color(0.85, 0.88, 0.95, 1)
+text = "[i]Pukul 01:15 WIB. Udara asrama tiba-tiba terasa pengap dan dingin berbau hangus...[/i]"
+typing_speed = 0.04
+
+[sub_resource type="Resource" id="Resource_n2"]
+script = ExtResource("1_line")
+speaker_name = "MC"
+speaker_color = Color(0.85, 0.88, 0.95, 1)
+text = "[shake rate=15.0 level=4]KREKKK...[/shake] Suara apaan itu dari kamar Amir?! Kayak tulang patah dipaksa..."
+typing_speed = 0.04
+event_signal = "play_bone_crack_sfx"
+
+[sub_resource type="Resource" id="Resource_n3"]
+script = ExtResource("1_line")
+speaker_name = "Amir"
+speaker_color = Color(0.9, 0.25, 0.25, 1)
+text = "[shake rate=20.0 level=6]M... MC... tolong...[/shake] Mereka gamau keluar... [color=red]mereka merayap di dalam otak gua![/color]"
+typing_speed = 0.045
+
+[sub_resource type="Resource" id="Resource_n4"]
+script = ExtResource("1_line")
+speaker_name = "Amir"
+speaker_color = Color(1.0, 0.1, 0.1, 1)
+text = "[shake rate=35.0 level=10][color=red]JANGAN DEKETIN GUA!! LARI... DAN SEMBUNYI DI BAWAH KASUR SEKARANG!![/color][/shake]"
+typing_speed = 0.03
+event_signal = "amir_burst_door"
+
+[sub_resource type="Resource" id="Resource_n5"]
+script = ExtResource("1_line")
+speaker_name = "MISI SURVIVAL"
+speaker_color = Color(1.0, 0.3, 0.3, 1)
+text = "[color=yellow][b]OBJEKTIF:[/b][/color] [shake rate=20 level=5][color=red]LARI DAN TEKAN [E] DI DEKAT KASUR UNTUK BERSEMBUNYI![/color][/shake]\nAmir akan kehilangan jejakmu di kolong kasur!"
+typing_speed = 0.025
+
+[resource]
+script = ExtResource("2_data")
+dialogue_id = "first_night_incident"
+lines = Array[ExtResource("1_line")]([SubResource("Resource_n1"), SubResource("Resource_n2"), SubResource("Resource_n3"), SubResource("Resource_n4"), SubResource("Resource_n5")])
+repeatable = false
+on_finish_event = "first_night_chase_started"

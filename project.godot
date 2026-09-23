@@ -22,6 +22,7 @@ sp="*uid://cxmb1j6o5lray"
 gd="*uid://2juixsd1cldy"
 Inventory="*uid://be3ur17f438xl"
 HorrorDialogue="*uid://c1dik5m8se27b"
+StoryManager="*res://Skrip/story_game_manager.gd"
 
 [editor_plugins]
 

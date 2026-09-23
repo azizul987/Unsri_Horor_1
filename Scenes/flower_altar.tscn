@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cflwraltar001"]
+
+[ext_resource type="Script" path="res://Skrip/flower_altar.gd" id="1_altar"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_altar"]
+height = 2.0
+radius = 2.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.15, 0.15, 0.16, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_base"]
+material = SubResource("StandardMaterial3D_stone")
+top_radius = 0.8
+bottom_radius = 1.0
+height = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bowl"]
+albedo_color = Color(0.2, 0.18, 0.15, 1)
+roughness = 0.85
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bowl"]
+material = SubResource("StandardMaterial3D_bowl")
+top_radius = 0.65
+bottom_radius = 0.5
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glow"]
+albedo_color = Color(0.2, 0.6, 1, 1)
+emission_enabled = true
+emission = Color(0.3, 0.7, 1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+material = SubResource("StandardMaterial3D_glow")
+radius = 0.15
+height = 0.3
+
+[node name="FlowerAltar" type="Area3D"]
+script = ExtResource("1_altar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_altar")
+
+[node name="AltarBase" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("CylinderMesh_base")
+
+[node name="AltarBowl" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_bowl")
+
+[node name="RitualCore" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("SphereMesh_core")

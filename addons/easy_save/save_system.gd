@@ -68,6 +68,10 @@ func set_slot(slot: int) -> void:
 	current_slot = slot
 	slot_changed.emit(current_slot, old_slot)
 
+## Alias untuk set_slot() agar kompatibel dengan pemanggil yang menggunakan nama set_active_slot
+func set_active_slot(slot: int) -> void:
+	set_slot(slot)
+
 ## Mengembalikan nomor slot yang sedang aktif.
 func get_slot() -> int:
 	return current_slot

@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="10_kasur"]
 [ext_resource type="PackedScene" uid="uid://c8m3v9p7q2k1r" path="res://Scenes/bed_hiding_spot.tscn" id="11_hiding"]
 [ext_resource type="AudioStream" uid="uid://dyge3g7m61n1y" path="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav" id="12_bgm"]
+[ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="13_altar"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.0196078, 0.0196078, 0.027451, 1)
@@ -293,14 +294,19 @@ text = "DEMO HORROR DIALOGUE (3D)"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 0.9)
 theme_override_font_sizes/font_size = 11
-text = "• WASD = Bergerak
+text = "• WASD = Bergerak | Shift = Lari
 • Mouse = Rotasi Kamera
 • Maju ke depan = Picu Monolog Batin
 • Dekati Meja/Sosok = Tekan [E] untuk Interaksi
-• Dekati Kasur = Tekan [E] untuk Sembunyi / Keluar"
+• Dekati Kasur = Tekan [E] untuk Sembunyi / Keluar
+• Dekati Altar = Tekan [E] untuk Persembahkan Bunga & Save"
+
+[node name="FlowerAltar" parent="." instance=ExtResource("13_altar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 0, 4.0)
 
 [node name="DemoBGM" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_bgm")
 volume_db = -12.0
 autoplay = true
+
 

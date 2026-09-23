@@ -41,6 +41,7 @@ var is_jumping: bool = false
 
 func _ready() -> void:
 	add_to_group(&"player")
+	add_to_group(&"saveable")
 	# Aktifkan floor snap agar saat turun tangga karakter tidak melayang/membal
 	floor_snap_length = max_step_height
 	floor_constant_speed = true
@@ -271,5 +272,29 @@ func exit_hiding_spot(exit_global_pos: Vector3, duration: float = 0.5) -> void:
 	is_hidden = false
 	movement_locked = false
 	hiding_state_changed.emit(false)
+
+## ============================================================================
+## 💾 DUKUNGAN EASY_SAVE (SAVESYSTEM)
+## ============================================================================
+
+func get_save_data() -> Dictionary:
+	return {
+		"position": global_position,
+		"rotation_y": rotation.y,
+		"camera_pitch": camera.rotation.x if camera else 0.0,
+		"is_crouching": is_crouching
+	}
+
+func load_save_data(data: Dictionary) -> void:
+	if data.has("position"):
+		global_position = data["position"]
+	if data.has("rotation_y"):
+		rotation.y = float(data["rotation_y"])
+		if camera and "yaw" in camera:
+			camera.yaw = rotation.y
+	if data.has("camera_pitch") and camera:
+		camera.rotation.x = float(data["camera_pitch"])
+		if "pitch" in camera:
+			camera.pitch = camera.rotation.x
 
 

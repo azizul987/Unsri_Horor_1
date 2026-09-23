@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="27_1w6v2"]
 [ext_resource type="PackedScene" uid="uid://c8m3wap7q2k1r" path="res://Scenes/bed_hiding_spot.tscn" id="28_hiding_bed"]
 [ext_resource type="AudioStream" uid="uid://dyge3g7m61n1y" path="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav" id="29_bgm"]
+[ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="30_altar"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_top_color = Color(0, 0, 0, 1)
@@ -43,7 +44,11 @@ energy_multiplier = 0.0
 sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
 
 [sub_resource type="Environment" id="Environment_7mycd"]
+background_mode = 1
 background_energy_multiplier = 0.0
+ambient_light_source = 1
+ambient_light_energy = 0.0
+reflected_light_source = 1
 sky = SubResource("Sky_lquwl")
 tonemap_mode = 2
 glow_enabled = true
@@ -3169,7 +3174,7 @@ scale_amount_max = 1.2
 [node name="ButterflyLight" type="OmniLight3D" parent="CharacterBody3D/GPUParticles3D" unique_id=1983748291]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3783602, 0)
 light_color = Color(0.5, 0.9, 0.6, 1)
-light_energy = 0.8
+light_energy = 0.0
 omni_range = 4.5
 omni_attenuation = 1.8
 
@@ -13626,3 +13631,6 @@ color = Color(1, 1, 1, 0.75)
 stream = ExtResource("29_bgm")
 volume_db = -12.0
 autoplay = true
+
+[node name="FlowerAltar" parent="." unique_id=1415029710 instance=ExtResource("30_altar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 13.8, -23)
