@@ -16,6 +16,20 @@ extends CharacterBody3D
 @export var smooth_step_camera: bool = true
 @export var camera_smooth_speed: float = 20.0
 
+@export_group("Hiding & Crawling / Sembunyi")
+## Status apakah pemain sedang bersembunyi (di bawah kasur / lemari)
+@export var is_hidden: bool = false
+## Apakah kontrol gerak dikunci saat sembunyi di hiding spot
+var movement_locked: bool = false
+## Ketinggian posisi kamera saat sembunyi di bawah kasur
+@export var hiding_camera_y: float = -0.35
+## Dukungan tombol merangkak manual (Ctrl / C)
+@export var enable_crouch: bool = true
+var is_crouching: bool = false
+
+signal hiding_state_changed(is_hidden: bool)
+signal crouch_state_changed(is_crouching: bool)
+
 @onready var collision_shape: CollisionShape3D = get_node_or_null("CollisionShape3D")
 @onready var camera: Camera3D = get_node_or_null("Camera3D")
 
@@ -44,6 +58,11 @@ func _ready() -> void:
 		default_camera_pos_y = camera.position.y
 
 func _physics_process(delta: float) -> void:
+	# Jika sedang bersembunyi (di bawah kasur / lemari), matikan gerak
+	if movement_locked:
+		velocity = Vector3.ZERO
+		return
+
 	was_on_floor = is_on_floor()
 
 	# Add the gravity.
@@ -193,3 +212,64 @@ func _handle_step_up() -> void:
 
 		# Berhasil naik tangga, hentikan loop offset
 		break
+
+## Memulai sembunyi di bawah kasur dengan transisi kamera tiarap halus
+func enter_hiding_spot(hiding_global_pos: Vector3, look_yaw: float, duration: float = 0.55, target_camera_local_y: float = 0.0) -> void:
+	is_hidden = true
+	movement_locked = true
+	velocity = Vector3.ZERO
+
+	if collision_shape:
+		collision_shape.set_deferred(&"disabled", true)
+
+	var tween: Tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, ^"global_position", hiding_global_pos, duration)
+	
+	if camera:
+		tween.tween_property(camera, ^"position:y", target_camera_local_y, duration)
+
+		# Haluskan rotasi kamera saat merayap agar menghadap ke luar kolong kasur secara alami
+		var current_yaw: float = rotation.y
+		if "yaw" in camera:
+			current_yaw = camera.yaw
+		var angle_diff: float = wrapf(look_yaw - current_yaw, -PI, PI)
+		var final_yaw: float = current_yaw + angle_diff
+		
+		tween.tween_property(self, ^"rotation:y", final_yaw, duration)
+		if "yaw" in camera:
+			tween.tween_property(camera, ^"yaw", final_yaw, duration)
+		if "pitch" in camera:
+			tween.tween_property(camera, ^"pitch", 0.0, duration)
+		tween.tween_property(camera, ^"rotation:x", 0.0, duration)
+
+		await tween.finished
+		if camera.has_method("set_hiding_camera_clamps"):
+			camera.set_hiding_camera_clamps(true, final_yaw, 65.0, -22.0, 28.0)
+		elif camera.has_method("set_yaw_clamp"):
+			camera.set_yaw_clamp(true, final_yaw, deg_to_rad(65.0))
+	else:
+		await tween.finished
+
+	hiding_state_changed.emit(true)
+
+## Keluar dari bawah kasur kembali berdiri di samping kasur
+func exit_hiding_spot(exit_global_pos: Vector3, duration: float = 0.5) -> void:
+	if camera and camera.has_method("reset_yaw_clamp"):
+		camera.reset_yaw_clamp()
+
+	var tween: Tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, ^"global_position", exit_global_pos, duration)
+
+	if camera:
+		tween.tween_property(camera, ^"position:y", default_camera_pos_y, duration)
+
+	await tween.finished
+
+	if collision_shape:
+		collision_shape.set_deferred(&"disabled", false)
+
+	is_hidden = false
+	movement_locked = false
+	hiding_state_changed.emit(false)
+
+

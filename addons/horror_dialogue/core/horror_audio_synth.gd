@@ -85,3 +85,26 @@ static func get_glitch_sound() -> AudioStreamWAV:
 	_cached_glitch.stereo = false
 	_cached_glitch.data = bytes
 	return _cached_glitch
+
+## Menghasilkan suara gesekan kain/lantai saat merayap masuk atau keluar dari bawah kasur
+static func get_crawl_sound() -> AudioStreamWAV:
+	var sample_rate: int = 22050
+	var duration: float = 0.32
+	var sample_count: int = int(sample_rate * duration)
+	var bytes := PackedByteArray()
+	bytes.resize(sample_count * 2)
+
+	for i in range(sample_count):
+		var t: float = float(i) / float(sample_count)
+		var envelope: float = sin(t * PI)
+		var sample_val: float = (randf_range(-0.6, 0.6) + sin(t * 60.0) * 0.25) * envelope
+		var val_s16: int = clampi(int(sample_val * 18000.0), -32768, 32767)
+		bytes.encode_s16(i * 2, val_s16)
+
+	var wav := AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	wav.data = bytes
+	return wav
+

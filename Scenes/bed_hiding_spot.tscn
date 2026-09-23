@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c8m3wap7q2k1r"]
+
+[ext_resource type="Script" path="res://Skrip/bed_hiding_spot_3d.gd" id="1_hiding"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_detect"]
+size = Vector3(1.8, 1.4, 2.4)
+
+[node name="BedHidingSpot3D" type="Area3D" node_paths=PackedStringArray("hiding_marker", "exit_marker")]
+script = ExtResource("1_hiding")
+hiding_marker = NodePath("HidingPoint")
+exit_marker = NodePath("ExitPoint")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_detect")
+
+[node name="HidingPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+
+[node name="ExitPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0.85, 0)

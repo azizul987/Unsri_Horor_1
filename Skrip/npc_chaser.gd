@@ -52,6 +52,13 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
+	# Jika player sedang sembunyi di bawah kasur / lemari, Amir kehilangan jejak
+	if target_player.get("is_hidden") == true:
+		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 2.5)
+		velocity.z = move_toward(velocity.z, 0.0, speed * delta * 2.5)
+		move_and_slide()
+		return
+
 	# 3. Update target posisi NavigationAgent terus-menerus mengikuti Player
 	_repath_timer += delta
 	if _repath_timer >= 0.1 or target_player.global_position.distance_squared_to(_last_player_pos) > 0.04:

@@ -9,6 +9,9 @@
 [ext_resource type="Resource" path="res://addons/horror_dialogue/examples/notes/sample_letter.tres" id="7_note_res"]
 [ext_resource type="Resource" path="res://addons/horror_dialogue/examples/dialogues/npc_encounter.tres" id="8_npc_res"]
 [ext_resource type="Script" uid="uid://bwm2ho6b8vc7j" path="res://addons/horror_dialogue/examples/demo_hud.gd" id="9_hud"]
+[ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="10_kasur"]
+[ext_resource type="PackedScene" uid="uid://c8m3v9p7q2k1r" path="res://Scenes/bed_hiding_spot.tscn" id="11_hiding"]
+[ext_resource type="AudioStream" uid="uid://dyge3g7m61n1y" path="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav" id="12_bgm"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.0196078, 0.0196078, 0.027451, 1)
@@ -203,6 +206,14 @@ prompt_note_message = "Baca Surat Lantai 3"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TableWithNote/DialogueInteractable3D" unique_id=1136711527]
 shape = SubResource("SphereShape3D_interact")
 
+[node name="BedArea" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.8, 0, 0)
+
+[node name="kasur" parent="BedArea" instance=ExtResource("10_kasur")]
+
+[node name="BedHidingSpot3D" parent="BedArea" instance=ExtResource("11_hiding")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
+
 [node name="MysteriousNPC" type="Node3D" parent="." unique_id=777558470]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.92, -5.5)
 
@@ -285,4 +296,11 @@ theme_override_font_sizes/font_size = 11
 text = "• WASD = Bergerak
 • Mouse = Rotasi Kamera
 • Maju ke depan = Picu Monolog Batin
-• Dekati Meja/Sosok = Tekan [E] untuk Interaksi"
+• Dekati Meja/Sosok = Tekan [E] untuk Interaksi
+• Dekati Kasur = Tekan [E] untuk Sembunyi / Keluar"
+
+[node name="DemoBGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_bgm")
+volume_db = -12.0
+autoplay = true
+
