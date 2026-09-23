@@ -25,6 +25,9 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
+	if HorrorDialogue:
+		HorrorDialogue.dialogue_finished.connect(_on_dialogue_finished)
+
 	_setup_hud()
 	_setup_altar_light()
 
@@ -32,9 +35,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not _player_in_range:
 		return
 
+	# Jangan proses interaksi jika dialog atau catatan sedang aktif di layar!
+	if HorrorDialogue and (HorrorDialogue.is_dialogue_active() or HorrorDialogue.is_note_active()):
+		return
+
+	# Hanya tangani penekanan tombol E (jangan gunakan ui_accept agar tidak bentrok dengan tombol Space/Enter untuk lanjut dialog)
 	var is_interact: bool = (
-		(event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E) or
-		event.is_action_pressed(&"ui_accept")
+		event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E
 	)
 
 	if is_interact:
@@ -43,6 +50,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Interaksi utama dengan Altar
 func interact() -> void:
+	# Sembunyikan prompt interaksi saat dialog terbuka agar layar bersih
+	if _hud_label:
+		_hud_label.visible = false
+
 	var story = StoryManager if StoryManager else StoryGameManager.instance
 	var current_dep: int = story.flowers_deposited if story else 0
 
@@ -143,6 +154,10 @@ func _on_body_exited(body: Node3D) -> void:
 		_player_in_range = false
 		if _hud_label:
 			_hud_label.visible = false
+
+func _on_dialogue_finished(_dialogue_id: String) -> void:
+	if _player_in_range:
+		_update_hud()
 
 func _setup_altar_light() -> void:
 	_altar_light = OmniLight3D.new()

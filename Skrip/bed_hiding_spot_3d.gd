@@ -62,6 +62,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not _player_in_range and not _is_occupied:
 		return
 
+	# Jangan proses interaksi jika dialog atau catatan sedang aktif di layar!
+	if HorrorDialogue and (HorrorDialogue.is_dialogue_active() or HorrorDialogue.is_note_active()):
+		return
+
 	# Tombol E atau Spasi/Enter untuk Masuk/Keluar dari bawah kasur
 	var is_interact: bool = (
 		(event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E) or

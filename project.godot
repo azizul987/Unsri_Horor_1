@@ -11,8 +11,10 @@ config_version=5
 [application]
 
 config/name="Null"
-run/main_scene="res://Scenes/main.tscn"
+run/main_scene="uid://bgckxom3otchv"
 config/features=PackedStringArray("4.6", "Forward Plus")
+boot_splash/show_image=false
+boot_splash/use_filter=false
 config/icon="res://icon.svg"
 
 [autoload]

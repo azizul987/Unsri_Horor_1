@@ -44,12 +44,10 @@ energy_multiplier = 0.0
 sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
 
 [sub_resource type="Environment" id="Environment_7mycd"]
-background_mode = 1
-background_energy_multiplier = 0.0
+sky = SubResource("Sky_lquwl")
 ambient_light_source = 1
 ambient_light_energy = 0.0
 reflected_light_source = 1
-sky = SubResource("Sky_lquwl")
 tonemap_mode = 2
 glow_enabled = true
 
@@ -62,7 +60,7 @@ height = 1.7
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
 radius = 0.26
-height = 1.4108398
+height = 1.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kry3j"]
 render_priority = 0
@@ -3114,12 +3112,30 @@ region_min_size = 1.0
 [sub_resource type="BoxShape3D" id="BoxShape3D_3pmx8"]
 size = Vector3(1, 2.328125, 1.6365967)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k868"]
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_hpc6h"]
+material = SubResource("StandardMaterial3D_7k868")
+size = Vector2(0.4, 0.4)
+
+[sub_resource type="Curve" id="Curve_kltya"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_e08e2"]
+offsets = PackedFloat32Array(0, 0.4832714, 1)
+colors = PackedColorArray(0.87724084, 0.51078963, 0.09341081, 1, 0.5612675, 0.21310818, 0.13752481, 1, 0.11372549, 0.011764706, 0, 0.54901963)
+
 [node name="Main" type="Node3D" unique_id=448454425]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=618706464]
 transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938414, 0.66315246, 0.7091713, -0.5181915, 0.7049452, -0.48428264, 0, 11.240326, 0)
-light_energy = 0.0
 shadow_enabled = true
+shadow_opacity = 0.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=747896932]
 environment = SubResource("Environment_7mycd")
@@ -3140,7 +3156,7 @@ near = 0.02
 script = ExtResource("4_7mycd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=311514290]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14457989, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.09934044, 0)
 shape = SubResource("CapsuleShape3D_5vw27")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="CharacterBody3D" unique_id=1441273246]
@@ -9568,14 +9584,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7263222, 4.2312517, 4.5727
 shape = SubResource("BoxShape3D_abqjc")
 
 [node name="Tanggga Samping2" type="StaticBody3D" parent="Node" unique_id=34495688]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.759, 3.3522778, 9.359)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.759, 3.4340086, 9.359)
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Node/Tanggga Samping2" unique_id=1439663632]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4506893)
 polygon = PackedVector2Array(-1.0232506, 0.11772871, 1.1192932, 2.0757098, 1.0395832, 2.2345874, -1.1944141, 0.27626228)
 
 [node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="Node/Tanggga Samping2" unique_id=245164389]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0250096, 4.000677)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9061618, 4.000677)
 depth = 1.28
 polygon = PackedVector2Array(1.0383396, -0.83658767, 1.0416107, -0.9870162, -1.5146046, 0.69004774, -1.5169258, 0.9240575)
 
@@ -9628,14 +9644,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6558685, 0.17282963, 2.340
 shape = SubResource("BoxShape3D_6iyjs")
 
 [node name="Tanggga Samping3" type="StaticBody3D" parent="Node" unique_id=464685675]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.759, 6.8533735, 9.359)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.759, 6.9096365, 9.359)
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Node/Tanggga Samping3" unique_id=160035482]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4506893)
 polygon = PackedVector2Array(-1.0232506, 0.11772871, 1.1192932, 2.0757098, 1.0395832, 2.2345874, -1.1944141, 0.27626228)
 
 [node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="Node/Tanggga Samping3" unique_id=1447278816]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0250096, 4.000677)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.777295, 4.000677)
 depth = 1.28
 polygon = PackedVector2Array(1.0383396, -0.83658767, 1.0416107, -0.9870162, -1.5146046, 0.69004774, -1.5169258, 0.9240575)
 
@@ -9695,7 +9711,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4506893)
 polygon = PackedVector2Array(-1.0232506, 0.11772871, 1.1192932, 2.0757098, 1.0395832, 2.2345874, -1.1944141, 0.27626228)
 
 [node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="Node/Tanggga Samping4" unique_id=31602052]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0250096, 4.000677)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.847, 4.001)
 depth = 1.28
 polygon = PackedVector2Array(1.0383396, -0.83658767, 1.0416107, -0.9870162, -1.5146046, 0.69004774, -1.5169258, 0.9240575)
 
@@ -9804,7 +9820,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7263222, 4.2312517, 4.5727
 shape = SubResource("BoxShape3D_abqjc")
 
 [node name="Tanggga Samping6" type="StaticBody3D" parent="Node" unique_id=117301889]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.9900787, 3.3573463, -36.201412)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.99, 3.2013795, -36.201)
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Node/Tanggga Samping6" unique_id=1111037551]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4506893)
@@ -9864,14 +9880,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6558685, 0.17282963, 2.340
 shape = SubResource("BoxShape3D_6iyjs")
 
 [node name="Tanggga Samping7" type="StaticBody3D" parent="Node" unique_id=1349499947]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.95288324, 6.7297177, -36.201412)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.953, 6.8133554, -36.201)
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Node/Tanggga Samping7" unique_id=1330337910]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4506893)
 polygon = PackedVector2Array(-1.0232506, 0.11772871, 1.1192932, 2.0757098, 1.0395832, 2.2345874, -1.1944141, 0.27626228)
 
 [node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="Node/Tanggga Samping7" unique_id=360215998]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0250096, 4.000677)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08539504, 2.8655572, 4.0009995)
 depth = 1.28
 polygon = PackedVector2Array(1.0383396, -0.83658767, 1.0416107, -0.9870162, -1.5146046, 0.69004774, -1.5169258, 0.9240575)
 
@@ -9931,7 +9947,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4506893)
 polygon = PackedVector2Array(-1.0232506, 0.11772871, 1.1192932, 2.0757098, 1.0395832, 2.2345874, -1.1944141, 0.27626228)
 
 [node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="Node/Tanggga Samping8" unique_id=1890086444]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0250096, 4.000677)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.016010523, 2.8471155, 4.000675)
 depth = 1.28
 polygon = PackedVector2Array(1.0383396, -0.83658767, 1.0416107, -0.9870162, -1.5146046, 0.69004774, -1.5169258, 0.9240575)
 
@@ -13582,33 +13598,6 @@ mesh = SubResource("CapsuleMesh_ig7tw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)
 shape = SubResource("CapsuleShape3D_5vw27")
 
-[node name="lemari" parent="." unique_id=1518109869 instance=ExtResource("25_cbgmd")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 22.662407, 13.834341, -25.87503)
-
-[node name="lemari2" parent="." unique_id=1131575720 instance=ExtResource("25_cbgmd")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 21.871529, 13.834341, -25.87503)
-
-[node name="lemari3" parent="." unique_id=787434526 instance=ExtResource("25_cbgmd")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 23.60662, 13.834341, -25.87503)
-
-[node name="kasur" parent="." unique_id=1650461996 instance=ExtResource("24_3pmx8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 24.377214, 13.8465395, -23.608177)
-
-[node name="StaticBody3D" type="StaticBody3D" parent="kasur" unique_id=1166610831]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="kasur/StaticBody3D" unique_id=934444309]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6640625, 0.31829834)
-shape = SubResource("BoxShape3D_3pmx8")
-
-[node name="BedHidingSpot3D" parent="kasur" unique_id=19153795 instance=ExtResource("28_hiding_bed")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
-
-[node name="meja" parent="." unique_id=1743351357 instance=ExtResource("27_1w6v2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.812689, 13.800608, -23.059471)
-
-[node name="meja2" parent="." unique_id=667096188 instance=ExtResource("27_1w6v2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.876457, 13.800608, -23.059471)
-
 [node name="Crosshair" type="CanvasLayer" parent="." unique_id=1310687115]
 layer = 5
 
@@ -13634,3 +13623,49 @@ autoplay = true
 
 [node name="FlowerAltar" parent="." unique_id=1415029710 instance=ExtResource("30_altar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 13.8, -23)
+
+[node name="Node3D" type="Node3D" parent="." unique_id=1690307095]
+transform = Transform3D(-0.82108027, -0.251557, 0.51239276, 0.23938414, 0.6631525, 0.70917135, -0.5181915, 0.70494527, -0.4842827, 0, 11.240326, 0)
+
+[node name="meja" parent="Node3D" unique_id=1743351357 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(-0.82108027, 0.23938416, -0.5181916, -0.25155696, 0.6631526, 0.7049453, 0.5123927, 0.70917135, -0.48428267, -6.168934, -20.296501, 24.672035)
+
+[node name="meja2" parent="Node3D" unique_id=667096188 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(-0.82108027, 0.23938416, -0.5181916, -0.25155696, 0.6631526, 0.7049453, 0.5123927, 0.70917135, -0.48428267, -5.4002132, -20.060986, 24.192318)
+
+[node name="lemari" parent="Node3D" unique_id=1518109869 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.51819146, 0.23938416, 0.8210802, 0.70494527, 0.6631526, 0.2515569, -0.48428267, 0.70917135, -0.51239264, -4.5784655, -22.221142, 25.98248)
+
+[node name="lemari2" parent="Node3D" unique_id=1131575720 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.51819146, 0.23938416, 0.8210802, 0.70494527, 0.6631526, 0.2515569, -0.48428267, 0.70917135, -0.51239264, -3.9290917, -22.02219, 25.577244)
+
+[node name="lemari3" parent="Node3D" unique_id=787434526 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.51819146, 0.23938416, 0.8210802, 0.70494527, 0.6631526, 0.2515569, -0.48428267, 0.70917135, -0.51239264, -5.3537416, -22.458664, 26.46629)
+
+[node name="kasur" parent="Node3D" unique_id=1650461996 instance=ExtResource("24_3pmx8")]
+transform = Transform3D(-0.5181915, 0.23938416, 0.82108027, 0.7049453, 0.6631526, 0.25155693, -0.4842827, 0.70917135, -0.5123927, -7.158205, -21.046413, 25.771992)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Node3D/kasur" unique_id=1166610831]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/kasur/StaticBody3D" unique_id=934444309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6640625, 0.31829834)
+shape = SubResource("BoxShape3D_3pmx8")
+
+[node name="BedHidingSpot3D" parent="Node3D/kasur" unique_id=19153795 instance=ExtResource("28_hiding_bed")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="." unique_id=854900155]
+transform = Transform3D(-0.82108027, -0.251557, 0.51239276, 0.23938414, 0.6631525, 0.70917135, -0.5181915, 0.70494527, -0.4842827, 16.262619, 15.822441, 12.648424)
+amount = 40
+lifetime = 0.8
+randomness = 0.3
+mesh = SubResource("QuadMesh_hpc6h")
+emission_shape = 1
+emission_sphere_radius = 0.15
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.2
+initial_velocity_max = 2.2
+scale_amount_curve = SubResource("Curve_kltya")
+color_ramp = SubResource("Gradient_e08e2")
