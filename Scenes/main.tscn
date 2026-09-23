@@ -22,7 +22,11 @@
 [ext_resource type="Material" uid="uid://ds53d31xdpxm5" path="res://Asset/Rusun/Materials/Warna__genteng.material" id="19_r33sp"]
 [ext_resource type="Material" uid="uid://f2ih1dvrslt" path="res://Asset/Rusun/Materials/Oren.material" id="20_hdf80"]
 [ext_resource type="Material" uid="uid://biqba7acab4l1" path="res://Asset/Rusun/Materials/Biru.material" id="21_jwpg7"]
+[ext_resource type="PackedScene" uid="uid://cfkbesamf6igs" path="res://apart.fbx" id="22_cbgmd"]
 [ext_resource type="PackedScene" uid="uid://8e3fxltyw1y7" path="res://Skrip/npc_mesh.fbx" id="22_gt3je"]
+[ext_resource type="PackedScene" uid="uid://5o843i3bprqq" path="res://kasur.fbx" id="24_3pmx8"]
+[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://lemari.tscn" id="25_cbgmd"]
+[ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="27_1w6v2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_top_color = Color(0, 0, 0, 1)
@@ -37,6 +41,7 @@ energy_multiplier = 0.0
 sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
 
 [sub_resource type="Environment" id="Environment_7mycd"]
+background_energy_multiplier = 0.0
 sky = SubResource("Sky_lquwl")
 tonemap_mode = 2
 glow_enabled = true
@@ -50,7 +55,7 @@ height = 1.7
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
 radius = 0.26
-height = 1.5267578
+height = 1.4108398
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kry3j"]
 render_priority = 0
@@ -3099,17 +3104,21 @@ agent_radius = 0.2
 agent_max_slope = 80.0
 region_min_size = 1.0
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_3pmx8"]
+size = Vector3(1, 2.328125, 1.6365967)
+
 [node name="Main" type="Node3D" unique_id=448454425]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=618706464]
 transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938414, 0.66315246, 0.7091713, -0.5181915, 0.7049452, -0.48428264, 0, 11.240326, 0)
+light_energy = 0.0
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=747896932]
 environment = SubResource("Environment_7mycd")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1199465831 groups=["player"]]
-transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 17.011475, 1.5637636, 9.489549)
+transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 17.011475, 14.49193, -23.734524)
 script = ExtResource("2_1bvp3")
 speed = 3.525
 step_check_distance = 0.435
@@ -3119,13 +3128,12 @@ material_override = SubResource("StandardMaterial3D_272bh")
 mesh = SubResource("CapsuleMesh_ig7tw")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1481125246]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496, -0.05)
-fov = 78.0
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 9.536743e-07, 0.38961887, -0.049999237)
 near = 0.02
 script = ExtResource("4_7mycd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=311514290]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14457989, 0)
 shape = SubResource("CapsuleShape3D_5vw27")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="CharacterBody3D" unique_id=1441273246]
@@ -10973,6 +10981,7 @@ mesh = SubResource("ArrayMesh_ijw4d")
 
 [node name="Cube_751" type="MeshInstance3D" parent="rusun1" unique_id=305227777]
 transform = Transform3D(-3.4924184e-08, 3.6786653e-07, 0.047361404, -1.6653149e-14, 0.5859306, -2.973505e-08, 0.5859306, 4.9959447e-14, 5.6459193e-09, 6.4220324, 6.5254183, -8.348244)
+visible = false
 mesh = SubResource("ArrayMesh_vjcr6")
 
 [node name="Cube_750" type="MeshInstance3D" parent="rusun1" unique_id=1962993714]
@@ -12272,7 +12281,7 @@ transform = Transform3D(5.9604645e-08, 0, 1, 0, 1, 0, -1, 0, 5.9604645e-08, 12.7
 mesh = SubResource("ArrayMesh_1ndqa")
 
 [node name="Cube_291" type="MeshInstance3D" parent="rusun1" unique_id=1322008223]
-transform = Transform3D(5.9604645e-08, 0, 1, 0, 1, 0, -1, 0, 5.9604645e-08, 12.756653, 7.145575, -12.169804)
+transform = Transform3D(5.9604645e-08, 7.662493e-11, 1, -1.1641532e-10, 1, -9.8680175e-11, -1, 1.1641532e-10, 5.948823e-08, 12.756189, 7.1450315, -12.589541)
 mesh = SubResource("ArrayMesh_kv2vn")
 
 [node name="Cube_290" type="MeshInstance3D" parent="rusun1" unique_id=1339259524]
@@ -13337,6 +13346,25 @@ fov = 22.895193
 near = 0.1
 far = 1000.0
 
+[node name="apart" parent="rusun1" unique_id=1777085839 instance=ExtResource("22_cbgmd")]
+transform = Transform3D(0.9999922, 0.0037890282, 0.0011065082, -0.0037904517, 0.999992, 0.0012926676, -0.0011015928, -0.0012968589, 0.99999857, 265.35095, 1.4518237, 13.016468)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="rusun1" unique_id=1486309898]
+transform = Transform3D(1, 1.0891199e-10, -8.032657e-09, -5.866275e-08, 1, 2.9336661e-08, -3.608875e-08, 2.9336661e-08, 1, 157.60219, -7.9010224, 4.1038294)
+size = Vector3(270.2503, 0.3690033, 142.06015)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="rusun1" unique_id=1137281189]
+transform = Transform3D(1, 1.114131e-10, -8.032657e-09, -6.3092216e-08, 1, 3.1548552e-08, -4.0512532e-08, 3.1548552e-08, 1, -161.88197, -6.690025, 4.4557743)
+size = Vector3(270.2503, 0.3690033, 142.06015)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="rusun1" unique_id=1731754073]
+transform = Transform3D(1, 1.13800525e-10, -8.032657e-09, -6.752168e-08, 1, 3.3760443e-08, -4.4936314e-08, 3.3760443e-08, 1, 29.64497, -7.5626864, -51.46923)
+size = Vector3(270.2503, 0.3690033, 27.274094)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="rusun1" unique_id=102873156]
+transform = Transform3D(1, 3.4947334e-10, -8.032657e-09, -7.2650664e-08, 1, 3.632158e-08, -5.005859e-08, 3.632158e-08, 1, 12.932022, -7.3632507, 57.758957)
+size = Vector3(270.2503, 0.3690033, 35.823692)
+
 [node name="Tiang2" type="StaticBody3D" parent="." unique_id=740418568]
 transform = Transform3D(0.99999785, 0.0017771288, -0.0011088048, -0.0017785651, 0.99999756, -0.0012906978, 0.0011064996, 0.0012926748, 0.99999857, 35.215, 7.849, -13.129)
 
@@ -13525,6 +13553,7 @@ transform = Transform3D(0.99889857, -6.2775536e-05, -0.047106676, 5.8799415e-05,
 shape = SubResource("BoxShape3D_jx0wj")
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=612657747]
+visible = false
 navigation_mesh = SubResource("NavigationMesh_21xkr")
 
 [node name="npc_mesh" parent="NavigationRegion3D" unique_id=20983193 instance=ExtResource("22_gt3je")]
@@ -13545,3 +13574,45 @@ mesh = SubResource("CapsuleMesh_ig7tw")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D2" unique_id=1572720710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)
 shape = SubResource("CapsuleShape3D_5vw27")
+
+[node name="lemari" parent="." unique_id=1518109869 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 22.662407, 13.834341, -25.87503)
+
+[node name="lemari2" parent="." unique_id=1131575720 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 21.871529, 13.834341, -25.87503)
+
+[node name="lemari3" parent="." unique_id=787434526 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 23.60662, 13.834341, -25.87503)
+
+[node name="kasur" parent="." unique_id=1650461996 instance=ExtResource("24_3pmx8")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 24.377214, 13.8465395, -23.608177)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="kasur" unique_id=1166610831]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="kasur/StaticBody3D" unique_id=934444309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6640625, 0.31829834)
+shape = SubResource("BoxShape3D_3pmx8")
+
+[node name="meja" parent="." unique_id=1743351357 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.812689, 13.800608, -23.059471)
+
+[node name="meja2" parent="." unique_id=667096188 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.876457, 13.800608, -23.059471)
+
+[node name="Crosshair" type="CanvasLayer" parent="." unique_id=1310687115]
+layer = 5
+
+[node name="Dot" type="ColorRect" parent="Crosshair" unique_id=1440855401]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.75)

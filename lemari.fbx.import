@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dcbbrfbjhy6ex"
-path="res://.godot/imported/lantai.fbx-1828e7408c5ebfe763ac55a1ddd7b0c2.scn"
+uid="uid://dy48wcd804n81"
+path="res://.godot/imported/lemari.fbx-6d7f88bae9595c50e3441a812043f446.scn"
 
 [deps]
 
-source_file="res://lantai.fbx"
-dest_files=["res://.godot/imported/lantai.fbx-1828e7408c5ebfe763ac55a1ddd7b0c2.scn"]
+source_file="res://lemari.fbx"
+dest_files=["res://.godot/imported/lemari.fbx-6d7f88bae9595c50e3441a812043f446.scn"]
 
 [params]
 

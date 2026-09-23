@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://b23vx0v9m5x2c"]
+
+[ext_resource type="Script" path="res://addons/horror_dialogue/ui/note_reader_ui.gd" id="1_note_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_paper"]
+bg_color = Color(0.0823529, 0.0745098, 0.0666667, 0.960784)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.352941, 0.235294, 0.156863, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.823529)
+shadow_size = 12
+
+[node name="HorrorNoteReaderUI" type="CanvasLayer"]
+layer = 105
+script = ExtResource("1_note_ui")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="PaperPanel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(540, 400)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -270.0
+offset_top = -200.0
+offset_right = 270.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(270, 200)
+theme_override_styles/panel = SubResource("StyleBoxFlat_paper")
+
+[node name="MarginContainer" type="MarginContainer" parent="PaperPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PaperPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="PaperPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.862745, 0.27451, 0.27451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "JUDUL CATATAN"
+horizontal_alignment = 1
+
+[node name="AuthorLabel" type="Label" parent="PaperPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.55, 0.5, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "- Penulis Tidak Dikenal"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="PaperPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PaperPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ContentLabel" type="RichTextLabel" parent="PaperPanel/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.85, 0.82, 0.78, 1)
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "Isi catatan atau dokumen..."
+fit_content = true
+
+[node name="HSeparator2" type="HSeparator" parent="PaperPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CloseHint" type="Label" parent="PaperPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 0.7)
+theme_override_font_sizes/font_size = 12
+text = "▶ [Tekan E atau ESC untuk Menutup]"
+horizontal_alignment = 1
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -6.0

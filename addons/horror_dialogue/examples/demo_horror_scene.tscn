@@ -1,0 +1,288 @@
+[gd_scene format=3 uid="uid://do7k7odn08uby"]
+
+[ext_resource type="Script" uid="uid://cr7p3xpcs0m2a" path="res://Skrip/character_body_3d.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://bi4608udhce61" path="res://Skrip/camera_3d.gd" id="2_camera"]
+[ext_resource type="Script" uid="uid://cyonrwh5wd8ah" path="res://addons/horror_dialogue/3d/dialogue_trigger_3d.gd" id="3_trigger"]
+[ext_resource type="Resource" path="res://addons/horror_dialogue/examples/dialogues/intro_monologue.tres" id="4_intro_res"]
+[ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="5_meja"]
+[ext_resource type="Script" uid="uid://dnl2to85b7dcj" path="res://addons/horror_dialogue/3d/dialogue_interactable_3d.gd" id="6_interact"]
+[ext_resource type="Resource" path="res://addons/horror_dialogue/examples/notes/sample_letter.tres" id="7_note_res"]
+[ext_resource type="Resource" path="res://addons/horror_dialogue/examples/dialogues/npc_encounter.tres" id="8_npc_res"]
+[ext_resource type="Script" uid="uid://bwm2ho6b8vc7j" path="res://addons/horror_dialogue/examples/demo_hud.gd" id="9_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.0196078, 0.0196078, 0.027451, 1)
+sky_horizon_color = Color(0.0588235, 0.0588235, 0.0784314, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.0588235, 0.0588235, 0.0784314, 1)
+
+[sub_resource type="Sky" id="Sky_env"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_horror"]
+background_mode = 2
+sky = SubResource("Sky_env")
+ambient_light_source = 2
+ambient_light_color = Color(0.05, 0.05, 0.07, 1)
+ambient_light_energy = 0.4
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.4
+fog_enabled = true
+fog_light_color = Color(0.02, 0.02, 0.03, 1)
+fog_density = 0.04
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_walls"]
+albedo_color = Color(0.18, 0.17, 0.16, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.3
+height = 1.7
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
+radius = 0.3
+height = 1.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_player"]
+albedo_color = Color(0.3, 0.3, 0.35, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
+size = Vector3(10, 3, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_paper"]
+albedo_color = Color(0.85, 0.8, 0.7, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_paper"]
+material = SubResource("StandardMaterial3D_paper")
+size = Vector3(0.3, 0.01, 0.4)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_interact"]
+radius = 2.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ghost"]
+albedo_color = Color(0.05, 0.05, 0.05, 1)
+emission_enabled = true
+emission = Color(0.7, 0.1, 0.1, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ghost"]
+material = SubResource("StandardMaterial3D_ghost")
+radius = 0.35
+height = 1.85
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(0.05, 0.05, 0.06, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.3, 0.3, 0.5)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="DemoHorrorScene" type="Node3D" unique_id=1544350299]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=632187806]
+environment = SubResource("Environment_horror")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1265962096]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 10, 0)
+light_color = Color(0.4, 0.45, 0.6, 1)
+light_energy = 0.05
+shadow_enabled = true
+
+[node name="RedCorridorLight" type="OmniLight3D" parent="." unique_id=1055998506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -5.5)
+light_color = Color(0.85, 0.15, 0.15, 1)
+light_energy = 1.2
+shadow_enabled = true
+omni_range = 8.0
+
+[node name="RoomGeometry" type="Node3D" parent="." unique_id=800290364]
+
+[node name="Floor" type="CSGBox3D" parent="RoomGeometry" unique_id=412109053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
+size = Vector3(12, 0.2, 20)
+material = SubResource("StandardMaterial3D_floor")
+
+[node name="Ceiling" type="CSGBox3D" parent="RoomGeometry" unique_id=986679359]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 0)
+use_collision = true
+size = Vector3(12, 0.2, 20)
+material = SubResource("StandardMaterial3D_floor")
+
+[node name="WallLeft" type="CSGBox3D" parent="RoomGeometry" unique_id=1587311353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2, 0)
+use_collision = true
+size = Vector3(0.3, 4, 20)
+material = SubResource("StandardMaterial3D_walls")
+
+[node name="WallRight" type="CSGBox3D" parent="RoomGeometry" unique_id=1906627812]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 0)
+use_collision = true
+size = Vector3(0.3, 4, 20)
+material = SubResource("StandardMaterial3D_walls")
+
+[node name="WallBack" type="CSGBox3D" parent="RoomGeometry" unique_id=1075925883]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -10)
+use_collision = true
+size = Vector3(12, 4, 0.3)
+material = SubResource("StandardMaterial3D_walls")
+
+[node name="WallFront" type="CSGBox3D" parent="RoomGeometry" unique_id=1433513772]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10)
+use_collision = true
+size = Vector3(12, 4, 0.3)
+material = SubResource("StandardMaterial3D_walls")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1002310674 groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 7)
+script = ExtResource("1_player")
+speed = 3.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1530982280]
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=1971617715]
+mesh = SubResource("CapsuleMesh_player")
+surface_material_override/0 = SubResource("StandardMaterial3D_player")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1553223523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+current = true
+script = ExtResource("2_camera")
+enable_camcorder_shader = false
+
+[node name="Flashlight" type="SpotLight3D" parent="CharacterBody3D" unique_id=746175493]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, -0.15)
+light_color = Color(0.9, 0.95, 1, 1)
+light_energy = 2.0
+shadow_enabled = true
+spot_range = 14.0
+spot_angle = 42.0
+
+[node name="IntroMonologueTrigger" type="Area3D" parent="." unique_id=1299015329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 4)
+script = ExtResource("3_trigger")
+dialogue_data = ExtResource("4_intro_res")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="IntroMonologueTrigger" unique_id=920890017]
+shape = SubResource("BoxShape3D_trigger")
+
+[node name="TableWithNote" type="Node3D" parent="." unique_id=966163612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 0, 0)
+
+[node name="meja" parent="TableWithNote" unique_id=614646962 instance=ExtResource("5_meja")]
+
+[node name="PaperMesh" type="MeshInstance3D" parent="TableWithNote" unique_id=73678355]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0, 0.77, 0)
+mesh = SubResource("BoxMesh_paper")
+
+[node name="NoteLight" type="OmniLight3D" parent="TableWithNote" unique_id=443052630]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.5
+omni_range = 3.0
+
+[node name="DialogueInteractable3D" type="Area3D" parent="TableWithNote" unique_id=1864026536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+script = ExtResource("6_interact")
+is_note = true
+note_data = ExtResource("7_note_res")
+prompt_note_message = "Baca Surat Lantai 3"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableWithNote/DialogueInteractable3D" unique_id=1136711527]
+shape = SubResource("SphereShape3D_interact")
+
+[node name="MysteriousNPC" type="Node3D" parent="." unique_id=777558470]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.92, -5.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MysteriousNPC" unique_id=2141222771]
+mesh = SubResource("CapsuleMesh_ghost")
+
+[node name="DialogueInteractable3D" type="Area3D" parent="MysteriousNPC" unique_id=1848539944]
+script = ExtResource("6_interact")
+dialogue_data = ExtResource("8_npc_res")
+prompt_message = "Bicara dengan Sosok Misterius"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MysteriousNPC/DialogueInteractable3D" unique_id=479071587]
+shape = SubResource("SphereShape3D_interact")
+
+[node name="DemoHUD" type="CanvasLayer" parent="." unique_id=1985215362]
+script = ExtResource("9_hud")
+
+[node name="Crosshair" type="ColorRect" parent="DemoHUD" unique_id=927206468]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.7)
+
+[node name="PromptLabel" type="Label" parent="DemoHUD" unique_id=193052863]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = 18.0
+offset_right = 200.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 15
+text = "[E] Interaksi"
+horizontal_alignment = 1
+
+[node name="GuidePanel" type="PanelContainer" parent="DemoHUD" unique_id=161877987]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 320.0
+offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
+
+[node name="MarginContainer" type="MarginContainer" parent="DemoHUD/GuidePanel" unique_id=331772613]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DemoHUD/GuidePanel/MarginContainer" unique_id=1115852057]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="DemoHUD/GuidePanel/MarginContainer/VBoxContainer" unique_id=444820825]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.25, 0.25, 1)
+theme_override_font_sizes/font_size = 14
+text = "DEMO HORROR DIALOGUE (3D)"
+
+[node name="GuideText" type="Label" parent="DemoHUD/GuidePanel/MarginContainer/VBoxContainer" unique_id=1924598311]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "• WASD = Bergerak
+• Mouse = Rotasi Kamera
+• Maju ke depan = Picu Monolog Batin
+• Dekati Meja/Sosok = Tekan [E] untuk Interaksi"

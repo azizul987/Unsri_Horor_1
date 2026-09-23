@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="NoteData" format=3]
+
+[ext_resource type="Script" path="res://addons/horror_dialogue/resources/note_data.gd" id="1_notedata"]
+
+[resource]
+script = ExtResource("1_notedata")
+title = "SURAT DARI LANTAI 3"
+author = "Penghuni Kamar 304 - 14 Mei 2002"
+content = "Jika ada siapapun yang menemukan surat ini... kumohon berhati-hatilah.\n\nJangan pernah menyalakan senter saat melewati tangga darurat di blok timur. Suara langkah berat itu bukan manusia.\n\nAmir sudah mengunci semua pintu keluar dari gedung rusun ini. Kunci utama disembunyikan di dekat lemari tua di lantai bawah.\n\n[color=red]TOLONG JANGAN TINGGALKAN AKU DI SINI...[/color]"

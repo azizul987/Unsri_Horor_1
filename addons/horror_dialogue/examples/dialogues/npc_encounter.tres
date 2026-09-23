@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://bitggc8t24j81"]
+
+[ext_resource type="Script" uid="uid://ct217akp0an6m" path="res://addons/horror_dialogue/resources/dialogue_choice.gd" id="1_choice"]
+[ext_resource type="Script" uid="uid://b0rl4rr64a57t" path="res://addons/horror_dialogue/resources/dialogue_line.gd" id="2_line"]
+[ext_resource type="Script" uid="uid://d0xu2py7ql38q" path="res://addons/horror_dialogue/resources/dialogue_data.gd" id="3_data"]
+
+[sub_resource type="Resource" id="Resource_choice_1"]
+script = ExtResource("1_choice")
+text = "Siapa kamu? Kenapa kamu ada di sini?"
+trigger_event = "ask_identity"
+
+[sub_resource type="Resource" id="Resource_choice_2"]
+script = ExtResource("1_choice")
+text = "Aku hanya ingin mencari jalan keluar!"
+trigger_event = "ask_escape"
+
+[sub_resource type="Resource" id="Resource_choice_3"]
+script = ExtResource("1_choice")
+text = "Serahkan kunci kamar 302! [Kunci]"
+required_item_id = "room_key"
+locked_hint = "(Butuh Kunci Kamar)"
+trigger_event = "give_room_key"
+
+[sub_resource type="Resource" id="Resource_npc_line_1"]
+script = ExtResource("2_line")
+speaker_name = "Penghuni Rusun"
+speaker_color = Color(0.9, 0.2, 0.2, 1)
+text = "Jangan mendekat... [wave amp=30.0 freq=4.0]dia[/wave] sedang berkeliaran di lantai ini."
+typing_speed = 0.04
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_1"), SubResource("Resource_choice_2"), SubResource("Resource_choice_3")])
+
+[resource]
+script = ExtResource("3_data")
+dialogue_id = "npc_resident_encounter"
+lines = Array[ExtResource("2_line")]([SubResource("Resource_npc_line_1")])
+on_finish_event = "talk_finished"
