@@ -1,0 +1,218 @@
+[gd_scene format=3 uid="uid://ct7uxwbefbd8k"]
+
+[ext_resource type="Shader" uid="uid://coyg6y1gvq3ks" path="res://Shaders/forest_fire_flame.gdshader" id="1_flame_shader"]
+[ext_resource type="PackedScene" uid="uid://bsyavtb5sdys6" path="res://pohon.fbx" id="2_kpeij"]
+[ext_resource type="Shader" uid="uid://cb4o65yiwai6u" path="res://Shaders/forest_smoke.gdshader" id="2_smoke_shader"]
+[ext_resource type="Shader" uid="uid://sdpbcsmfkl32" path="res://Shaders/forest_ember.gdshader" id="3_ember_shader"]
+[ext_resource type="Script" uid="uid://dbcug46ia442x" path="res://Skrip/forest_fire_tree.gd" id="4_script"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_preview_trunk"]
+transparency = 1
+albedo_color = Color(0.42, 0.28, 0.16, 0.35)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_preview_trunk"]
+material = SubResource("StandardMaterial3D_preview_trunk")
+top_radius = 0.425
+bottom_radius = 0.55
+height = 4.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_preview_canopy"]
+transparency = 1
+albedo_color = Color(0.2, 0.48, 0.22, 0.3)
+roughness = 0.85
+
+[sub_resource type="SphereMesh" id="SphereMesh_preview_canopy"]
+material = SubResource("StandardMaterial3D_preview_canopy")
+radius = 1.4
+height = 2.52
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flame"]
+render_priority = 0
+shader = ExtResource("1_flame_shader")
+shader_parameter/use_texture = false
+shader_parameter/color_core = Color(1, 0.95, 0.5, 1)
+shader_parameter/color_flame = Color(1, 0.45, 0.05, 1)
+shader_parameter/color_tip = Color(0.8, 0.1, 0, 0)
+shader_parameter/flame_speed = 4.0
+shader_parameter/flame_waviness = 0.35
+shader_parameter/emission_boost = 2.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_flame"]
+material = SubResource("ShaderMaterial_flame")
+size = Vector2(1.2, 1.6)
+
+[sub_resource type="Curve" id="Curve_flame_scale"]
+_data = [Vector2(0, 0.35), 0.0, 2.5, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), -1.8, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_flame"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0.25, 1, 0.9, 0.6, 1, 1, 0.35, 0.05, 0.9, 0.4, 0.05, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_smoke"]
+render_priority = 0
+shader = ExtResource("2_smoke_shader")
+shader_parameter/smoke_color_base = Color(0.22, 0.15, 0.1, 0.85)
+shader_parameter/smoke_color_top = Color(0.06, 0.06, 0.06, 0)
+shader_parameter/smoke_density = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_smoke"]
+material = SubResource("ShaderMaterial_smoke")
+size = Vector2(2.8, 2.8)
+
+[sub_resource type="Curve" id="Curve_smoke_scale"]
+_data = [Vector2(0, 0.45), 0.0, 2.2, 0, 0, Vector2(0.45, 1.3), 0.8, 0.8, 0, 0, Vector2(1, 2.6), 1.6, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_smoke"]
+offsets = PackedFloat32Array(0, 0.18, 0.72, 1)
+colors = PackedColorArray(0.3, 0.2, 0.15, 0, 0.24, 0.2, 0.18, 0.75, 0.12, 0.12, 0.12, 0.6, 0.05, 0.05, 0.05, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ember"]
+render_priority = 0
+shader = ExtResource("3_ember_shader")
+shader_parameter/ember_color = Color(1, 0.65, 0.15, 1)
+shader_parameter/pulse_speed = 8.0
+shader_parameter/glow_intensity = 4.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_ember"]
+material = SubResource("ShaderMaterial_ember")
+size = Vector2(0.25, 0.25)
+
+[sub_resource type="Curve" id="Curve_ember_scale"]
+_data = [Vector2(0, 0.2), 0.0, 2.8, 0, 0, Vector2(0.25, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.15), -1.4, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_ember"]
+offsets = PackedFloat32Array(0, 0.1, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 0.85, 0.35, 1, 1, 0.4, 0.05, 0.85, 0.7, 0.1, 0, 0)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_heat"]
+height = 7.2
+radius = 3.5
+
+[node name="ForestFireTree" type="Node3D" unique_id=214027030]
+script = ExtResource("4_script")
+tree_scene = ExtResource("2_kpeij")
+
+[node name="TreeSlot" type="Node3D" parent="." unique_id=2128924260]
+
+[node name="pohon" type="Node3D" parent="TreeSlot" unique_id=1647285061 instance=ExtResource("2_kpeij")]
+
+[node name="EditorTreePreview" type="Node3D" parent="." unique_id=1817835430]
+visible = false
+
+[node name="PreviewTrunk" type="MeshInstance3D" parent="EditorTreePreview" unique_id=1841203846]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+mesh = SubResource("CylinderMesh_preview_trunk")
+
+[node name="PreviewCanopy" type="MeshInstance3D" parent="EditorTreePreview" unique_id=962869441]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.1, 0)
+mesh = SubResource("SphereMesh_preview_canopy")
+
+[node name="FireSystem" type="Node3D" parent="." unique_id=1852158097]
+
+[node name="FireBase" type="CPUParticles3D" parent="FireSystem" unique_id=1403822602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+amount = 35
+mesh = SubResource("QuadMesh_flame")
+emission_shape = 1
+emission_sphere_radius = 0.7
+direction = Vector3(0, 1, 0)
+spread = 25.0
+gravity = Vector3(0, 2, 0)
+initial_velocity_min = 1.2
+initial_velocity_max = 2.2
+scale_amount_max = 1.8
+scale_amount_curve = SubResource("Curve_flame_scale")
+color_ramp = SubResource("Gradient_flame")
+
+[node name="FireTrunk" type="CPUParticles3D" parent="FireSystem" unique_id=1908272238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+amount = 45
+lifetime = 1.2
+mesh = SubResource("QuadMesh_flame")
+emission_shape = 3
+emission_box_extents = Vector3(0.45, 1.8, 0.45)
+direction = Vector3(0, 1, 0)
+spread = 20.0
+gravity = Vector3(0, 2.5, 0)
+initial_velocity_min = 1.5
+initial_velocity_max = 2.8
+scale_amount_min = 0.9
+scale_amount_max = 1.6
+scale_amount_curve = SubResource("Curve_flame_scale")
+color_ramp = SubResource("Gradient_flame")
+
+[node name="FireCanopy" type="CPUParticles3D" parent="FireSystem" unique_id=611838630]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+amount = 50
+lifetime = 1.4
+mesh = SubResource("QuadMesh_flame")
+emission_shape = 1
+emission_sphere_radius = 1.25
+direction = Vector3(0, 1, 0)
+spread = 35.0
+gravity = Vector3(0, 3, 0)
+initial_velocity_min = 1.8
+initial_velocity_max = 3.2
+scale_amount_min = 1.4
+scale_amount_max = 2.4
+scale_amount_curve = SubResource("Curve_flame_scale")
+color_ramp = SubResource("Gradient_flame")
+
+[node name="SmokeColumn" type="CPUParticles3D" parent="FireSystem" unique_id=1947506547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.1, 0)
+amount = 60
+lifetime = 3.5
+mesh = SubResource("QuadMesh_smoke")
+emission_shape = 1
+emission_sphere_radius = 1.5
+direction = Vector3(0.42294446, 0.8811342, 0.21147223)
+spread = 28.0
+gravity = Vector3(0, 1.8, 0)
+initial_velocity_min = 3.0
+initial_velocity_max = 5.5
+scale_amount_min = 2.2
+scale_amount_max = 4.5
+scale_amount_curve = SubResource("Curve_smoke_scale")
+color_ramp = SubResource("Gradient_smoke")
+
+[node name="EmbersSparks" type="CPUParticles3D" parent="FireSystem" unique_id=426516785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+amount = 65
+lifetime = 2.5
+mesh = SubResource("QuadMesh_ember")
+emission_shape = 3
+emission_box_extents = Vector3(0.75, 2.4, 0.75)
+direction = Vector3(0.42294443, 0.8811342, 0.21147221)
+spread = 35.0
+gravity = Vector3(0, 1.2, 0)
+initial_velocity_min = 3.5
+initial_velocity_max = 6.8
+scale_amount_min = 0.8
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_ember_scale")
+color_ramp = SubResource("Gradient_ember")
+
+[node name="FireLight" type="OmniLight3D" parent="." unique_id=1898243066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+light_color = Color(1, 0.45, 0.12, 1)
+light_energy = 3.6065629
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 1.2
+
+[node name="FireAudio" type="AudioStreamPlayer3D" parent="." unique_id=1709338958]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+unit_size = 5.0
+max_distance = 35.0
+
+[node name="HeatDamageArea" type="Area3D" parent="." unique_id=616252612]
+collision_layer = 0
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeatDamageArea" unique_id=1865356322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+shape = SubResource("CylinderShape3D_heat")

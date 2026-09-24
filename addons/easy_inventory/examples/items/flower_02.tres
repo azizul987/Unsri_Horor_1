@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "flower_02"
+name = "Kembang Api Merah (Bunga 2)"
+description = "Kelopaknya menyerupai kuncup lidah api yang membara. Memancarkan kehangatan yang memperlambat laju kelelahan stamina pemain."
+item_type = 3
+max_stack = 1
+is_usable = false
+is_droppable = false
+flower_index = 2
+passive_buff_id = "stamina_boost"
+buff_value = 0.3
+custom_properties = {
+"glow_color": Color(1, 0.25, 0.15, 1),
+"location": "Dapur (Lemari)"
+}

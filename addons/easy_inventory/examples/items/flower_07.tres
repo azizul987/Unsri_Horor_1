@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "flower_07"
+name = "Mawar Arang (Bunga 7)"
+description = "Kelopaknya hitam pekat seperti arang kayu terbakar dengan urat bara oranye menyala di sela-selanya. Ditemukan bersama botol bensin bukti keterlibatan Amir."
+item_type = 3
+max_stack = 1
+is_usable = false
+is_droppable = false
+flower_index = 7
+passive_buff_id = "fire_resistance"
+buff_value = 0.5
+custom_properties = {
+"glow_color": Color(1, 0.45, 0.05, 1),
+"location": "Tepi Hutan"
+}

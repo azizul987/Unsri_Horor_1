@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "flower_06"
+name = "Kantong Rawa (Bunga 6)"
+description = "Bunga liar berbentuk corong dengan cairan hijau neon berpijar. Bunga pertama yang ditemukan di luar gedung dekat bekas kebakaran."
+item_type = 3
+max_stack = 1
+is_usable = false
+is_droppable = false
+flower_index = 6
+passive_buff_id = "acid_immunity"
+buff_value = 0.5
+custom_properties = {
+"glow_color": Color(0.2, 1, 0.5, 1),
+"location": "Area Luar Pemondokan"
+}

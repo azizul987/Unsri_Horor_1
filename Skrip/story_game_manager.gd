@@ -246,7 +246,7 @@ func set_chapter(new_chapter: Chapter) -> void:
 ## 🎭 DIALOG & EVENT HANDLERS
 ## ============================================================================
 
-func _on_dialogue_finished() -> void:
+func _on_dialogue_finished(_dialogue_id: String = "") -> void:
 	pass
 
 func _on_dialogue_event_triggered(event_name: String) -> void:

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "flower_08"
+name = "Kupu-Kupu Induk (Bunga 8)"
+description = "Bunga terakhir di kamar Amir. Kelopaknya berdenyut magis menyerupai sayap kupu-kupu malam raksasa. Kunci utama untuk membuka ritual akhir di Altar Tanah."
+item_type = 3
+max_stack = 1
+is_usable = false
+is_droppable = false
+flower_index = 8
+passive_buff_id = "final_catalyst"
+buff_value = 1.0
+custom_properties = {
+"glow_color": Color(1, 0.2, 0.7, 1),
+"location": "Kamar Amir"
+}

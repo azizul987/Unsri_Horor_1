@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+
+[resource]
+script = ExtResource("1_item_script")
+id = "flower_03"
+name = "Bunga Bangkai Kerdil (Bunga 3)"
+description = "Bunga berwarna ungu gelap kehitaman yang mengeluarkan aroma humus rawa. Menyamarkan bau manusia sehingga jarak deteksi patroli Amir sedikit berkurang."
+item_type = 3
+max_stack = 1
+is_usable = false
+is_droppable = false
+flower_index = 3
+passive_buff_id = "stealth_scent"
+buff_value = 0.2
+custom_properties = {
+"glow_color": Color(0.65, 0.2, 0.9, 1),
+"location": "Ruang Bersama (Balik Lemari)"
+}

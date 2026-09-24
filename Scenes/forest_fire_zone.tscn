@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://ct7uxwhbobd8k"]
+
+[ext_resource type="Script" uid="uid://dm0nf48ojecem" path="res://Skrip/forest_fire_zone.gd" id="1_zone_script"]
+[ext_resource type="Shader" uid="uid://sdpbcsmfkl32" path="res://Shaders/forest_ember.gdshader" id="2_ember_shader"]
+[ext_resource type="PackedScene" uid="uid://bsyavtb5sdys6" path="res://pohon.fbx" id="2_hwvoa"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boundary"]
+transparency = 1
+albedo_color = Color(1, 0.4, 0.1, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_boundary"]
+material = SubResource("StandardMaterial3D_boundary")
+size = Vector3(40, 0.2, 40)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ambient_ember"]
+render_priority = 0
+shader = ExtResource("2_ember_shader")
+shader_parameter/ember_color = Color(1, 0.65, 0.2, 1)
+shader_parameter/pulse_speed = 6.0
+shader_parameter/glow_intensity = 3.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_ambient_ember"]
+material = SubResource("ShaderMaterial_ambient_ember")
+size = Vector2(0.2, 0.2)
+
+[sub_resource type="Curve" id="Curve_ambient_scale"]
+_data = [Vector2(0, 0.2), 0.0, 2.0, 0, 0, Vector2(0.4, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), -1.5, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_ambient_ember"]
+offsets = PackedFloat32Array(0, 0.15, 0.8, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 0.8, 0.3, 0.8, 1, 0.45, 0.1, 0.7, 0.5, 0.1, 0, 0)
+
+[node name="ForestFireZone" type="Node3D" unique_id=1154134575]
+script = ExtResource("1_zone_script")
+tree_model = ExtResource("2_hwvoa")
+
+[node name="ZoneBoundaryGuide" type="MeshInstance3D" parent="." unique_id=459242025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("BoxMesh_boundary")
+
+[node name="TreesContainer" type="Node3D" parent="." unique_id=1858826631]
+
+[node name="AmbientEmbers" type="CPUParticles3D" parent="." unique_id=313620348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+amount = 80
+lifetime = 6.0
+mesh = SubResource("QuadMesh_ambient_ember")
+emission_shape = 3
+emission_box_extents = Vector3(20, 6, 20)
+direction = Vector3(0.5, -0.3, 0.3)
+spread = 60.0
+gravity = Vector3(0, -0.4, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.8
+scale_amount_min = 0.6
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_ambient_scale")
+color_ramp = SubResource("Gradient_ambient_ember")
+
+[node name="ZoneAudio" type="AudioStreamPlayer3D" parent="." unique_id=221243191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+max_distance = 60.0
