@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://k0chtb88wrm7"]
 
-[ext_resource type="Script" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+[ext_resource type="Script" uid="uid://cijik2dd0aucf" path="res://addons/easy_inventory/item_data.gd" id="1_item_script"]
+[ext_resource type="PackedScene" uid="uid://51qqcyk6gam4" path="res://key.fbx" id="2_d32nx"]
 
 [resource]
 script = ExtResource("1_item_script")
@@ -8,12 +9,8 @@ id = "room_key"
 name = "Kunci Kamar Amir"
 description = "Kunci kuningan berkarat dengan gantungan nomor kamar Amir. Baunya apek bercampur kemenyan."
 item_type = 2
-max_stack = 1
 is_usable = false
-is_droppable = false
-flower_index = 0
-passive_buff_id = ""
-buff_value = 0.0
+world_mesh_scene = ExtResource("2_d32nx")
 custom_properties = {
 "unlocks_door": "kamar_amir"
 }

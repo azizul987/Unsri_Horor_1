@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://cl7aaj0kcgq7m"]
+
+[ext_resource type="Shader" uid="uid://doq4smie06vfi" path="res://Shaders/butterfly_flap.gdshader" id="1_4lxb4"]
+[ext_resource type="Texture2D" uid="uid://bsaeqpfefc6oy" path="res://Krita-removebg-preview.png" id="2_sio7d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kry3j"]
+render_priority = 0
+shader = ExtResource("1_4lxb4")
+shader_parameter/butterfly_texture = ExtResource("2_sio7d")
+shader_parameter/flap_speed = 35.0
+shader_parameter/flap_amount = 0.6
+shader_parameter/enable_emission = true
+shader_parameter/emission_color = Color(0.5, 0.9, 0.6, 1)
+shader_parameter/emission_energy = 2.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_6bp64"]
+material = SubResource("ShaderMaterial_kry3j")
+size = Vector2(0.25, 0.25)
+subdivide_width = 2
+
+[node name="Kupu kupu" type="Node3D" unique_id=1185922221]
+
+[node name="KupuKupuParticles_" type="CPUParticles3D" parent="." unique_id=1095350562]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3783602, 0)
+amount = 30
+lifetime = 5.0
+randomness = 0.25
+lifetime_randomness = 0.45
+mesh = SubResource("QuadMesh_6bp64")
+emission_shape = 1
+emission_sphere_radius = 2.5
+direction = Vector3(0, 0.5, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.5
+scale_amount_min = 0.7
+scale_amount_max = 1.2
+
+[node name="ButterflyLight" type="OmniLight3D" parent="." unique_id=340509032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3783602, 0)
+light_color = Color(0.5, 0.9, 0.6, 1)
+light_energy = 0.0
+omni_range = 4.5
+omni_attenuation = 1.8

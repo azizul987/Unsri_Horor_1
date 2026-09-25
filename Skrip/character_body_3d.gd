@@ -109,9 +109,159 @@ func _physics_process(delta: float) -> void:
 			var y_diff: float = prev_global_y - global_position.y
 			if y_diff > 0.01 and y_diff <= max_step_height:
 				camera.position.y += y_diff
-		
+
 		# Kembalikan posisi kamera secara halus ke posisi default
 		camera.position.y = lerpf(camera.position.y, default_camera_pos_y, delta * camera_smooth_speed)
+
+	# Raycast interaction dari kamera
+	_update_interact_raycast()
+
+# ─── Sistem Interact Raycast (pickup item dari pandangan kamera) ───────────
+@export_group("Interaction")
+## Jarak maksimal interaksi dari pandangan kamera (dalam meter)
+@export var interact_distance: float = 2.5
+
+var _interact_target: Node = null   # Node yang sedang diarahkan
+var _interact_label: Label = null   # Label HUD untuk prompt interaksi
+
+func _ready_interaction() -> void:
+	# Buat label prompt tepat di tengah layar (sama persis seperti horror_door dan flower_pickup)
+	var cl: CanvasLayer = CanvasLayer.new()
+	cl.name = "InteractHUD"
+	cl.layer = 20
+	add_child(cl)
+
+	_interact_label = Label.new()
+	_interact_label.name = "InteractPrompt"
+	_interact_label.set_anchors_preset(Control.PRESET_CENTER)
+	_interact_label.anchor_left = 0.5
+	_interact_label.anchor_top = 0.5
+	_interact_label.anchor_right = 0.5
+	_interact_label.anchor_bottom = 0.5
+	_interact_label.offset_left = -200.0
+	_interact_label.offset_right = 200.0
+	_interact_label.offset_top = 35.0
+	_interact_label.offset_bottom = 65.0
+	_interact_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_interact_label.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_interact_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_interact_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_interact_label.add_theme_font_size_override("font_size", 14)
+	_interact_label.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	_interact_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	_interact_label.add_theme_constant_override("shadow_offset_x", 1)
+	_interact_label.add_theme_constant_override("shadow_offset_y", 1)
+	_interact_label.visible = false
+	cl.add_child(_interact_label)
+
+func _is_pickup_node(node: Node) -> bool:
+	if node == null:
+		return false
+	if node is ItemPickup3D:
+		return true
+	if "item_data" in node and node.get("item_data") != null:
+		return true
+	if node.is_in_group(&"item_pickup"):
+		return true
+	if node is FlowerPickup or node.has_method("pickup_flower"):
+		return true
+	return false
+
+func _find_pickup_node(node: Node) -> Node:
+	var curr: Node = node
+	while curr != null:
+		if _is_pickup_node(curr):
+			return curr
+		if curr is CharacterBody3D or curr == get_tree().current_scene:
+			break
+		curr = curr.get_parent()
+	return null
+
+func _find_interactive_table(node: Node) -> InteractiveTable:
+	var curr: Node = node
+	while curr != null:
+		if curr is InteractiveTable:
+			return curr as InteractiveTable
+		if curr is CharacterBody3D or curr == get_tree().current_scene:
+			break
+		curr = curr.get_parent()
+	return null
+
+func _update_interact_raycast() -> void:
+	# Inisialisasi label saat pertama kali dipanggil
+	if _interact_label == null:
+		_ready_interaction()
+
+	if camera == null:
+		return
+
+	# Cast ray dari posisi kamera ke arah pandangan
+	var space: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+	var cam_origin: Vector3 = camera.global_position
+	var cam_forward: Vector3 = -camera.global_transform.basis.z
+	var ray_end: Vector3 = cam_origin + cam_forward * interact_distance
+
+	var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(cam_origin, ray_end)
+	query.exclude = [get_rid()]
+	query.collide_with_areas = true   # Detect Area3D (ItemPickup3D / FlowerPickup)
+	query.collide_with_bodies = true
+
+	var result: Dictionary = space.intersect_ray(query)
+
+	var new_target: Node = null
+	if result.has("collider"):
+		var collider: Node = result["collider"]
+		# 1. Prioritaskan item pickup (bisa di lantai atau di dalam laci meja)
+		var pickup: Node = _find_pickup_node(collider)
+		if pickup != null:
+			new_target = pickup
+		else:
+			# 2. Jika bukan item, periksa apakah yang dilihat adalah InteractiveTable
+			var table: InteractiveTable = _find_interactive_table(collider)
+			if table != null:
+				new_target = table
+
+	# Update target
+	if _interact_target != new_target:
+		_interact_target = new_target
+
+	# Tampilkan / sembunyikan prompt
+	if _interact_label:
+		if _interact_target != null and is_instance_valid(_interact_target):
+			var prompt_text: String = "[E] Interaksi"
+			if _interact_target is InteractiveTable:
+				prompt_text = (_interact_target as InteractiveTable).get_interaction_prompt()
+			elif _interact_target.has_method("get_interaction_prompt"):
+				prompt_text = str(_interact_target.call("get_interaction_prompt"))
+			elif "current_flower_name" in _interact_target and str(_interact_target.current_flower_name) != "":
+				prompt_text = "[E] Ambil " + str(_interact_target.current_flower_name)
+			elif "item_data" in _interact_target and _interact_target.item_data != null:
+				prompt_text = "[E] Ambil " + str(_interact_target.item_data.name)
+			_interact_label.text = prompt_text
+			_interact_label.visible = true
+		else:
+			_interact_label.visible = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_E and _interact_target != null and is_instance_valid(_interact_target):
+			if _interact_target is InteractiveTable or _interact_target.has_method("toggle_drawer"):
+				_interact_target.call("interact", self)
+				if _interact_label and is_instance_valid(_interact_target):
+					_interact_label.text = str(_interact_target.call("get_interaction_prompt"))
+				get_viewport().set_input_as_handled()
+			elif _interact_target.has_method("pickup_flower"):
+				_interact_target.call("pickup_flower")
+				_interact_target = null
+				if _interact_label:
+					_interact_label.visible = false
+				get_viewport().set_input_as_handled()
+			elif _interact_target.has_method("interact"):
+				_interact_target.call("interact", self)
+				_interact_target = null
+				if _interact_label:
+					_interact_label.visible = false
+				get_viewport().set_input_as_handled()
 
 
 func _handle_step_up() -> void:
@@ -296,5 +446,3 @@ func load_save_data(data: Dictionary) -> void:
 		camera.rotation.x = float(data["camera_pitch"])
 		if "pitch" in camera:
 			camera.pitch = camera.rotation.x
-
-

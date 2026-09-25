@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://3faiyqtdvrrw"
-path="res://.godot/imported/meja.fbx-c0fd7279187299ff825780ac32af6cd7.scn"
+uid="uid://51qqcyk6gam4"
+path="res://.godot/imported/key.fbx-62903a85b8dc377d944a39245872706b.scn"
 
 [deps]
 
-source_file="res://meja.fbx"
-dest_files=["res://.godot/imported/meja.fbx-c0fd7279187299ff825780ac32af6cd7.scn"]
+source_file="res://key.fbx"
+dest_files=["res://.godot/imported/key.fbx-62903a85b8dc377d944a39245872706b.scn"]
 
 [params]
 
@@ -37,7 +37,19 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"meshes": {
+"Cube_122": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://Cube_122.res",
+"save_to_file/path": "uid://b26j2ae0ovco3"
+}
+}
+}
 fbx/importer=0
 fbx/allow_geometry_helper_nodes=false
 fbx/embedded_image_handling=1

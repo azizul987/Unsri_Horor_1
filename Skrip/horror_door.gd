@@ -16,7 +16,7 @@ signal door_locked_interacted
 signal door_unlocked(key_id: String)
 signal door_banged
 
-@export_group("Status Pintu")
+@export_group("Status & Kunci Pintu")
 ## Apakah pintu sedang terbuka
 @export var is_open: bool = false:
 	set(val):
@@ -24,8 +24,22 @@ signal door_banged
 		if is_inside_tree():
 			_update_door_rotation(false)
 
-## Apakah pintu terkunci
-@export var is_locked: bool = false
+## OPSI KUNCI: Apakah pintu ini membutuhkan kunci?
+## Jika FALSE (OPSI TANPA KUNCI), pintu bebas dibuka-tutup langsung oleh pemain tanpa perlu item kunci!
+@export var requires_key: bool = false:
+	set(val):
+		requires_key = val
+		if not requires_key:
+			is_locked = false
+		if is_inside_tree():
+			_update_prompt()
+
+## Apakah pintu saat ini sedang terkunci? (Hanya berlaku jika requires_key = true)
+@export var is_locked: bool = false:
+	set(val):
+		is_locked = val if requires_key else false
+		if is_inside_tree():
+			_update_prompt()
 
 ## ID item kunci di inventory yang dibutuhkan untuk membuka pintu ini (misal: "room_key")
 @export var required_key_id: String = "room_key"
@@ -55,11 +69,19 @@ signal door_banged
 # ============================================================================
 # NODE REFERENCES
 # ============================================================================
-@onready var hinge: Node3D = $Hinge
-@onready var interact_area: Area3D = $InteractArea
-@onready var interaction_hud: CanvasLayer = $InteractionHUD
-@onready var prompt_label: Label = $InteractionHUD/PromptLabel
-@onready var door_audio: AudioStreamPlayer3D = $DoorAudio
+@onready var hinge: Node3D = _find_hinge()
+@onready var interact_area: Area3D = get_node_or_null("InteractArea")
+@onready var interaction_hud: CanvasLayer = get_node_or_null("InteractionHUD")
+@onready var prompt_label: Label = get_node_or_null("InteractionHUD/PromptLabel")
+@onready var door_audio: AudioStreamPlayer3D = get_node_or_null("DoorAudio")
+
+func _find_hinge() -> Node3D:
+	if has_node("Hinge"):
+		return get_node("Hinge") as Node3D
+	var p = get_node_or_null("pintu") if has_node("pintu") else get_node_or_null("Pintu")
+	if p is Node3D:
+		return p as Node3D
+	return null
 
 var _is_animating: bool = false
 var _player_in_range: bool = false
@@ -96,8 +118,8 @@ func interact() -> void:
 	if _is_animating:
 		return
 
-	# 1. Jika pintu terkunci
-	if is_locked:
+	# 1. Jika pintu membutuhkan kunci dan sedang terkunci
+	if requires_key and is_locked:
 		# Cek apakah pemain membawa kuncinya di inventory
 		var has_key: bool = _check_player_has_key()
 		var hd = _get_dialogue()
@@ -224,7 +246,7 @@ func burst_open() -> void:
 # ============================================================================
 
 func _check_player_has_key() -> bool:
-	if required_key_id == "":
+	if not requires_key or required_key_id == "":
 		return true
 
 	# Cek via Singleton Inventory (easy_inventory)
@@ -283,8 +305,11 @@ func _get_sound_manager() -> Node:
 func _update_prompt() -> void:
 	if not prompt_label:
 		return
-	if is_locked:
-		prompt_label.text = "[E] Pintu Terkunci"
+	if requires_key and is_locked:
+		if _check_player_has_key():
+			prompt_label.text = "[E] Buka Pintu (Gunakan Kunci)"
+		else:
+			prompt_label.text = "[E] Pintu Terkunci"
 	elif is_open:
 		prompt_label.text = "[E] Tutup Pintu"
 	else:

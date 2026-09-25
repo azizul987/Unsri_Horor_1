@@ -178,6 +178,15 @@ func _build_ui_tree() -> void:
 		item_desc_label.add_theme_color_override("font_color", Color(0.75, 0.75, 0.75, 0.9))
 		info_vbox.add_child(item_desc_label)
 
+		# Hint tombol aksi (Use / Drop)
+		var hint_label: Label = Label.new()
+		hint_label.name = "HintLabel"
+		hint_label.text = ""
+		hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		hint_label.add_theme_font_size_override("font_size", 10)
+		hint_label.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55, 0.8))
+		info_vbox.add_child(hint_label)
+
 		margin.add_child(info_vbox)
 		info_panel.add_child(margin)
 		info_panel.modulate.a = 0.0
@@ -238,10 +247,22 @@ func _on_slot_selected(_slot_index: int) -> void:
 	refresh_ui()
 
 func _on_slot_gui_input(event: InputEvent, index: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var inv: InventoryManager = _get_inventory()
-		if inv:
-			inv.select_slot(index)
+	if not event is InputEventMouseButton or not event.pressed:
+		return
+
+	var inv: InventoryManager = _get_inventory()
+	if inv == null:
+		return
+
+	if event.button_index == MOUSE_BUTTON_LEFT:
+		# Klik kiri: pilih slot
+		inv.select_slot(index)
+
+	elif event.button_index == MOUSE_BUTTON_RIGHT:
+		# Klik kanan: drop item dari slot ini langsung
+		inv.select_slot(index)
+		_handle_drop_item(inv)
+		get_viewport().set_input_as_handled()
 
 func _update_info_panel(selected_item: ItemData) -> void:
 	if not show_item_info_panel or info_panel == null:
@@ -255,9 +276,31 @@ func _update_info_panel(selected_item: ItemData) -> void:
 	item_name_label.text = selected_item.name
 	item_desc_label.text = selected_item.description
 
+	# Update hint label jika ada
+	var hint_label: Label = info_panel.get_node_or_null("MarginContainer/VBoxContainer/HintLabel")
+	if hint_label == null:
+		# Cari secara lebih luas
+		hint_label = _find_node_by_name(info_panel, "HintLabel") as Label
+	if hint_label:
+		var hints: Array[String] = []
+		if selected_item.is_usable:
+			hints.append("[%s] Gunakan" % OS.get_keycode_string(use_item_key))
+		if selected_item.is_droppable:
+			hints.append("[%s] Buang / Klik Kanan" % OS.get_keycode_string(drop_item_key))
+		hint_label.text = "  ·  ".join(hints)
+
 	var tween: Tween = create_tween()
 	tween.tween_property(info_panel, "modulate:a", 1.0, 0.2)
 	_info_timer = info_display_duration
+
+func _find_node_by_name(parent: Node, node_name: String) -> Node:
+	for child in parent.get_children():
+		if child.name == node_name:
+			return child
+		var found: Node = _find_node_by_name(child, node_name)
+		if found:
+			return found
+	return null
 
 func _handle_drop_item(inv: InventoryManager) -> void:
 	var player_node: Node3D = _find_player_node()

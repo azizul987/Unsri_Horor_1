@@ -1,38 +1,25 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://c6wkseqsl2044"]
 
-[ext_resource type="Script" path="res://addons/easy_inventory/item_pickup_3d.gd" id="1_pickup_script"]
+[ext_resource type="Script" uid="uid://b3bg57wuycdcd" path="res://addons/easy_inventory/item_pickup_3d.gd" id="1_pickup_script"]
+[ext_resource type="ArrayMesh" uid="uid://ct2qgebsocm8m" path="res://Cube_122.res" id="2_x6ssy"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
-radius = 1.0
+radius = 0.1626165
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glow"]
-albedo_color = Color(0.95, 0.8, 0.35, 1)
-metallic = 0.6
-roughness = 0.4
-emission_enabled = true
-emission = Color(0.85, 0.6, 0.15, 1)
-emission_energy_multiplier = 0.6
-
-[sub_resource type="BoxMesh" id="BoxMesh_box"]
-material = SubResource("StandardMaterial3D_glow")
-size = Vector3(0.25, 0.25, 0.25)
-
-[node name="ItemPickup3D" type="Area3D"]
-collision_layer = 1
-collision_mask = 1
+[node name="ItemPickup3D" type="Area3D" unique_id=485363760]
 script = ExtResource("1_pickup_script")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=945860502]
 shape = SubResource("SphereShape3D_pickup")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_box")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1728784011]
+mesh = ExtResource("2_x6ssy")
 
-[node name="InteractionHUD" type="CanvasLayer" parent="."]
+[node name="InteractionHUD" type="CanvasLayer" parent="." unique_id=1182066063]
 layer = 5
 visible = false
 
-[node name="PromptLabel" type="Label" parent="InteractionHUD"]
+[node name="PromptLabel" type="Label" parent="InteractionHUD" unique_id=787859844]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

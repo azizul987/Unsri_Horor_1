@@ -75,16 +75,17 @@ func play_sfx_3d(sound: Variant, global_pos: Vector3, max_dist: float = 25.0, vo
 
 	var player = AudioStreamPlayer3D.new()
 	player.stream = stream
+
+	# Tambahkan ke root scene terlebih dahulu sebelum mengakses global_position
+	var target_parent = get_tree().current_scene if (get_tree() and get_tree().current_scene) else self
+	target_parent.add_child(player)
+
 	player.global_position = global_pos
 	player.max_distance = max_dist
 	player.unit_size = 3.5
 	player.volume_db = volume_db
 	player.pitch_scale = pitch
 	player.attenuation_filter_cutoff_hz = 6000.0
-
-	# Tambahkan ke root scene agar tidak terhapus jika node pemanggil hilang
-	var target_parent = get_tree().current_scene if get_tree().current_scene else self
-	target_parent.add_child(player)
 
 	player.play()
 	player.finished.connect(player.queue_free)

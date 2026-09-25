@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://Skrip/ending_cinematic.gd" id="1_ending_script"]
 [ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="2_altar"]
+[ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="3_amir"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.02, 0.01, 0.02, 1)
@@ -91,16 +92,8 @@ light_color = Color(0.4, 1, 0.7, 1)
 light_energy = 2.5
 omni_range = 8.0
 
-[node name="Amir" type="Node3D" parent="."]
+[node name="Amir" parent="." instance=ExtResource("3_amir")]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.4, 0.6)
-
-[node name="Torso" type="MeshInstance3D" parent="Amir"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-mesh = SubResource("CapsuleMesh_amir_torso")
-
-[node name="Head" type="MeshInstance3D" parent="Amir"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0.1)
-mesh = SubResource("SphereMesh_amir_head")
 
 [node name="AmirGlow" type="OmniLight3D" parent="Amir"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)

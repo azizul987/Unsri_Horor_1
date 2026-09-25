@@ -33,7 +33,7 @@ extends Node3D
 
 @onready var butterfly: Node3D = $ForestShot/Moth
 @onready var dorm_butterfly: Node3D = $DormShot/DormMoth
-@onready var amir_arm_light: OmniLight3D = $DormShot/AmirModel/ArmGlow
+@onready var amir_arm_light: OmniLight3D = get_node_or_null("DormShot/Amir/ArmGlow")
 
 var _is_transitioning: bool = false
 var _intro_coroutine: bool = false

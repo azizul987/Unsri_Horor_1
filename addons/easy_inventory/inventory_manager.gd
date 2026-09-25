@@ -225,7 +225,11 @@ func use_selected_item() -> void:
 
 ## Membuang item yang sedang dipilih ke dunia 3D
 func drop_selected_item(drop_origin: Vector3, drop_forward: Vector3 = Vector3.FORWARD) -> void:
-	var slot: InventorySlotData = get_slot(selected_slot_index)
+	drop_item_at_slot(selected_slot_index, drop_origin, drop_forward)
+
+## Membuang item dari slot tertentu ke dunia 3D
+func drop_item_at_slot(slot_index: int, drop_origin: Vector3, drop_forward: Vector3 = Vector3.FORWARD) -> void:
+	var slot: InventorySlotData = get_slot(slot_index)
 	if slot == null or slot.is_empty():
 		return
 
@@ -233,13 +237,57 @@ func drop_selected_item(drop_origin: Vector3, drop_forward: Vector3 = Vector3.FO
 	if not item_to_drop.is_droppable:
 		return
 
-	var drop_pos: Vector3 = drop_origin + (drop_forward.normalized() * 1.2) + Vector3(0, 0.2, 0)
-	
-	# Spawn visual item di 3D world jika scene ditentukan
-	_spawn_dropped_item_in_world(item_to_drop, 1, drop_pos)
+	# Raycast ke bawah untuk cari posisi lantai — tidak mungkin tembus
+	var drop_pos: Vector3 = _raycast_floor_position(drop_origin, drop_forward)
 
-	remove_item_at_slot(selected_slot_index, 1)
+	remove_item_at_slot(slot_index, 1)
 	item_dropped.emit(item_to_drop, 1, drop_pos)
+	_spawn_pickup_at(item_to_drop, 1, drop_pos)
+
+## Cari posisi lantai dengan raycast Physics — jauh lebih reliable dari RigidBody
+func _raycast_floor_position(from: Vector3, forward: Vector3) -> Vector3:
+	# Titik asal ray: depan player, setinggi pinggang
+	var ray_from: Vector3 = from + forward.normalized() * 0.8 + Vector3.UP * 0.3
+	var ray_to: Vector3 = ray_from + Vector3.DOWN * 6.0
+
+	# Ambil physics space dari player Node3D (lebih reliable dari viewport)
+	var space: PhysicsDirectSpaceState3D = null
+	var player_rid: RID = RID()
+
+	var players: Array[Node] = get_tree().get_nodes_in_group(&"player")
+	if players.is_empty():
+		players = get_tree().get_nodes_in_group(&"Player")
+
+	if not players.is_empty() and players[0] is Node3D:
+		var player: Node3D = players[0] as Node3D
+		space = player.get_world_3d().direct_space_state
+		if player is PhysicsBody3D:
+			player_rid = (player as PhysicsBody3D).get_rid()
+
+	# Fallback ke viewport jika tidak ada player
+	if space == null:
+		var vp: Viewport = get_viewport()
+		if vp:
+			var w3d: World3D = vp.find_world_3d()
+			if w3d:
+				space = w3d.direct_space_state
+
+	if space == null:
+		return from + forward.normalized() * 0.8 + Vector3(0, 0.05, 0)
+
+	var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(ray_from, ray_to)
+	query.collision_mask = 0xFFFFFFFF  # Deteksi SEMUA layer
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	if player_rid.is_valid():
+		query.exclude = [player_rid]  # Jangan hit player sendiri
+
+	var result: Dictionary = space.intersect_ray(query)
+
+	if result.has("position"):
+		return (result["position"] as Vector3) + Vector3.UP * 0.05
+	else:
+		return from + forward.normalized() * 0.8 + Vector3(0, 0.05, 0)
 
 ## Mengosongkan seluruh isi inventory
 func clear_inventory() -> void:
@@ -248,35 +296,84 @@ func clear_inventory() -> void:
 	inventory_updated.emit()
 	flower_count_changed.emit(0)
 
-## Spawn item pickup di dunia 3D
-func _spawn_dropped_item_in_world(item_data: ItemData, qty: int, spawn_pos: Vector3) -> void:
+## Spawn ItemPickup3D yang bisa diinteraksi (Area3D + CollisionShape + Visual)
+func _spawn_pickup_at(item_data: ItemData, qty: int, pos: Vector3) -> void:
 	var current_scene: Node = get_tree().current_scene
 	if current_scene == null:
 		return
 
 	var pickup_node: Node = null
 
-	if item_data.world_mesh_scene != null:
-		pickup_node = item_data.world_mesh_scene.instantiate()
-	elif default_pickup_scene != null:
+	# Gunakan default_pickup_scene jika di-set di inspector
+	if default_pickup_scene != null:
 		pickup_node = default_pickup_scene.instantiate()
-	else:
-		# Buat ItemPickup3D runtime sederhana jika tidak ada scene yang di-assign
+		if pickup_node:
+			pickup_node.set("item_data", item_data)
+			pickup_node.set("quantity", qty)
+
+	# Fallback: buat ItemPickup3D Area3D secara runtime dengan visual
+	if pickup_node == null:
 		var item_pickup_script: Script = load("res://addons/easy_inventory/item_pickup_3d.gd")
 		if item_pickup_script:
-			var dynamic_pickup: Node3D = Node3D.new()
-			dynamic_pickup.set_script(item_pickup_script)
-			dynamic_pickup.set("item_data", item_data)
-			dynamic_pickup.set("quantity", qty)
-			pickup_node = dynamic_pickup
+			var area_pickup: Area3D = Area3D.new()
+			area_pickup.name = "DroppedItem_%s" % item_data.id
+			area_pickup.set_script(item_pickup_script)
+
+			# CollisionShape — sphere ukuran wajar agar mudah di-raycast
+			var col: CollisionShape3D = CollisionShape3D.new()
+			var sphere: SphereShape3D = SphereShape3D.new()
+			sphere.radius = 0.25
+			col.shape = sphere
+			area_pickup.add_child(col)
+
+			# ── Visual Mesh ──────────────────────────────────────────────
+			# Prioritas 1: spawn world_mesh_scene dari ItemData sebagai child visual
+			if item_data.world_mesh_scene != null:
+				var visual: Node = item_data.world_mesh_scene.instantiate()
+				if visual is Node3D:
+					# Nonaktifkan script pada visual agar tidak conflict
+					visual.set_script(null)
+					(visual as Node3D).scale = Vector3.ONE * 0.6
+					area_pickup.add_child(visual)
+
+			# Prioritas 2: fallback — sphere kecil berwarna agar item terlihat
+			elif true:
+				var mesh_inst: MeshInstance3D = MeshInstance3D.new()
+				var sm: SphereMesh = SphereMesh.new()
+				sm.radius = 0.08
+				sm.height = 0.16
+				var mat: StandardMaterial3D = StandardMaterial3D.new()
+				match item_data.item_type:
+					ItemData.ItemType.FLOWER:
+						mat.albedo_color = Color(0.8, 0.2, 0.9)
+						mat.emission_enabled = true
+						mat.emission = Color(0.5, 0.1, 0.7)
+					ItemData.ItemType.KEY:
+						mat.albedo_color = Color(0.9, 0.75, 0.2)
+						mat.metallic = 0.8
+					ItemData.ItemType.CONSUMABLE:
+						mat.albedo_color = Color(0.3, 0.8, 0.4)
+					_:
+						mat.albedo_color = Color(0.7, 0.65, 0.5)
+				sm.material = mat
+				mesh_inst.mesh = sm
+				area_pickup.add_child(mesh_inst)
+
+			area_pickup.set("item_data", item_data)
+			area_pickup.set("quantity", qty)
+			pickup_node = area_pickup
 
 	if pickup_node and pickup_node is Node3D:
+		pickup_node.set("enable_rotation", true)
+		pickup_node.set("rotation_speed", 1.5)
+		pickup_node.set("enable_bobbing", true)
+		pickup_node.set("bob_height", 0.04)
+		pickup_node.set("bob_speed", 2.0)
 		current_scene.add_child(pickup_node)
-		pickup_node.global_position = spawn_pos
+		(pickup_node as Node3D).global_position = pos + Vector3(0, 0.12, 0)
 
 func _is_valid_slot_index(index: int) -> bool:
 	return index >= 0 and index < slots.size()
-
 # ==============================================================================
 # INTEGRASI SERIALIZATION / SAVE SYSTEM (KOMPATIBEL DENGAN EASYSAVE)
 # ==============================================================================
