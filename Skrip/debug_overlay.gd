@@ -7,10 +7,13 @@ var log_label: Label = null
 var recorded_positions: Array[Dictionary] = []
 
 func _ready() -> void:
+	if not OS.is_debug_build():
+		queue_free()
+		return
+
 	visible = false
-	set_process(false)
-	set_process_input(false)
 	layer = 120
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	var panel = PanelContainer.new()
 	panel.name = "DebugPanel"
