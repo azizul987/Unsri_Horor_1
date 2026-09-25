@@ -236,27 +236,32 @@ text = "WHEN-YA"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1534172480]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="PlayButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1482523817]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(260, 44)
 layout_mode = 2
+size_flags_horizontal = 4
 focus_neighbor_top = NodePath("../QuitButton")
 focus_neighbor_bottom = NodePath("../ContinueButton")
 theme_override_fonts/font = ExtResource("7_yhxw7")
 text = "Mulai Game"
 
 [node name="ContinueButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1060076152]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(260, 44)
 layout_mode = 2
+size_flags_horizontal = 4
 focus_neighbor_top = NodePath("../PlayButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
 theme_override_fonts/font = ExtResource("7_trj04")
 text = "Lanjutkan"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=319478611]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(260, 44)
 layout_mode = 2
+size_flags_horizontal = 4
 focus_neighbor_top = NodePath("../ContinueButton")
 focus_neighbor_bottom = NodePath("../PlayButton")
 theme_override_fonts/font = ExtResource("7_yhxw7")

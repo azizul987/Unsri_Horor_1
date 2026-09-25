@@ -12,7 +12,11 @@ extends Control
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	
+
+	var snd = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if snd:
+		snd.play_music("bgm_tomb", 2.0, -8.0)
+
 	play_button.pressed.connect(_on_play_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
@@ -50,6 +54,10 @@ func _on_play_pressed() -> void:
 	if inv and inv.has_method("clear_inventory"):
 		inv.clear_inventory()
 
+	var snd = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if snd:
+		snd.stop_music(1.0)
+
 	await get_tree().create_timer(0.15).timeout
 	if not intro_scene.is_empty():
 		get_tree().change_scene_to_file(intro_scene)
@@ -74,6 +82,10 @@ func _on_continue_pressed() -> void:
 			ss.set_slot(target_slot)
 			ss.load_game()
 
+	var snd = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if snd:
+		snd.stop_music(1.0)
+
 	await get_tree().create_timer(0.15).timeout
 	if not gameplay_scene.is_empty():
 		get_tree().change_scene_to_file(gameplay_scene)
@@ -86,6 +98,9 @@ func _on_quit_pressed() -> void:
 func _animate_button(btn: Button) -> void:
 	if btn == null:
 		return
+	var snd = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if snd:
+		snd.play_sfx_2d("ui_click", 2.0)
 	btn.pivot_offset = btn.size / 2.0
 	var tween: Tween = create_tween()
 	tween.tween_property(btn, "scale", Vector2(0.95, 0.95), 0.06)

@@ -112,8 +112,8 @@ func _check_continue_game() -> void:
 func _input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
 		return
-	# Shortcut F6 saat play game untuk toggle terang/gelap
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F6:
+	# Shortcut F6 saat play game untuk toggle terang/gelap (hanya di debug build)
+	if OS.is_debug_build() and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F6:
 		mode_terang_clear = not mode_terang_clear
 		_show_in_game_toast("Pencahayaan: " + ("Mode Terang (Clear)" if mode_terang_clear else "Mode Horor (Envi Lama)"))
 

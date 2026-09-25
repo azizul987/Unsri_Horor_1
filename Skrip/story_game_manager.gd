@@ -686,6 +686,10 @@ func _show_death_screen() -> void:
 	btn_retry.grab_focus()
 
 func _on_death_retry_pressed() -> void:
+	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if sm:
+		sm.play_sfx_2d("ui_click", 2.0)
+
 	if is_instance_valid(_death_hud_layer):
 		_death_hud_layer.queue_free()
 		_death_hud_layer = null
@@ -700,6 +704,10 @@ func _on_death_retry_pressed() -> void:
 	get_tree().reload_current_scene()
 
 func _on_death_menu_pressed() -> void:
+	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if sm:
+		sm.play_sfx_2d("ui_click", 2.0)
+
 	if is_instance_valid(_death_hud_layer):
 		_death_hud_layer.queue_free()
 		_death_hud_layer = null

@@ -31,7 +31,8 @@ var sound_library: Dictionary = {
 	"creepy_rattle": "res://Asset/Audio/sfx_creepy_rattle.wav",
 	"horror_scream": "res://Asset/Audio/sfx_horror_scream.wav",
 	"ambience_drone": "res://Asset/Audio/ambience_rusun_drone.wav",
-	"bgm_tomb": "res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav"
+	"bgm_tomb": "res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav",
+	"ui_click": "res://Asset/Audio/sfx_ui_click.wav"
 }
 
 # Pemutar musik dan ambience global
@@ -52,12 +53,24 @@ func _ready() -> void:
 	_bgm_player = AudioStreamPlayer.new()
 	_bgm_player.name = "BGMPlayer"
 	_bgm_player.bus = &"Master"
+	_bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	_bgm_player.finished.connect(_on_bgm_finished)
 	add_child(_bgm_player)
 
 	_ambience_player = AudioStreamPlayer.new()
 	_ambience_player.name = "AmbiencePlayer"
 	_ambience_player.bus = &"Master"
+	_ambience_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	_ambience_player.finished.connect(_on_ambience_finished)
 	add_child(_ambience_player)
+
+func _on_bgm_finished() -> void:
+	if _bgm_player.stream != null:
+		_bgm_player.play()
+
+func _on_ambience_finished() -> void:
+	if _ambience_player.stream != null:
+		_ambience_player.play()
 
 func _exit_tree() -> void:
 	if instance == self:
@@ -102,6 +115,7 @@ func play_sfx_2d(sound: Variant, volume_db: float = 0.0, pitch: float = 1.0) -> 
 		return null
 
 	var player = AudioStreamPlayer.new()
+	player.process_mode = Node.PROCESS_MODE_ALWAYS
 	player.stream = stream
 	player.volume_db = volume_db
 	player.pitch_scale = pitch

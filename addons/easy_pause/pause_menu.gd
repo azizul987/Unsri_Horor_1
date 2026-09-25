@@ -118,6 +118,8 @@ func pause_game() -> void:
 	if is_game_paused() or _is_animating:
 		return
 
+	_play_sfx()
+
 	if manage_mouse_mode:
 		_saved_mouse_mode = Input.mouse_mode
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -165,7 +167,10 @@ func _setup_audio() -> void:
 	add_child(_audio_player)
 
 func _play_sfx() -> void:
-	if sfx_button_click != null and _audio_player != null:
+	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if sm:
+		sm.play_sfx_2d("ui_click", 2.0)
+	elif sfx_button_click != null and _audio_player != null:
 		_audio_player.stream = sfx_button_click
 		_audio_player.play()
 

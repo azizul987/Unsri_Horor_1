@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Null"
+config/name="UNSRI Horor"
 run/main_scene="uid://bgckxom3otchv"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/show_image=false
@@ -27,7 +27,6 @@ HorrorDialogue="*uid://c1dik5m8se27b"
 StoryManager="*res://Skrip/story_game_manager.gd"
 SoundManager="*uid://bwr2swiqxurjt"
 PauseMenu="*res://addons/easy_pause/pause_menu.tscn"
-DebugOverlay="*res://Skrip/debug_overlay.gd"
 
 [editor_plugins]
 
