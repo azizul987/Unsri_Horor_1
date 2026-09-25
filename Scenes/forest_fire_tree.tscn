@@ -53,9 +53,9 @@ colors = PackedColorArray(1, 1, 1, 0.25, 1, 0.9, 0.6, 1, 1, 0.35, 0.05, 0.9, 0.4
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_smoke"]
 render_priority = 0
 shader = ExtResource("2_smoke_shader")
-shader_parameter/smoke_color_base = Color(0.22, 0.15, 0.1, 0.85)
-shader_parameter/smoke_color_top = Color(0.06, 0.06, 0.06, 0)
-shader_parameter/smoke_density = 1.0
+shader_parameter/smoke_color_base = Color(0.18044299, 0.28484154, 0.2051934, 0.8509804)
+shader_parameter/smoke_color_top = Color(0.17254902, 0.17254902, 0.17254902, 0.34509805)
+shader_parameter/smoke_density = 0.50000002049012
 
 [sub_resource type="QuadMesh" id="QuadMesh_smoke"]
 material = SubResource("ShaderMaterial_smoke")
@@ -72,7 +72,7 @@ colors = PackedColorArray(0.3, 0.2, 0.15, 0, 0.24, 0.2, 0.18, 0.75, 0.12, 0.12, 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ember"]
 render_priority = 0
 shader = ExtResource("3_ember_shader")
-shader_parameter/ember_color = Color(1, 0.65, 0.15, 1)
+shader_parameter/ember_color = Color(0.41644728, 0.10768325, 0.11853298, 1)
 shader_parameter/pulse_speed = 8.0
 shader_parameter/glow_intensity = 4.0
 
@@ -98,10 +98,9 @@ tree_scene = ExtResource("2_kpeij")
 
 [node name="TreeSlot" type="Node3D" parent="." unique_id=2128924260]
 
-[node name="pohon" type="Node3D" parent="TreeSlot" unique_id=1647285061 instance=ExtResource("2_kpeij")]
+[node name="pohon" parent="TreeSlot" unique_id=1647285061 instance=ExtResource("2_kpeij")]
 
 [node name="EditorTreePreview" type="Node3D" parent="." unique_id=1817835430]
-visible = false
 
 [node name="PreviewTrunk" type="MeshInstance3D" parent="EditorTreePreview" unique_id=1841203846]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
@@ -199,7 +198,7 @@ color_ramp = SubResource("Gradient_ember")
 [node name="FireLight" type="OmniLight3D" parent="." unique_id=1898243066]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
 light_color = Color(1, 0.45, 0.12, 1)
-light_energy = 3.6065629
+light_energy = 3.7621748
 shadow_enabled = true
 omni_range = 12.0
 omni_attenuation = 1.2

@@ -1,0 +1,203 @@
+[gd_scene format=3 uid="uid://endingcinematic001"]
+
+[ext_resource type="Script" path="res://Skrip/ending_cinematic.gd" id="1_ending_script"]
+[ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="2_altar"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
+sky_top_color = Color(0.02, 0.01, 0.02, 1)
+sky_horizon_color = Color(0.08, 0.05, 0.06, 1)
+ground_bottom_color = Color(0.01, 0.01, 0.01, 1)
+ground_horizon_color = Color(0.06, 0.04, 0.05, 1)
+
+[sub_resource type="Sky" id="Sky_ending"]
+sky_material = SubResource("ProceduralSkyMaterial_night")
+
+[sub_resource type="Environment" id="Environment_ending"]
+background_mode = 2
+sky = SubResource("Sky_ending")
+ambient_light_source = 2
+ambient_light_color = Color(0.1, 0.08, 0.12, 1)
+ambient_light_energy = 0.6
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 1.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.12, 0.1, 0.08, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+material = SubResource("StandardMaterial3D_ground")
+size = Vector3(30, 0.2, 30)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amir"]
+albedo_color = Color(0.2, 0.22, 0.25, 1)
+roughness = 0.85
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_amir_torso"]
+material = SubResource("StandardMaterial3D_amir")
+radius = 0.22
+height = 0.85
+
+[sub_resource type="SphereMesh" id="SphereMesh_amir_head"]
+material = SubResource("StandardMaterial3D_amir")
+radius = 0.16
+height = 0.32
+
+[sub_resource type="LabelSettings" id="LabelSettings_sub"]
+font_size = 19
+outline_size = 5
+outline_color = Color(0, 0, 0, 0.95)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 30
+outline_size = 6
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_desc"]
+font_size = 17
+font_color = Color(0.9, 0.9, 0.9, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 0.9)
+
+[node name="EndingCinematic" type="Node3D"]
+script = ExtResource("1_ending_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ending")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.0, 3.8)
+current = true
+fov = 58.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 8, 0)
+light_color = Color(0.5, 0.6, 0.8, 1)
+light_energy = 0.3
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_ground")
+
+[node name="FlowerAltar" parent="." instance=ExtResource("2_altar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+
+[node name="AltarLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.5)
+light_color = Color(0.4, 1, 0.7, 1)
+light_energy = 2.5
+omni_range = 8.0
+
+[node name="Amir" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.4, 0.6)
+
+[node name="Torso" type="MeshInstance3D" parent="Amir"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+mesh = SubResource("CapsuleMesh_amir_torso")
+
+[node name="Head" type="MeshInstance3D" parent="Amir"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0.1)
+mesh = SubResource("SphereMesh_amir_head")
+
+[node name="AmirGlow" type="OmniLight3D" parent="Amir"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_color = Color(0.2, 1, 0.5, 1)
+light_energy = 3.0
+omni_range = 3.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Subtitles" type="MarginContainer" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -130.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 45
+
+[node name="Label" type="Label" parent="UI/Subtitles"]
+layout_mode = 2
+text = "Ending monologue text"
+label_settings = SubResource("LabelSettings_sub")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="EndingTitle" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TitleLabel" type="Label" parent="UI/EndingTitle"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -80.0
+offset_right = 400.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "ENDING TITLE"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubLabel" type="Label" parent="UI/EndingTitle"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -380.0
+offset_top = -15.0
+offset_right = 380.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ending description paragraph"
+label_settings = SubResource("LabelSettings_desc")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="RestartButton" type="Button" parent="UI/EndingTitle"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = 100.0
+offset_right = 140.0
+offset_bottom = 145.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "🔄 Mainkan Lagi dari Prolog"
+
+[node name="FadeRect" type="ColorRect" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

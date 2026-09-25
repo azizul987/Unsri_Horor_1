@@ -87,12 +87,14 @@ func interact() -> void:
 		_pulse_altar_light()
 		flower_deposited.emit(current_dep)
 
+		# Mainkan audio lonceng / chime mistis via SoundManager
+		if SoundManager and SoundManager.has_method("play_sfx_3d"):
+			SoundManager.play_sfx_3d("flower_bell", global_position, 20.0)
+
+		# Buka Kepingan Fakta Cerita sesuai urutan bunga (1 sampai 8)
 		if HorrorDialogue:
-			HorrorDialogue.start_monologue([
-				"[color=yellow]Kamu meletakkan bunga di atas lingkaran tanah altar.[/color]",
-				"Aroma manis dan getaran gaib terasa menyebar ke sekeliling...",
-				"Bunga di altar: [b]%d / 8[/b]." % current_dep
-			], "ALTAR TANAH")
+			var fragment_lines: Array = _get_lore_fragment(current_dep)
+			HorrorDialogue.start_monologue(fragment_lines, "ALTAR TANAH — KEPINGAN INGATAN")
 
 		_update_hud()
 	else:
@@ -208,3 +210,61 @@ func _update_hud() -> void:
 		_hud_label.text = "[E] " + prompt_deposit + " (%d/8)" % dep
 
 	_hud_label.visible = true
+
+func _get_lore_fragment(index: int) -> Array:
+	match index:
+		1:
+			return [
+				"[color=#ffd700]Kepingan Fakta I Terbuka:[/color]",
+				"\"Malam itu ada bau asap menyengat dari arah rawa... kami kira cuma warga yang membakar sampah.\"",
+				"Bunga di altar: [b]1 / 8[/b]."
+			]
+		2:
+			return [
+				"[color=#ffd700]Kepingan Fakta II Terbuka:[/color]",
+				"\"Catatan tua rusun: Kupu-kupu malam rawa bukan serangga biasa... mereka terikat dengan tanah yang mereka huni.\"",
+				"Bunga di altar: [b]2 / 8[/b]."
+			]
+		3:
+			return [
+				"[color=#ffd700]Kepingan Fakta III Terbuka:[/color]",
+				"\"Peringatan: Jika ada yang terkena gigitannya, tubuhnya perlahan meminjam wujud mereka. Dia bukan lagi manusia sepenuhnya.\"",
+				"Bunga di altar: [b]3 / 8[/b]."
+			]
+		4:
+			return [
+				"[color=#ffd700]Kepingan Fakta IV Terbuka (Pesan WhatsApp di HP):[/color]",
+				"\"Woy, kalian kemarin malam ke mana sama Amir? Kok pas balik bajunya Amir bau bensin menyengat?!\"",
+				"Bunga di altar: [b]4 / 8[/b]."
+			]
+		5:
+			return [
+				"[color=#ffd700]Kepingan Fakta V Terbuka (Rekaman Suara):[/color]",
+				"\"Amir tertawa: 'Tenang aja bro... apinya gak bakal gede. Kita cuma main-main sebentar doang... gak ada yang tahu.'\"",
+				"Bunga di altar: [b]5 / 8[/b]."
+			]
+		6:
+			return [
+				"[color=#ffd700]Kepingan Fakta VI Terbuka (Foto Galeri):[/color]",
+				"Terlihat foto Amir memegang korek api dan botol minyak tanah di semak belukar sambil tersenyum jahil...",
+				"Amir pelakunya! Dia yang menyulut api kebakaran hutan!",
+				"Bunga di altar: [b]6 / 8[/b]."
+			]
+		7:
+			return [
+				"[color=#ffd700]Kepingan Fakta VII Terbuka (Video Bukti):[/color]",
+				"Rekaman HP memperlihatkan dahan pohon meledak tersulut api, Amir tertawa lalu lari panik saat api tak terkendali!",
+				"Amir tahu dialah penyebab koloni kupu-kupu punah, tapi menyembunyikannya dari semua orang!",
+				"Bunga di altar: [b]7 / 8[/b]."
+			]
+		8:
+			return [
+				"[color=#ffd700]Kepingan Fakta Terakhir VIII (Peringatan Ritual):[/color]",
+				"\"Kutukan ini menuntut tebusan. 8 bunga telah berkumpul. Kamu punya dua pilihan: kembalikan sisa jiwanya, atau bakar dia bersama dosa yang ia perbuat!\"",
+				"Bunga di altar: [b]8 / 8[/b]. Altar siap untuk penentuan akhir!"
+			]
+		_:
+			return [
+				"[color=yellow]Kamu meletakkan bunga di atas lingkaran tanah altar.[/color]",
+				"Bunga di altar: [b]%d / 8[/b]." % index
+			]

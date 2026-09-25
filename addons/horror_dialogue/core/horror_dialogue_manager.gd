@@ -63,16 +63,22 @@ func start_dialogue(data: DialogueData) -> bool:
 	return true
 
 ## Menampilkan monolog batin cepat untuk pemain tanpa perlu membuat file Resource
-func start_monologue(lines: Array[String], speaker: String = "Aku", typing_speed: float = 0.035, freeze: bool = true) -> void:
+func start_monologue(lines: Variant, speaker: String = "Aku", typing_speed: float = 0.035, freeze: bool = true) -> void:
 	var temp_data := DialogueData.new()
 	temp_data.dialogue_id = "quick_monologue_" + str(Time.get_ticks_msec())
 	temp_data.repeatable = true
 
-	for text_content in lines:
+	var line_list: Array = []
+	if lines is String:
+		line_list = [lines]
+	elif lines is Array:
+		line_list = lines
+
+	for text_content in line_list:
 		var line := DialogueLine.new()
 		line.speaker_name = speaker
 		line.speaker_color = Color(0.85, 0.85, 0.95, 1.0) # Abu-abu kebiruan batin
-		line.text = text_content
+		line.text = str(text_content)
 		line.typing_speed = typing_speed
 		line.freeze_player = freeze
 		temp_data.lines.append(line)

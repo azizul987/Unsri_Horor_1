@@ -250,15 +250,28 @@ func _on_dialogue_finished(_dialogue_id: String = "") -> void:
 	pass
 
 func _on_dialogue_event_triggered(event_name: String) -> void:
+	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
 	match event_name:
+		"play_bone_crack_sfx":
+			if sm:
+				var pos = amir_node.global_position if is_instance_valid(amir_node) else Vector3.ZERO
+				sm.play_sfx_3d("bone_crack", pos, 25.0)
+		"amir_burst_door":
+			var door = get_tree().current_scene.find_child("AmirRoomDoor", true, false)
+			if door and door.has_method("burst_open"):
+				door.burst_open()
+			elif sm:
+				sm.play_sfx_2d("door_bang")
+			if sm:
+				sm.play_jumpscare("jumpscare_hit", 3.0)
 		"prologue_day_completed":
 			set_chapter(Chapter.FIRST_NIGHT)
 		"first_night_chase_started":
 			set_chapter(Chapter.HUNTING_FLOWERS)
 		"game_ending_cure_completed":
-			set_chapter(Chapter.ENDING)
+			play_ending(true)
 		"game_ending_burn_completed":
-			set_chapter(Chapter.ENDING)
+			play_ending(false)
 
 ## Memulai dialog prolog siang hari
 func play_prologue_day() -> void:
@@ -272,12 +285,13 @@ func play_first_night_incident() -> void:
 	if res and HorrorDialogue:
 		HorrorDialogue.start_dialogue(res)
 
-## Memulai dialog ending
+var is_cure_ending: bool = true
+
+## Memulai sinematik ending
 func play_ending(is_cure: bool) -> void:
-	var path: String = "res://addons/horror_dialogue/examples/dialogues/ending_cure.tres" if is_cure else "res://addons/horror_dialogue/examples/dialogues/ending_burn.tres"
-	var res = load(path)
-	if res and HorrorDialogue:
-		HorrorDialogue.start_dialogue(res)
+	is_cure_ending = is_cure
+	set_chapter(Chapter.ENDING)
+	get_tree().change_scene_to_file("res://Scenes/ending_cinematic.tscn")
 
 ## ============================================================================
 ## 🖥️ UI AUTOSAVE INDICATOR

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://coucrvksdd4p3"
-path="res://.godot/imported/Breathing Idle.fbx-c2e567f8735af52032a9f8c99608d979.scn"
+path="res://.godot/imported/_saanBreathing Idle.fbx-90bbe7f0d400572720d0b16bcc3abf3f.scn"
 
 [deps]
 
-source_file="res://Breathing Idle.fbx"
-dest_files=["res://.godot/imported/Breathing Idle.fbx-c2e567f8735af52032a9f8c99608d979.scn"]
+source_file="res://_saanBreathing Idle.fbx"
+dest_files=["res://.godot/imported/_saanBreathing Idle.fbx-90bbe7f0d400572720d0b16bcc3abf3f.scn"]
 
 [params]
 

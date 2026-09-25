@@ -25,14 +25,16 @@ gd="*uid://2juixsd1cldy"
 Inventory="*uid://be3ur17f438xl"
 HorrorDialogue="*uid://c1dik5m8se27b"
 StoryManager="*res://Skrip/story_game_manager.gd"
+SoundManager="*uid://bwr2swiqxurjt"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_inventory/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg", "res://addons/horror_dialogue/plugin.cfg")
+enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_inventory/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg", "res://addons/horror_audio/plugin.cfg", "res://addons/horror_dialogue/plugin.cfg")
 
 [global_group]
 
 player=""
+pintu=""
 
 [input]
 

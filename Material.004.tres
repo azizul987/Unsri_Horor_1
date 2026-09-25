@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bm4f1bwfl6mel"]
+
+[ext_resource type="Texture2D" uid="uid://dj0oygiueykjp" path="res://amir_1.png" id="1_gqqhk"]
+
+[resource]
+resource_name = "Material.004"
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_gqqhk")
+emission_enabled = true

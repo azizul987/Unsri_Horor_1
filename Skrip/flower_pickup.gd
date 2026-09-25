@@ -61,7 +61,7 @@ const FLOWER_PRESETS = {
 		"name": "Mawar Arang (Bunga 7)",
 		"color": Color(1.0, 0.45, 0.05, 1.0),
 		"resource": "res://addons/easy_inventory/examples/items/flower_07.tres",
-		"monologue": "Hitam legam berurat bara api... sisa kebakaran hutan yang disulut Amir."
+		"monologue": "Hitam legam berurat bara api... sisa kebakaran rawa yang membakar habis tanah ini."
 	},
 	8: {
 		"name": "Kupu-Kupu Induk (Bunga 8)",
@@ -316,6 +316,10 @@ func _show_inventory_full_warning() -> void:
 		], "INVENTORY PENUH")
 
 func _play_pickup_chime() -> void:
+	if SoundManager and SoundManager.has_method("play_sfx_3d"):
+		SoundManager.play_sfx_3d("flower_bell", global_position, 18.0, -2.0, 1.2)
+		return
+
 	var audio_player: AudioStreamPlayer3D = AudioStreamPlayer3D.new()
 	audio_player.global_position = global_position
 	audio_player.unit_size = 4.0

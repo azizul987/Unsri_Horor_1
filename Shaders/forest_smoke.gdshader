@@ -1,10 +1,6 @@
 shader_type spatial;
 render_mode blend_mix, depth_draw_opaque, cull_disabled, unshaded;
 
-// ============================================================================
-// 💨 SHADER ASAP PEKAT KEBAKARAN HUTAN (FOREST FIRE SMOKE)
-// ============================================================================
-
 uniform vec4 smoke_color_base : source_color = vec4(0.22, 0.15, 0.1, 0.85); // Abu pekat dekat api
 uniform vec4 smoke_color_top : source_color = vec4(0.06, 0.06, 0.06, 0.0);   // Abu-abu hitam pekat di udara
 uniform float smoke_density : hint_range(0.1, 2.0) = 1.0;

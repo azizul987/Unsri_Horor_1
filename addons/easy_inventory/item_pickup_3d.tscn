@@ -3,21 +3,23 @@
 [ext_resource type="Script" path="res://addons/easy_inventory/item_pickup_3d.gd" id="1_pickup_script"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
-radius = 0.6
+radius = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glow"]
-albedo_color = Color(0.9, 0.7, 0.3, 1)
+albedo_color = Color(0.95, 0.8, 0.35, 1)
+metallic = 0.6
+roughness = 0.4
 emission_enabled = true
-emission = Color(0.8, 0.5, 0.1, 1)
-emission_energy_multiplier = 0.5
+emission = Color(0.85, 0.6, 0.15, 1)
+emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_box"]
 material = SubResource("StandardMaterial3D_glow")
 size = Vector3(0.25, 0.25, 0.25)
 
 [node name="ItemPickup3D" type="Area3D"]
-collision_layer = 4
-collision_mask = 2
+collision_layer = 1
+collision_mask = 1
 script = ExtResource("1_pickup_script")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -25,3 +27,23 @@ shape = SubResource("SphereShape3D_pickup")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_box")
+
+[node name="InteractionHUD" type="CanvasLayer" parent="."]
+layer = 5
+visible = false
+
+[node name="PromptLabel" type="Label" parent="InteractionHUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = 35.0
+offset_right = 120.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[E] Ambil Item"
+horizontal_alignment = 1
+vertical_alignment = 1

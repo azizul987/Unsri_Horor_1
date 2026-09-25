@@ -8,6 +8,7 @@ extends PanelContainer
 var icon_rect: TextureRect
 var count_label: Label
 var key_label: Label
+var fallback_name_label: Label
 var highlight_border: ReferenceRect
 
 var _is_selected: bool = false
@@ -24,6 +25,7 @@ func _setup_internal_nodes() -> void:
 		icon_rect = get_node("Margin/Icon") as TextureRect
 		count_label = get_node_or_null("CountLabel") as Label
 		key_label = get_node_or_null("KeyLabel") as Label
+		fallback_name_label = get_node_or_null("Margin/FallbackNameLabel") as Label
 		return
 
 	# Margin Container
@@ -42,6 +44,17 @@ func _setup_internal_nodes() -> void:
 	icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	margin.add_child(icon_rect)
+
+	# Fallback Name Label (saat item belum memiliki file icon)
+	fallback_name_label = Label.new()
+	fallback_name_label.name = "FallbackNameLabel"
+	fallback_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	fallback_name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	fallback_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	fallback_name_label.add_theme_font_size_override("font_size", 9)
+	fallback_name_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.6, 1.0))
+	fallback_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_child(fallback_name_label)
 
 	# Slot Hotkey Number Label (pojok kiri atas)
 	key_label = Label.new()
@@ -75,11 +88,20 @@ func update_slot_display(slot_data: InventorySlotData, is_selected_slot: bool) -
 	if slot_data == null or slot_data.is_empty():
 		if icon_rect:
 			icon_rect.texture = null
+		if fallback_name_label:
+			fallback_name_label.text = ""
+			fallback_name_label.visible = false
 		if count_label:
 			count_label.text = ""
 	else:
 		if icon_rect:
 			icon_rect.texture = slot_data.item_data.icon
+		if fallback_name_label:
+			if slot_data.item_data.icon == null:
+				fallback_name_label.text = slot_data.item_data.name
+				fallback_name_label.visible = true
+			else:
+				fallback_name_label.visible = false
 		if count_label:
 			count_label.text = str(slot_data.quantity) if slot_data.quantity > 1 else ""
 

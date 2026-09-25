@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ckv0272k02bb2"
+path="res://.godot/imported/freesound_community-light-wing-flap-6143 (1).mp3-92dfb0c9a0dd645244d3e3b6db1a9dd6.mp3str"
+
+[deps]
+
+source_file="res://freesound_community-light-wing-flap-6143 (1).mp3"
+dest_files=["res://.godot/imported/freesound_community-light-wing-flap-6143 (1).mp3-92dfb0c9a0dd645244d3e3b6db1a9dd6.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

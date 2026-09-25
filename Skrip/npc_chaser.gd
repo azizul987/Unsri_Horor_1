@@ -41,6 +41,10 @@ var _is_resting: bool = false
 var _player_particles: CPUParticles3D = null
 var _player_light: OmniLight3D = null
 
+# Audio atmospheric cooldown
+var _creepy_sound_timer: float = 0.0
+var _has_attacked: bool = false
+
 func _ready() -> void:
 	add_to_group(&"chaser")
 	add_to_group(&"saveable")
@@ -79,6 +83,16 @@ func _physics_process(delta: float) -> void:
 	# 3. Update Signature Mechanic: Radar Kupu-Kupu berdasarkan jarak
 	_update_butterfly_radar(horizontal_dist)
 
+	# 3b. Suara gemerisik / patah tulang menyeramkan saat Amir mendekat
+	if _creepy_sound_timer > 0.0:
+		_creepy_sound_timer -= delta
+	elif horizontal_dist < 16.0 and target_player.get("is_hidden") != true:
+		_creepy_sound_timer = randf_range(5.0, 9.0)
+		var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+		if sm and sm.has_method("play_sfx_3d"):
+			var sound_choice = "creepy_rattle" if randf() < 0.5 else "bone_crack"
+			sm.play_sfx_3d(sound_choice, global_position, 20.0, 0.0, randf_range(0.85, 1.15))
+
 	# 4. Jika player sedang sembunyi di bawah kasur / lemari, Amir kehilangan jejak
 	if target_player.get("is_hidden") == true:
 		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 2.5)
@@ -114,12 +128,20 @@ func _physics_process(delta: float) -> void:
 	# 7. Jika sudah menyentuh player
 	if horizontal_dist <= stopping_distance:
 		_look_towards(player_pos, delta)
+		if not _has_attacked:
+			_has_attacked = true
+			var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+			if sm:
+				sm.play_jumpscare("jumpscare_hit")
+				sm.play_sfx_3d("monster_screech", global_position, 25.0)
 		caught_player.emit()
 		if not always_chase:
 			velocity.x = move_toward(velocity.x, 0.0, speed * delta * 5.0)
 			velocity.z = move_toward(velocity.z, 0.0, speed * delta * 5.0)
 			move_and_slide()
 			return
+	else:
+		_has_attacked = false
 
 	# 8. Tentukan arah pergerakan NavMesh
 	var horizontal_dir: Vector3 = Vector3.ZERO

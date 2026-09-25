@@ -29,6 +29,7 @@ var _info_timer: float = 0.0
 var _inventory_ref: InventoryManager
 
 func _ready() -> void:
+	add_to_group(&"inventory_ui")
 	layer = 10
 	_build_ui_tree()
 	_connect_to_inventory()
@@ -86,10 +87,16 @@ func _build_ui_tree() -> void:
 	# Container Utama di Bawah Tengah Layar
 	var bottom_center: VBoxContainer = VBoxContainer.new()
 	bottom_center.name = "BottomCenterLayout"
-	bottom_center.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	bottom_center.anchor_left = 0.5
+	bottom_center.anchor_right = 0.5
+	bottom_center.anchor_top = 1.0
+	bottom_center.anchor_bottom = 1.0
+	bottom_center.offset_left = -170.0
+	bottom_center.offset_right = 170.0
+	bottom_center.offset_top = -145.0
+	bottom_center.offset_bottom = -15.0
 	bottom_center.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	bottom_center.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	bottom_center.position = Vector2(-150, -140)
 	bottom_center.alignment = BoxContainer.ALIGNMENT_CENTER
 	bottom_center.add_theme_constant_override("separation", 8)
 	bottom_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -157,10 +164,13 @@ func _build_ui_tree() -> void:
 func _connect_to_inventory() -> void:
 	var inv: InventoryManager = _get_inventory()
 	if inv == null:
+		call_deferred(&"_connect_to_inventory")
 		return
 
-	inv.inventory_updated.connect(refresh_ui)
-	inv.slot_selected.connect(_on_slot_selected)
+	if not inv.inventory_updated.is_connected(refresh_ui):
+		inv.inventory_updated.connect(refresh_ui)
+	if not inv.slot_selected.is_connected(_on_slot_selected):
+		inv.slot_selected.connect(_on_slot_selected)
 
 	_create_slots(inv.max_slots)
 	refresh_ui()
@@ -230,7 +240,9 @@ func _handle_drop_item(inv: InventoryManager) -> void:
 	inv.drop_selected_item(drop_origin, drop_dir)
 
 func _find_player_node() -> Node3D:
-	var nodes: Array[Node] = get_tree().get_nodes_in_group("Player")
+	var nodes: Array[Node] = get_tree().get_nodes_in_group("player")
+	if nodes.is_empty():
+		nodes = get_tree().get_nodes_in_group("Player")
 	if not nodes.is_empty() and nodes[0] is Node3D:
 		return nodes[0] as Node3D
 	return null

@@ -34,6 +34,10 @@
 [ext_resource type="AudioStream" uid="uid://dyge3g7m61n1y" path="res://Arya of Terror - FREE Horror Soundtracks Vol. 1/2021_HSV1_Tomb_of_the_Forgotten.wav" id="29_bgm"]
 [ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="30_altar"]
 [ext_resource type="PackedScene" uid="uid://ct7uxwhbobd8k" path="res://Scenes/forest_fire_zone.tscn" id="34_neg2b"]
+[ext_resource type="PackedScene" path="res://Scenes/horror_door.tscn" id="35_door"]
+[ext_resource type="PackedScene" path="res://addons/easy_inventory/item_pickup_3d.tscn" id="36_key_pickup"]
+[ext_resource type="Resource" path="res://addons/easy_inventory/examples/items/room_key.tres" id="37_key_item"]
+[ext_resource type="PackedScene" path="res://addons/easy_inventory/ui/inventory_ui.tscn" id="38_inv_ui"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_top_color = Color(0, 0, 0, 1)
@@ -14320,3 +14324,14 @@ color_ramp = SubResource("Gradient_e08e2")
 
 [node name="ForestFireZone" parent="." unique_id=1154134575 instance=ExtResource("34_neg2b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.640806, 1.5948772, 43.09457)
+
+[node name="AmirRoomDoor" parent="." unique_id=184920194 instance=ExtResource("35_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0.45, 14.5)
+is_locked = true
+locked_message = "Pintu kamar Amir terkunci rapat dari dalam. Terdengar derak patahan tulang di baliknya..."
+
+[node name="AmirRoomKeyPickup" parent="." unique_id=771920194 instance=ExtResource("36_key_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.8, 0.6, 17)
+item_data = ExtResource("37_key_item")
+
+[node name="InventoryUI" parent="." instance=ExtResource("38_inv_ui")]

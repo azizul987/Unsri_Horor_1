@@ -18,6 +18,10 @@ signal flower_count_changed(total_flowers: int)
 ## Scene generic untuk 3D pickup saat item dibuang (jika ItemData tidak mendefinisikan world_mesh_scene)
 @export var default_pickup_scene: PackedScene
 
+@export_group("UI")
+## Otomatis memunculkan HUD UI Inventory saat game dimulai jika belum ada
+@export var auto_spawn_ui: bool = true
+
 var slots: Array[InventorySlotData] = []
 var selected_slot_index: int = 0:
 	set(value):
@@ -26,8 +30,22 @@ var selected_slot_index: int = 0:
 			selected_slot_index = clamped
 			slot_selected.emit(selected_slot_index)
 
+var _ui_instance: Node = null
+
 func _ready() -> void:
 	_initialize_slots()
+	if auto_spawn_ui:
+		call_deferred(&"_ensure_ui")
+
+func _ensure_ui() -> void:
+	if not is_inside_tree():
+		return
+	var existing = get_tree().get_nodes_in_group(&"inventory_ui")
+	if existing.is_empty() and _ui_instance == null:
+		var ui_scene: PackedScene = load("res://addons/easy_inventory/ui/inventory_ui.tscn")
+		if ui_scene:
+			_ui_instance = ui_scene.instantiate()
+			add_child(_ui_instance)
 
 ## Inisialisasi slot kosong sesuai ukuran max_slots
 func _initialize_slots() -> void:

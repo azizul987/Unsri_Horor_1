@@ -4,9 +4,9 @@
 
 [resource]
 script = ExtResource("1_item_script")
-id = "room_key_02"
-name = "Kunci Cadangan"
-description = "Kunci kuningan berkarat yang ditemukan di bawah kasur kamar kosong."
+id = "room_key"
+name = "Kunci Kamar Amir"
+description = "Kunci kuningan berkarat dengan gantungan nomor kamar Amir. Baunya apek bercampur kemenyan."
 item_type = 2
 max_stack = 1
 is_usable = false
@@ -15,5 +15,5 @@ flower_index = 0
 passive_buff_id = ""
 buff_value = 0.0
 custom_properties = {
-"unlocks_door": "kamar_dapur"
+"unlocks_door": "kamar_amir"
 }
