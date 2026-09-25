@@ -232,7 +232,7 @@ func _on_save_pressed() -> void:
 			saved_success = bool(ss.save_game())
 
 	var original_text: String = save_button.text
-	save_button.text = "Tersimpan! ✓" if saved_success else "Tersimpan!"
+	save_button.text = "Tersimpan!"
 	save_button.disabled = true
 
 	var timer: SceneTreeTimer = get_tree().create_timer(1.2, true)

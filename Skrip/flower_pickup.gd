@@ -172,6 +172,13 @@ func _process(delta: float) -> void:
 				var s: float = 1.0 + 0.18 * sin(_anim_time * 4.5)
 				core.scale = Vector3(s, s, s)
 
+	if not Engine.is_editor_hint() and _player_in_range:
+		if not is_instance_valid(_player_node) or global_position.distance_to(_player_node.global_position) > 2.5 or _player_node.get("is_hidden") == true:
+			_player_in_range = false
+			_player_node = null
+			if interaction_hud:
+				interaction_hud.visible = false
+
 func _unhandled_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint() or not _player_in_range:
 		return
@@ -296,14 +303,14 @@ func pickup_flower() -> bool:
 	return true
 
 func _on_body_entered(body: Node3D) -> void:
-	if body.is_in_group(&"player") or body is CharacterBody3D:
+	if body.is_in_group(&"player"):
 		_player_in_range = true
 		_player_node = body
 		if interaction_hud:
 			interaction_hud.visible = true
 
 func _on_body_exited(body: Node3D) -> void:
-	if body.is_in_group(&"player") or body is CharacterBody3D:
+	if body.is_in_group(&"player"):
 		_player_in_range = false
 		_player_node = null
 		if interaction_hud:

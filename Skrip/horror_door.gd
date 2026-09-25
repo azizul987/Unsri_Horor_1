@@ -117,6 +117,19 @@ func _ready() -> void:
 		if interaction_hud:
 			interaction_hud.visible = false
 
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	if _player_in_range:
+		if not is_instance_valid(_player_node) or global_position.distance_to(_player_node.global_position) > 2.5 or _player_node.get("is_hidden") == true:
+			_player_in_range = false
+			_player_node = null
+			if interaction_hud:
+				interaction_hud.visible = false
+		elif interaction_hud:
+			var crosshair_target = _player_node.get("_interact_target")
+			interaction_hud.visible = (crosshair_target == null)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint() or not _player_in_range or _is_animating:
 		return
@@ -336,7 +349,7 @@ func _update_prompt() -> void:
 		prompt_label.text = "[E] Buka Pintu"
 
 func _on_body_entered(body: Node3D) -> void:
-	if body.is_in_group(&"player") or body is CharacterBody3D:
+	if body.is_in_group(&"player"):
 		_player_in_range = true
 		_player_node = body
 		_update_prompt()
@@ -344,7 +357,7 @@ func _on_body_entered(body: Node3D) -> void:
 			interaction_hud.visible = true
 
 func _on_body_exited(body: Node3D) -> void:
-	if body.is_in_group(&"player") or body is CharacterBody3D:
+	if body.is_in_group(&"player"):
 		_player_in_range = false
 		_player_node = null
 		if interaction_hud:

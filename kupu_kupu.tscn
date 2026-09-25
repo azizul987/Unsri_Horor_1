@@ -22,6 +22,7 @@ subdivide_width = 2
 
 [node name="KupuKupuParticles_" type="CPUParticles3D" parent="." unique_id=1095350562]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3783602, 0)
+emitting = false
 amount = 30
 lifetime = 5.0
 randomness = 0.25

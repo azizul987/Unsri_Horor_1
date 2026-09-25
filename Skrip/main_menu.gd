@@ -39,6 +39,8 @@ func _on_play_pressed() -> void:
 	var sm: Node = get_node_or_null("/root/StoryManager")
 	if sm:
 		sm.pending_restore = false
+		if sm.has_method("reset_story_state"):
+			sm.reset_story_state()
 	var root: Window = get_tree().root
 	if root.has_node("SaveSystem"):
 		var ss = root.get_node("SaveSystem")

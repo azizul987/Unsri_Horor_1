@@ -17,6 +17,9 @@ signal phase_changed(new_phase: int)
 		_apply_phase_settings()
 		phase_changed.emit(phase)
 
+## Apakah Amir sedang diam/terkunci di kamar (belum mulai mengejar pemain)
+@export var is_dormant: bool = true
+
 @export_group("Movement")
 @export var speed: float = 3.5
 @export var patrol_speed: float = 2.0
@@ -89,6 +92,13 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.y = 0.0
 
+	# Jika masih mode tidur/kamar belum dibuka, Amir diam di tempat
+	if is_dormant:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		move_and_slide()
+		return
+
 	if not is_instance_valid(target_player):
 		_find_player()
 		move_and_slide()
@@ -97,9 +107,11 @@ func _physics_process(delta: float) -> void:
 	var player_pos: Vector3 = target_player.global_position
 	var to_player: Vector3 = Vector3(player_pos.x - global_position.x, 0.0, player_pos.z - global_position.z)
 	var horizontal_dist: float = to_player.length()
-	var same_floor: bool = abs(player_pos.y - global_position.y) < 2.5
+	var floor_diff: float = abs(player_pos.y - global_position.y)
+	var same_floor: bool = floor_diff < 2.5
 
-	var radar_dist: float = horizontal_dist if same_floor else global_position.distance_to(player_pos) + 20.0
+	var floors_apart: float = floor_diff / 3.4
+	var radar_dist: float = horizontal_dist if same_floor else horizontal_dist + (floors_apart * 6.0)
 	_update_butterfly_radar(radar_dist)
 
 	if _creepy_sound_timer > 0.0:
@@ -230,43 +242,70 @@ func _update_butterfly_radar(dist: float) -> void:
 
 	# Jika player sedang sembunyi di bawah kasur, redam kepakan kupu-kupu
 	if target_player and target_player.get("is_hidden") == true:
-		_player_particles.emitting = false
+		if _player_particles.emitting:
+			_player_particles.emitting = false
 		if _player_light:
 			_player_light.light_energy = lerpf(_player_light.light_energy, 0.0, 0.1)
 		return
 
+	var target_amount: int = 0
+	var should_emit: bool = false
+	var target_light: float = 0.0
+
 	if dist > 25.0:
 		# Aman (>25m): Tidak ada kupu-kupu
-		_player_particles.emitting = false
-		if _player_light:
-			_player_light.light_energy = lerpf(_player_light.light_energy, 0.0, 0.1)
+		should_emit = false
+		target_light = 0.0
 	elif dist > 17.0:
-		# Peringatan 1 (18-25m): 1-2 kupu-kupu melintas
-		_player_particles.emitting = true
-		_player_particles.amount = 3
-		if _player_light:
-			_player_light.light_energy = lerpf(_player_light.light_energy, 0.2, 0.1)
+		# Peringatan 1 (18-25m): 1-3 kupu-kupu melintas
+		should_emit = true
+		target_amount = 3
+		target_light = 0.25
 	elif dist > 10.0:
 		# Peringatan 2 (10-17m): 8-12 kupu-kupu berkumpul, lampu berkedip
-		_player_particles.emitting = true
-		_player_particles.amount = 12
-		if _player_light:
-			_player_light.light_energy = randf_range(0.3, 0.7)
+		should_emit = true
+		target_amount = 12
+		target_light = randf_range(0.3, 0.7)
 	else:
 		# Peringatan 3 (<10m): Puluhan kupu-kupu mengerumuni layar! LARI!
-		_player_particles.emitting = true
-		_player_particles.amount = 35
-		if _player_light:
-			_player_light.light_energy = randf_range(0.8, 1.4)
+		should_emit = true
+		target_amount = 35
+		target_light = randf_range(0.9, 1.5)
+
+	# PENTING: Hanya set amount jika berubah, karena set amount setiap frame akan me-reset partikel
+	if target_amount > 0 and _player_particles.amount != target_amount:
+		_player_particles.amount = target_amount
+
+	if _player_particles.emitting != should_emit:
+		_player_particles.emitting = should_emit
+
+	if _player_light:
+		if should_emit and dist <= 17.0:
+			_player_light.light_energy = target_light
+		else:
+			_player_light.light_energy = lerpf(_player_light.light_energy, target_light, 0.1)
 
 func _find_player_particles() -> void:
-	if target_player:
-		var found = target_player.find_child("KupuKupuParticles_", true, false)
-		if found is CPUParticles3D:
-			_player_particles = found
-		var found_light = target_player.find_child("ButterflyLight", true, false)
-		if found_light is OmniLight3D:
-			_player_light = found_light
+	if not is_instance_valid(target_player):
+		return
+	var found = target_player.find_child("KupuKupuParticles_", true, false)
+	if found is CPUParticles3D:
+		_player_particles = found
+	var found_light = target_player.find_child("ButterflyLight", true, false)
+	if found_light is OmniLight3D:
+		_player_light = found_light
+
+	# Auto-spawn jika belum ada pada player
+	if not is_instance_valid(_player_particles):
+		if ResourceLoader.exists("res://kupu_kupu.tscn"):
+			var scene_res = load("res://kupu_kupu.tscn")
+			if scene_res is PackedScene:
+				var instance = scene_res.instantiate()
+				target_player.add_child(instance)
+				_player_particles = instance.find_child("KupuKupuParticles_", true, false) as CPUParticles3D
+				_player_light = instance.find_child("ButterflyLight", true, false) as OmniLight3D
+				if is_instance_valid(_player_particles):
+					_player_particles.emitting = false
 
 func _update_target_position() -> void:
 	if not is_instance_valid(target_player):
@@ -335,23 +374,53 @@ func _pick_new_patrol_point() -> void:
 	if nav_agent:
 		nav_agent.target_position = _patrol_target
 
+func _get_floor_index_from_y(y_pos: float, floors: Array[float]) -> int:
+	var closest_idx: int = 0
+	var min_diff: float = 99999.0
+	for i in floors.size():
+		var diff = abs(floors[i] - y_pos)
+		if diff < min_diff:
+			min_diff = diff
+			closest_idx = i
+	return closest_idx
+
 func teleport_to_other_floor() -> void:
 	var floors = _get_floor_heights()
 	var player_y: float = target_player.global_position.y if is_instance_valid(target_player) else global_position.y
+	var player_floor_idx: int = _get_floor_index_from_y(player_y, floors)
+	var amir_floor_idx: int = _get_floor_index_from_y(global_position.y, floors)
 
 	# Kumpulkan lantai selain lantai Amir saat ini
 	var candidates: Array[float] = []
-	for f in floors:
+	var candidate_indices: Array[int] = []
+	for i in floors.size():
+		var f = floors[i]
 		if abs(f - global_position.y) > 2.0:
 			candidates.append(f)
+			candidate_indices.append(i)
 	if candidates.is_empty():
 		return
 
-	# Pilih lantai dengan bobot: makin dekat ke player makin sering dipilih
+	# Decision: Bobot berdasarkan jarak lantai ke posisi player
+	# Misal player di Lantai 5 (idx 4):
+	# - Lantai 5 (jika Amir dari lantai lain): bobot 50 (peluang tertinggi)
+	# - Lantai 4 (selisih 1 lantai): bobot 30
+	# - Lantai 3 (selisih 2 lantai): bobot 15
+	# - Lantai 2 & 1 (selisih >= 3 lantai): bobot 5 (peluang kecil)
 	var weights: Array[float] = []
-	for f in candidates:
-		var dist = abs(f - player_y) + 0.5  # +0.5 hindari div by zero
-		weights.append(1.0 / dist)          # jarak dekat = bobot besar
+	for idx in candidate_indices:
+		var delta_floor: int = abs(idx - player_floor_idx)
+		var w: float = 5.0
+		match delta_floor:
+			0:
+				w = 50.0  # Langsung ke lantai pemain
+			1:
+				w = 30.0  # 1 lantai dekat pemain
+			2:
+				w = 15.0  # 2 lantai dari pemain
+			_:
+				w = 5.0   # Lantai jauh
+		weights.append(w)
 
 	var total_weight: float = 0.0
 	for w in weights:
@@ -366,6 +435,14 @@ func teleport_to_other_floor() -> void:
 			break
 
 	var raw_pt = Vector3(randf_range(16.5, 17.2), target_y, randf_range(-18.0, 6.0))
+	# Jika teleport ke lantai yang sama dengan player, hindari spawn menabrak pemain langsung
+	if is_instance_valid(target_player) and abs(target_y - player_y) < 2.0:
+		var p_z = target_player.global_position.z
+		var attempts = 0
+		while attempts < 10 and abs(raw_pt.z - p_z) < 8.0:
+			raw_pt.z = randf_range(-18.0, 6.0)
+			attempts += 1
+
 	var final_pos = raw_pt
 	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
 	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
@@ -379,12 +456,20 @@ func teleport_to_other_floor() -> void:
 	_teleport_timer = randf_range(teleport_interval * 0.7, teleport_interval * 1.3)
 	_pick_new_patrol_point()
 
+func wake_up() -> void:
+	is_dormant = false
+	_spawn_grace = 0.5
+	_is_chasing = true
+	_teleport_timer = randf_range(teleport_interval * 0.7, teleport_interval * 1.3)
+	_update_target_position()
+
 func get_save_data() -> Dictionary:
 	return {
 		"position": global_position,
 		"rotation_y": rotation.y,
 		"phase": phase,
-		"teleport_timer": _teleport_timer
+		"teleport_timer": _teleport_timer,
+		"is_dormant": is_dormant
 	}
 
 func load_save_data(data: Dictionary) -> void:
@@ -396,3 +481,5 @@ func load_save_data(data: Dictionary) -> void:
 		phase = int(data["phase"])
 	if data.has("teleport_timer"):
 		_teleport_timer = float(data["teleport_timer"])
+	if data.has("is_dormant"):
+		is_dormant = bool(data["is_dormant"])

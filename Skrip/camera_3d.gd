@@ -4,6 +4,7 @@ extends Camera3D
 @export var pitch_limit: float = deg_to_rad(89)
 @export var enable_camcorder_shader: bool = true # Centang ini di inspector untuk menyalakan/mematikan
 @export var enable_color_bleed: bool = true # Opsi untuk mematikan color bleed jika terasa berat
+@export var look_locked: bool = false
 
 var yaw: float = 0.0
 var pitch: float = 0.0
@@ -62,6 +63,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if look_locked:
+		return
+
 	if event is InputEventMouseMotion:
 		# Akumulasi rotasi dari gerakan mouse
 		yaw -= event.relative.x * mouse_sensitivity
@@ -80,6 +84,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 	elif event.is_action_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func look_at_target(target_global_pos: Vector3) -> void:
+	var parent_node = get_parent() as Node3D
+	if not parent_node:
+		return
+	var to_target = target_global_pos - global_position
+	var flat_dir = Vector3(to_target.x, 0.0, to_target.z).normalized()
+	if flat_dir.length_squared() > 0.001:
+		yaw = atan2(-flat_dir.x, -flat_dir.z)
+		parent_node.rotation.y = yaw
+	var horiz_dist = Vector2(to_target.x, to_target.z).length()
+	pitch = clampf(atan2(to_target.y, horiz_dist), current_pitch_limit_min, current_pitch_limit_max)
+	rotation.x = pitch
 
 ## Mengunci batas sudut tengok kamera (yaw dan pitch) saat sembunyi di bawah kasur
 func set_hiding_camera_clamps(enabled: bool, center_yaw: float = 0.0, half_yaw_deg: float = 65.0, min_pitch_deg: float = -22.0, max_pitch_deg: float = 28.0) -> void:

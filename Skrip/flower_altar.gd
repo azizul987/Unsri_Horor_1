@@ -116,11 +116,11 @@ func _trigger_final_ritual_choice() -> void:
 		line.text = "Ke-8 bunga telah lengkap di atas altar. Amir yang bermutasi telah tiba di hadapanmu.\nApa yang akan kamu lakukan?"
 
 		var choice_cure = DialogueChoice.new()
-		choice_cure.text = "🌸 Lakukan Ritual Penyembuhan (Ending 1: Sembuh)"
+		choice_cure.text = "Lakukan Ritual Penyembuhan (Ending 1: Sembuh)"
 		choice_cure.event_signal = "trigger_ending_cure"
 
 		var choice_burn = DialogueChoice.new()
-		choice_burn.text = "🔥 Bakar Altar dan Bunga Bersama Amir (Ending 2: Bakar)"
+		choice_burn.text = "Bakar Altar dan Bunga Bersama Amir (Ending 2: Bakar)"
 		choice_burn.event_signal = "trigger_ending_burn"
 
 		line.choices = [choice_cure, choice_burn]
