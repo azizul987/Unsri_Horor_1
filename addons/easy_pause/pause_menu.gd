@@ -33,7 +33,7 @@ signal quit_pressed
 
 @export_group("Navigation")
 ## Path file scene (.tscn) untuk kembali ke menu utama.
-@export_file("*.tscn") var main_menu_scene_path: String = ""
+@export_file("*.tscn") var main_menu_scene_path: String = "res://Scenes/main_menu.tscn"
 
 @export_group("Animation")
 ## Durasi animasi buka dan tutup menu (detik).
@@ -201,21 +201,36 @@ func _on_save_pressed() -> void:
 	_animate_button_bounce(save_button)
 	save_pressed.emit()
 
-	# Coba simpan otomatis jika ada SaveSystem atau SaveManager di project
 	var saved_success: bool = false
 	var root: Window = get_tree().root
-	if root.has_node("SaveSystem"):
-		var ss = root.get_node("SaveSystem")
-		if ss.has_method("save_game"):
-			ss.call("save_game")
-			saved_success = true
-	elif root.has_node("SaveManager"):
-		var sm = root.get_node("SaveManager")
-		if sm.has_method("save_game"):
-			sm.call("save_game")
-			saved_success = true
+	var ss: Node = root.get_node_or_null("SaveSystem")
+	if ss:
+		if ss.has_method("has_active_slot") and not ss.has_active_slot():
+			if ss.has_method("set_slot"):
+				ss.set_slot(1)
 
-	# Tampilkan feedback visual pada tombol
+		var player: Node = get_tree().get_first_node_in_group(&"player")
+		if player:
+			ss.set_value("player_position", player.global_position)
+			ss.set_value("player_rotation_y", player.rotation.y)
+			if "camera" in player and player.camera:
+				ss.set_value("camera_pitch", player.camera.rotation.x)
+			if "is_crouching" in player:
+				ss.set_value("player_crouching", player.is_crouching)
+
+		if ss.has_method("save_nodes_in_group"):
+			ss.save_nodes_in_group("saveable")
+
+		var inv: Node = root.get_node_or_null("Inventory")
+		if inv and inv.has_method("save_to_dictionary"):
+			ss.set_value("inventory_data", inv.save_to_dictionary())
+
+		var sm: Node = root.get_node_or_null("StoryManager")
+		if sm and sm.has_method("save_game_state"):
+			saved_success = sm.save_game_state()
+		elif ss.has_method("save_game"):
+			saved_success = bool(ss.save_game())
+
 	var original_text: String = save_button.text
 	save_button.text = "Tersimpan! ✓" if saved_success else "Tersimpan!"
 	save_button.disabled = true
@@ -232,13 +247,15 @@ func _on_main_menu_pressed() -> void:
 	main_menu_pressed.emit()
 
 	get_tree().paused = false
+	hide()
+	_is_animating = false
 	if manage_mouse_mode:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	if not main_menu_scene_path.is_empty():
-		get_tree().change_scene_to_file(main_menu_scene_path)
-	else:
-		hide()
+	var path: String = main_menu_scene_path
+	if path.is_empty():
+		path = "res://Scenes/main_menu.tscn"
+	get_tree().call_deferred(&"change_scene_to_file", path)
 
 func _on_quit_pressed() -> void:
 	_play_sfx()

@@ -34,6 +34,8 @@ static var instance: StoryGameManager
 # Referensi node dalam game
 var player_node: Node3D = null
 var amir_node: NPCChaser = null
+var pending_restore: bool = false
+var picked_flower_indices: Array = []
 
 # CanvasLayer HUD notifikasi autosave
 var _save_hud_layer: CanvasLayer = null
@@ -96,29 +98,39 @@ func _find_scene_nodes() -> void:
 ## Menyimpan posisi, rotasi, status cerita, dan progres bunga ke disk
 func save_game_state(custom_slot: int = -1) -> bool:
 	if SaveSystem == null:
-		push_warning("StoryGameManager: Addon SaveSystem tidak ditemukan.")
 		return false
+
+	if not is_instance_valid(player_node) or not is_instance_valid(amir_node):
+		_find_scene_nodes()
 
 	var slot: int = active_slot if custom_slot < 0 else custom_slot
 	SaveSystem.set_slot(slot)
 
-	# 1. Simpan Posisi & Rotasi Pemain
 	if is_instance_valid(player_node):
 		SaveSystem.set_value("player_position", player_node.global_position)
 		SaveSystem.set_value("player_rotation_y", player_node.rotation.y)
+		if "camera" in player_node and player_node.camera:
+			SaveSystem.set_value("camera_pitch", player_node.camera.rotation.x)
+		if "is_crouching" in player_node:
+			SaveSystem.set_value("player_crouching", player_node.is_crouching)
 
-	# 2. Simpan Status Cerita
 	SaveSystem.set_value("current_chapter", int(current_chapter))
 	SaveSystem.set_value("flowers_collected", flowers_collected)
 	SaveSystem.set_value("flowers_deposited", flowers_deposited)
 	SaveSystem.set_value("amir_phase", amir_phase)
+	SaveSystem.set_value("picked_flower_indices", picked_flower_indices)
 
-	# 3. Simpan Posisi Amir (jika ada di scene)
 	if is_instance_valid(amir_node):
 		SaveSystem.set_value("amir_position", amir_node.global_position)
 		SaveSystem.set_value("amir_rotation_y", amir_node.rotation.y)
 
-	# 4. Tulis ke file disk JSON (user://saves/save_slot_X.json)
+	var inv: Node = get_node_or_null("/root/Inventory")
+	if inv and inv.has_method("save_to_dictionary"):
+		SaveSystem.set_value("inventory_data", inv.save_to_dictionary())
+
+	if SaveSystem.has_method("save_nodes_in_group"):
+		SaveSystem.save_nodes_in_group("saveable")
+
 	var success: bool = SaveSystem.save_game()
 	if success:
 		_show_save_indicator("💾 PROGRES TERSIMPAN")
@@ -126,7 +138,6 @@ func save_game_state(custom_slot: int = -1) -> bool:
 
 	return success
 
-## Memulihkan posisi pemain dan progres cerita dari SaveSystem
 func load_game_state(custom_slot: int = -1) -> bool:
 	if SaveSystem == null:
 		return false
@@ -140,26 +151,57 @@ func load_game_state(custom_slot: int = -1) -> bool:
 	if not success:
 		return false
 
-	# 1. Pulihkan Cerita
+	if not is_instance_valid(player_node) or not is_instance_valid(amir_node):
+		_find_scene_nodes()
+
 	current_chapter = SaveSystem.get_value("current_chapter", Chapter.PROLOGUE_DAY) as Chapter
 	flowers_collected = int(SaveSystem.get_value("flowers_collected", 0))
 	flowers_deposited = int(SaveSystem.get_value("flowers_deposited", 0))
 	amir_phase = int(SaveSystem.get_value("amir_phase", 1))
+	picked_flower_indices = SaveSystem.get_value("picked_flower_indices", [])
 
-	# 2. Pulihkan Posisi & Rotasi Pemain
 	if is_instance_valid(player_node):
 		var saved_pos = SaveSystem.get_value("player_position", null)
-		if saved_pos != null:
+		if saved_pos is Vector3:
 			player_node.global_position = saved_pos
+		elif saved_pos is Dictionary and saved_pos.get("__type__") == "Vector3":
+			player_node.global_position = Vector3(saved_pos.get("x", 0.0), saved_pos.get("y", 0.0), saved_pos.get("z", 0.0))
+
 		var saved_rot_y = SaveSystem.get_value("player_rotation_y", null)
 		if saved_rot_y != null:
 			player_node.rotation.y = float(saved_rot_y)
+			if "camera" in player_node and player_node.camera and "yaw" in player_node.camera:
+				player_node.camera.yaw = float(saved_rot_y)
 
-	# 3. Pulihkan Posisi Amir
+		var saved_pitch = SaveSystem.get_value("camera_pitch", null)
+		if saved_pitch != null and "camera" in player_node and player_node.camera:
+			player_node.camera.rotation.x = float(saved_pitch)
+			if "pitch" in player_node.camera:
+				player_node.camera.pitch = float(saved_pitch)
+
+		if "velocity" in player_node:
+			player_node.velocity = Vector3.ZERO
+
 	if is_instance_valid(amir_node):
 		var amir_pos = SaveSystem.get_value("amir_position", null)
-		if amir_pos != null:
+		if amir_pos is Vector3:
 			amir_node.global_position = amir_pos
+		elif amir_pos is Dictionary and amir_pos.get("__type__") == "Vector3":
+			amir_node.global_position = Vector3(amir_pos.get("x", 0.0), amir_pos.get("y", 0.0), amir_pos.get("z", 0.0))
+
+	if SaveSystem.has_method("load_nodes_in_group"):
+		SaveSystem.load_nodes_in_group("saveable")
+
+	var inv: Node = get_node_or_null("/root/Inventory")
+	if inv and SaveSystem.has_value("inventory_data"):
+		var inv_data = SaveSystem.get_value("inventory_data")
+		if inv_data is Dictionary:
+			inv.load_from_dictionary(inv_data)
+
+	if picked_flower_indices.size() > 0:
+		for flower in get_tree().get_nodes_in_group(&"flower_pickup"):
+			if "flower_index" in flower and picked_flower_indices.has(flower.flower_index):
+				flower.queue_free()
 
 	_sync_amir_state()
 	flower_count_changed.emit(flowers_collected, flowers_deposited)
@@ -169,23 +211,32 @@ func load_game_state(custom_slot: int = -1) -> bool:
 
 	return true
 
-## Memeriksa apakah ada file save game sebelumnya
+func request_continue_game(slot: int = 1) -> void:
+	active_slot = slot
+	pending_restore = true
+	if SaveSystem:
+		SaveSystem.set_slot(slot)
+		SaveSystem.load_game()
+
+func apply_loaded_game() -> void:
+	if not pending_restore:
+		return
+	pending_restore = false
+	_find_scene_nodes()
+	load_game_state(active_slot)
+
 func has_save_file(slot: int = -1) -> bool:
 	if SaveSystem == null:
 		return false
 	var target_slot: int = active_slot if slot < 0 else slot
 	return SaveSystem.slot_exists(target_slot)
 
-## ============================================================================
-## 🌺 SISTEM ALUR BUNGA & MANAJEMEN FASE
-## ============================================================================
-
-## Dipanggil saat pemain mengambil sebuah bunga di map
-func collect_flower() -> void:
+func collect_flower(idx: int = -1) -> void:
+	if idx > 0 and not picked_flower_indices.has(idx):
+		picked_flower_indices.append(idx)
 	flowers_collected = mini(flowers_collected + 1, max_flowers)
 	flower_count_changed.emit(flowers_collected, flowers_deposited)
 	_evaluate_amir_phase()
-	# Autosave saat pemain memungut bunga
 	save_game_state()
 
 ## Mendepositkan bunga yang ada di inventory ke Altar (mengosongkan slot tas)

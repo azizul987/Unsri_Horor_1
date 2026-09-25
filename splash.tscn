@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bgckxom3otchv"]
 
 [ext_resource type="Script" uid="uid://ca5gh6nv811en" path="res://addons/awesome_splash/core/SplashContainer.gd" id="1_b04ml"]
-[ext_resource type="PackedScene" uid="uid://ceeayny1krlwd" path="res://Scenes/main.tscn" id="2_13jq6"]
+[ext_resource type="PackedScene" uid="uid://b2mainmenu001" path="res://Scenes/main_menu.tscn" id="2_13jq6"]
 [ext_resource type="PackedScene" uid="uid://dl2v33c3p3coa" path="res://src/demo_collection/dark/splash_screen.tscn" id="2_50j67"]
 
 [node name="SplashContainer" type="Node2D" unique_id=355726111]

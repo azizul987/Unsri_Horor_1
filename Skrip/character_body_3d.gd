@@ -42,6 +42,9 @@ var is_jumping: bool = false
 func _ready() -> void:
 	add_to_group(&"player")
 	add_to_group(&"saveable")
+	var sm = get_node_or_null("/root/StoryManager")
+	if sm:
+		sm.player_node = self
 	# Aktifkan floor snap agar saat turun tangga karakter tidak melayang/membal
 	floor_snap_length = max_step_height
 	floor_constant_speed = true
@@ -437,7 +440,11 @@ func get_save_data() -> Dictionary:
 
 func load_save_data(data: Dictionary) -> void:
 	if data.has("position"):
-		global_position = data["position"]
+		var p = data["position"]
+		if p is Vector3:
+			global_position = p
+		elif p is Dictionary and p.get("__type__") == "Vector3":
+			global_position = Vector3(p.get("x", 0.0), p.get("y", 0.0), p.get("z", 0.0))
 	if data.has("rotation_y"):
 		rotation.y = float(data["rotation_y"])
 		if camera and "yaw" in camera:
@@ -446,3 +453,4 @@ func load_save_data(data: Dictionary) -> void:
 		camera.rotation.x = float(data["camera_pitch"])
 		if "pitch" in camera:
 			camera.pitch = camera.rotation.x
+	velocity = Vector3.ZERO

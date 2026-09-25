@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://ceeayny1krlwd"]
 
+[ext_resource type="Script" uid="uid://cma0axil24axn" path="res://Skrip/main_level.gd" id="1_main_script"]
 [ext_resource type="Script" uid="uid://cr7p3xpcs0m2a" path="res://Skrip/character_body_3d.gd" id="2_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://bty4jfhkb03af" path="res://Asset/Red/texture_05.png" id="3_lquwl"]
 [ext_resource type="Script" uid="uid://bi4608udhce61" path="res://Skrip/camera_3d.gd" id="4_7mycd"]
@@ -39,10 +40,10 @@
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="39_amir"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
-sky_top_color = Color(0.02, 0.01, 0.01, 1)
-sky_horizon_color = Color(0.18, 0.05, 0.02, 1)
-ground_bottom_color = Color(0.01, 0.01, 0.01, 1)
-ground_horizon_color = Color(0.12, 0.04, 0.01, 1)
+sky_top_color = Color(0.35, 0.55, 0.85, 1)
+sky_horizon_color = Color(0.7, 0.78, 0.88, 1)
+ground_bottom_color = Color(0.2, 0.22, 0.25, 1)
+ground_horizon_color = Color(0.5, 0.55, 0.6, 1)
 
 [sub_resource type="Sky" id="Sky_lquwl"]
 sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
@@ -51,14 +52,13 @@ sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
 background_mode = 2
 sky = SubResource("Sky_lquwl")
 ambient_light_source = 2
-ambient_light_color = Color(0.03, 0.035, 0.05, 1)
-ambient_light_energy = 0.06
+ambient_light_color = Color(0.75, 0.8, 0.9, 1)
+ambient_light_energy = 0.65
 reflected_light_source = 1
 tonemap_mode = 2
 glow_enabled = true
 glow_intensity = 0.8
 glow_bloom = 0.15
-fog_enabled = true
 fog_light_color = Color(0.03, 0.035, 0.05, 1)
 fog_density = 0.02
 
@@ -3750,11 +3750,12 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kh53f")
 
 [node name="Main" type="Node3D" unique_id=448454425]
+script = ExtResource("1_main_script")
+mode_terang_clear = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=618706464]
 transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938414, 0.66315246, 0.7091713, -0.5181915, 0.7049452, -0.48428264, 0, 11.240326, 0)
-light_color = Color(0.35, 0.45, 0.65, 1)
-light_energy = 0.08
+light_color = Color(1, 0.98, 0.92, 1)
 shadow_enabled = true
 shadow_opacity = 0.95
 
@@ -11165,7 +11166,7 @@ transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938413, 0.66315
 transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938413, 0.6631525, 0.70917135, -0.51819146, 0.7049453, -0.48428267, 15.427376, 15.086578, 0.28842354)
 
 [node name="AmirRoomDoor" parent="." unique_id=184920194 instance=ExtResource("35_door")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 18.992512, 13.68942, -24.046526)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 19.110783, 13.571175, -24.046526)
 requires_key = true
 is_locked = true
 locked_message = "Pintu kamar Amir terkunci rapat dari dalam. Terdengar derak patahan tulang di baliknya..."

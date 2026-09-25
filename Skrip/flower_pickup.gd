@@ -131,6 +131,7 @@ var _player_node: Node3D = null
 # LIFECYCLE
 # ============================================================================
 func _ready() -> void:
+	add_to_group(&"flower_pickup")
 	_initial_y = visual_root.position.y if visual_root else position.y
 
 	# Setup deteksi player
@@ -274,7 +275,7 @@ func pickup_flower() -> bool:
 	# 2. Notifikasi ke StoryGameManager (tambah counter bunga & evaluasi fase Amir)
 	var story = StoryManager if StoryManager else StoryGameManager.instance
 	if story:
-		story.collect_flower()
+		story.collect_flower(flower_index)
 
 	# 3. Mainkan audio pickup chime lembut
 	_play_pickup_chime()

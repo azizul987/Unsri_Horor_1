@@ -20,6 +20,8 @@ shadow_size = 14
 process_mode = 3
 layer = 100
 script = ExtResource("1_pause")
+forbidden_scenes = PackedStringArray("MainMenu", "main_menu", "MainMenui", "TitleScreen", "Splash")
+main_menu_scene_path = "res://Scenes/main_menu.tscn"
 
 [node name="Backdrop" type="ColorRect" parent="."]
 anchors_preset = 15

@@ -359,7 +359,7 @@ func save_nodes_in_group(group_name: String = "saveable") -> void:
 	for node: Node in nodes:
 		if node.has_method("get_save_data"):
 			var key: String = str(node.get_path())
-			nodes_data[key] = node.call("get_save_data")
+			nodes_data[key] = SaveResourceSerializer.encode_variant(node.call("get_save_data"))
 	_active_data["_nodes_" + group_name] = nodes_data
 
 ## Memulihkan seluruh node dalam group tertentu.
@@ -372,8 +372,18 @@ func load_nodes_in_group(group_name: String = "saveable") -> void:
 	var nodes: Array[Node] = get_tree().get_nodes_in_group(group_name)
 	for node: Node in nodes:
 		var node_key: String = str(node.get_path())
-		if nodes_data.has(node_key) and node.has_method("load_save_data"):
-			node.call("load_save_data", nodes_data[node_key])
+		var raw_data: Variant = null
+		if nodes_data.has(node_key):
+			raw_data = nodes_data[node_key]
+		else:
+			for k in nodes_data.keys():
+				if str(k).ends_with("/" + node.name) or str(k) == node.name:
+					raw_data = nodes_data[k]
+					break
+		if raw_data != null and node.has_method("load_save_data"):
+			var data: Variant = SaveResourceSerializer.decode_variant(raw_data)
+			if data is Dictionary:
+				node.call("load_save_data", data)
 
 
 ## ============================================================================
