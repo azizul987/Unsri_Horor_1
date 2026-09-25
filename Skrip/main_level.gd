@@ -98,6 +98,8 @@ var _toast_label: Label = null
 var _toast_timer: SceneTreeTimer = null
 
 func _ready() -> void:
+	if not Engine.is_editor_hint():
+		mode_terang_clear = false
 	_apply_environment()
 	if not Engine.is_editor_hint():
 		call_deferred(&"_check_continue_game")

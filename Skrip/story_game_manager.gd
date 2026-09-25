@@ -282,13 +282,8 @@ func _sync_amir_state() -> void:
 	if amir_node.has_method("set_phase"):
 		amir_node.set_phase(amir_phase)
 
-	# Jika masih di babak prolog siang hari, sembunyikan atau matikan pergerakan Amir
-	if current_chapter == Chapter.PROLOGUE_DAY:
-		amir_node.process_mode = Node.PROCESS_MODE_DISABLED
-		amir_node.visible = false
-	else:
-		amir_node.process_mode = Node.PROCESS_MODE_INHERIT
-		amir_node.visible = true
+	amir_node.process_mode = Node.PROCESS_MODE_INHERIT
+	amir_node.visible = true
 
 ## Mengubah babak cerita
 func set_chapter(new_chapter: Chapter) -> void:

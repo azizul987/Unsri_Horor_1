@@ -11,7 +11,7 @@ custom_node/default_time = 1.0
 skip/type = 0
 move_to_scene = ExtResource("2_13jq6")
 transition_time = 1.0
-fade_color = Color(1, 1, 1, 1)
+fade_color = Color(0.014125013, 8.9305106e-09, 0.00022120273, 1)
 
 [node name="SplashDark" parent="." unique_id=1521766926 instance=ExtResource("2_50j67")]
 title = "Unsri-Horor"

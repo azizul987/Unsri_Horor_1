@@ -27,6 +27,7 @@ HorrorDialogue="*uid://c1dik5m8se27b"
 StoryManager="*res://Skrip/story_game_manager.gd"
 SoundManager="*uid://bwr2swiqxurjt"
 PauseMenu="*res://addons/easy_pause/pause_menu.tscn"
+DebugOverlay="*res://Skrip/debug_overlay.gd"
 
 [editor_plugins]
 

@@ -3752,6 +3752,8 @@ shadow_mesh = SubResource("ArrayMesh_kh53f")
 [node name="Main" type="Node3D" unique_id=448454425]
 script = ExtResource("1_main_script")
 mode_terang_clear = true
+horor_ambient_energy = 0.12
+horor_ambient_color = Color(0.15387514, 0.1642392, 0.20211685, 1)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=618706464]
 transform = Transform3D(-0.82108027, -0.25155693, 0.5123927, 0.23938414, 0.66315246, 0.7091713, -0.5181915, 0.7049452, -0.48428264, 0, 11.240326, 0)
@@ -9894,7 +9896,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.687296, 4.0252066, -26.201
 shape = SubResource("BoxShape3D_kq58d")
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="Node/Pagar2" unique_id=938237562]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.26215, 3.7300406, 6.9054623)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.266754, 3.780037, 6.892089)
 shape = SubResource("BoxShape3D_seu75")
 
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="Node/Pagar2" unique_id=809130300]
@@ -11082,7 +11084,6 @@ transform = Transform3D(0.9999856, -0.0055675628, 7.2061084e-06, 0.0055674915, 0
 size = Vector3(270.2503, 0.3690033, 37.207745)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=612657747]
-visible = false
 navigation_mesh = SubResource("NavigationMesh_21xkr")
 
 [node name="npc_mesh" parent="NavigationRegion3D" unique_id=20983193 instance=ExtResource("22_gt3je")]
@@ -11090,14 +11091,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.648294, 7.842553, -13.1458
 visible = false
 
 [node name="CharacterBody3D2" type="CharacterBody3D" parent="." unique_id=909632673]
-transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 17.011475, 14.812361, -23.785551)
+transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 17.011475, 14.812361, -5)
 script = ExtResource("7_6bp64")
 speed = 1.0
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterBody3D2" unique_id=1575761501]
 
 [node name="AmirModel" parent="CharacterBody3D2" unique_id=402694052 instance=ExtResource("39_amir")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.84, 0)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.84000015, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D2" unique_id=1572720710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)

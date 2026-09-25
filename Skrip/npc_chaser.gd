@@ -19,9 +19,13 @@ signal phase_changed(new_phase: int)
 
 @export_group("Movement")
 @export var speed: float = 3.5
+@export var patrol_speed: float = 2.0
 @export var turn_speed: float = 10.0
 @export var stopping_distance: float = 0.8
+@export var detection_range: float = 8.0
+@export var teleport_interval: float = 35.0
 @export var always_chase: bool = true
+@export var floor_heights: Array[float] = [1.05, 4.65, 8.15, 11.35, 14.65]
 
 @export_group("Target")
 @export var target_player: Node3D
@@ -31,8 +35,14 @@ signal phase_changed(new_phase: int)
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
 var _repath_timer: float = 0.0
 var _last_player_pos: Vector3 = Vector3.ZERO
+var _teleport_timer: float = 45.0
+var _patrol_target: Vector3 = Vector3.ZERO
+var _patrol_wait: float = 0.0
+var _patrol_timeout: float = 10.0
+var _is_chasing: bool = false
+var _spawn_grace: float = 5.0
+var _nav_ready: bool = false
 
-# Timer lelah / jeda nafas pada Fase 1
 var _chase_duration: float = 0.0
 var _rest_timer: float = 0.0
 var _is_resting: bool = false
@@ -58,50 +68,57 @@ func _ready() -> void:
 
 	_apply_phase_settings()
 	_find_player()
+	_setup_nav.call_deferred()
 
-	if target_player:
-		_update_target_position()
+func _setup_nav() -> void:
+	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	while is_inside_tree() and map.is_valid() and NavigationServer3D.map_get_iteration_id(map) == 0:
+		await get_tree().physics_frame
+	_nav_ready = true
+	_pick_new_patrol_point()
 
 func _physics_process(delta: float) -> void:
-	# 1. Terapkan gravitasi jika di udara
+	if not _nav_ready:
+		if not is_on_floor():
+			velocity.y -= _gravity * delta
+		move_and_slide()
+		return
+
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
 	else:
 		velocity.y = 0.0
 
-	# 2. Pastikan target player ada
 	if not is_instance_valid(target_player):
 		_find_player()
 		move_and_slide()
 		return
 
-	# Hitung jarak horizontal ke player
 	var player_pos: Vector3 = target_player.global_position
 	var to_player: Vector3 = Vector3(player_pos.x - global_position.x, 0.0, player_pos.z - global_position.z)
 	var horizontal_dist: float = to_player.length()
+	var same_floor: bool = abs(player_pos.y - global_position.y) < 2.5
 
-	# 3. Update Signature Mechanic: Radar Kupu-Kupu berdasarkan jarak
-	_update_butterfly_radar(horizontal_dist)
+	var radar_dist: float = horizontal_dist if same_floor else global_position.distance_to(player_pos) + 20.0
+	_update_butterfly_radar(radar_dist)
 
-	# 3b. Suara gemerisik / patah tulang menyeramkan saat Amir mendekat
 	if _creepy_sound_timer > 0.0:
 		_creepy_sound_timer -= delta
-	elif horizontal_dist < 16.0 and target_player.get("is_hidden") != true:
+	elif same_floor and horizontal_dist < 16.0 and target_player.get("is_hidden") != true:
 		_creepy_sound_timer = randf_range(5.0, 9.0)
 		var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
 		if sm and sm.has_method("play_sfx_3d"):
 			var sound_choice = "creepy_rattle" if randf() < 0.5 else "bone_crack"
 			sm.play_sfx_3d(sound_choice, global_position, 20.0, 0.0, randf_range(0.85, 1.15))
 
-	# 4. Jika player sedang sembunyi di bawah kasur / lemari, Amir kehilangan jejak
 	if target_player.get("is_hidden") == true:
 		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 2.5)
 		velocity.z = move_toward(velocity.z, 0.0, speed * delta * 2.5)
 		move_and_slide()
 		_chase_duration = 0.0
+		_is_chasing = false
 		return
 
-	# 5. Logika lelah khusus Fase 1 (memberi ruang nafas eksplorasi pemain)
 	if phase == 1:
 		if _is_resting:
 			_rest_timer -= delta
@@ -112,21 +129,40 @@ func _physics_process(delta: float) -> void:
 				_is_resting = false
 				_chase_duration = 0.0
 			return
-		else:
+		elif _is_chasing:
 			_chase_duration += delta
 			if _chase_duration >= 5.5:
 				_is_resting = true
 				_rest_timer = 3.5
 				return
 
-	# 6. Update target posisi NavigationAgent
-	_repath_timer += delta
-	if _repath_timer >= 0.1 or player_pos.distance_squared_to(_last_player_pos) > 0.04:
-		_repath_timer = 0.0
-		_update_target_position()
+	if _spawn_grace > 0.0:
+		_spawn_grace -= delta
 
-	# 7. Jika sudah menyentuh player
-	if horizontal_dist <= stopping_distance:
+	_teleport_timer -= delta
+	if _teleport_timer <= 0.0:
+		if not _is_chasing or horizontal_dist > 8.0:
+			teleport_to_other_floor()
+		else:
+			_teleport_timer = 5.0
+
+	_is_chasing = _spawn_grace <= 0.0 and same_floor and (always_chase or horizontal_dist < detection_range)
+
+	if _is_chasing:
+		_repath_timer += delta
+		if _repath_timer >= 0.15 or player_pos.distance_squared_to(_last_player_pos) > 0.04:
+			_repath_timer = 0.0
+			_update_target_position()
+	else:
+		_patrol_timeout -= delta
+		var dist_to_patrol = global_position.distance_to(_patrol_target)
+		if (nav_agent and nav_agent.is_navigation_finished()) or dist_to_patrol < 1.2 or _patrol_timeout <= 0.0:
+			_patrol_wait -= delta
+			if _patrol_wait <= 0.0 or _patrol_timeout <= 0.0:
+				_patrol_wait = randf_range(1.5, 3.5)
+				_pick_new_patrol_point()
+
+	if same_floor and horizontal_dist <= stopping_distance:
 		_look_towards(player_pos, delta)
 		if not _has_attacked:
 			_has_attacked = true
@@ -143,26 +179,25 @@ func _physics_process(delta: float) -> void:
 	else:
 		_has_attacked = false
 
-	# 8. Tentukan arah pergerakan NavMesh
+	var current_speed: float = speed if _is_chasing else patrol_speed
 	var horizontal_dir: Vector3 = Vector3.ZERO
 	if nav_agent and not nav_agent.is_navigation_finished():
 		var next_path_pos: Vector3 = nav_agent.get_next_path_position()
 		var to_waypoint: Vector3 = Vector3(next_path_pos.x - global_position.x, 0.0, next_path_pos.z - global_position.z)
 		if to_waypoint.length_squared() > 0.04:
 			horizontal_dir = to_waypoint.normalized()
-		else:
+		elif _is_chasing:
 			horizontal_dir = to_player.normalized()
-	else:
+	elif _is_chasing:
 		horizontal_dir = to_player.normalized()
 
-	# 9. Gerakkan Amir
 	if horizontal_dir != Vector3.ZERO:
-		velocity.x = horizontal_dir.x * speed
-		velocity.z = horizontal_dir.z * speed
+		velocity.x = horizontal_dir.x * current_speed
+		velocity.z = horizontal_dir.z * current_speed
 		_look_towards(global_position + horizontal_dir, delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 5.0)
-		velocity.z = move_toward(velocity.z, 0.0, speed * delta * 5.0)
+		velocity.x = move_toward(velocity.x, 0.0, current_speed * delta * 5.0)
+		velocity.z = move_toward(velocity.z, 0.0, current_speed * delta * 5.0)
 
 	move_and_slide()
 
@@ -265,15 +300,73 @@ func _find_player() -> void:
 			target_player = found as Node3D
 			_find_player_particles()
 
-## ============================================================================
-## 💾 DUKUNGAN EASY_SAVE (SAVESYSTEM)
-## ============================================================================
+func _get_floor_heights() -> Array[float]:
+	var heights: Array[float] = floor_heights.duplicate()
+	var scene = get_tree().current_scene
+	if scene:
+		var node = scene.find_child("Node", true, false)
+		if node:
+			var sb = node.find_child("StaticBody3D", true, false)
+			if sb:
+				var l1 = sb.find_child("Lantai", true, false)
+				var l2 = sb.find_child("Lantai2", true, false)
+				var l3 = sb.find_child("Lantai3", true, false)
+				var l4 = sb.find_child("Lantai4", true, false)
+				if l1 and l2 and l3 and l4:
+					heights = [
+						1.05,
+						l1.global_position.y + 4.65,
+						l2.global_position.y + 4.65,
+						l3.global_position.y + 4.65,
+						l4.global_position.y + 4.65
+					]
+	return heights
+
+func _pick_new_patrol_point() -> void:
+	_patrol_timeout = 15.0
+	var feet_y = global_position.y - 0.75
+	var raw_pt = Vector3(randf_range(16.5, 17.2), feet_y, randf_range(-20.0, 8.0))
+	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
+		var snapped = NavigationServer3D.map_get_closest_point(map, raw_pt)
+		if snapped != Vector3.ZERO and abs(snapped.y - feet_y) < 1.8:
+			_patrol_target = snapped
+		else:
+			_patrol_target = raw_pt
+	else:
+		_patrol_target = raw_pt
+	if nav_agent:
+		nav_agent.target_position = _patrol_target
+
+func teleport_to_other_floor() -> void:
+	var floors = _get_floor_heights()
+	var other_floors: Array[float] = []
+	for f in floors:
+		if abs(f - global_position.y) > 2.0:
+			other_floors.append(f)
+	if other_floors.is_empty():
+		return
+	var target_y: float = other_floors.pick_random()
+	var raw_pt = Vector3(randf_range(16.5, 17.2), target_y, randf_range(-18.0, 6.0))
+	var final_pos = raw_pt
+	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
+		var feet_pt = Vector3(raw_pt.x, target_y - 0.75, raw_pt.z)
+		var snapped = NavigationServer3D.map_get_closest_point(map, feet_pt)
+		if snapped != Vector3.ZERO and abs(snapped.y - feet_pt.y) < 1.8:
+			final_pos = Vector3(snapped.x, snapped.y + 0.85, snapped.z)
+	global_position = final_pos
+	velocity = Vector3.ZERO
+	_is_chasing = false
+	_teleport_timer = teleport_interval
+	_pick_new_patrol_point()
 
 func get_save_data() -> Dictionary:
 	return {
 		"position": global_position,
 		"rotation_y": rotation.y,
-		"phase": phase
+		"phase": phase,
+		"teleport_timer": _teleport_timer
 	}
 
 func load_save_data(data: Dictionary) -> void:
@@ -283,3 +376,5 @@ func load_save_data(data: Dictionary) -> void:
 		rotation.y = float(data["rotation_y"])
 	if data.has("phase"):
 		phase = int(data["phase"])
+	if data.has("teleport_timer"):
+		_teleport_timer = float(data["teleport_timer"])
