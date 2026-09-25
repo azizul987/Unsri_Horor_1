@@ -217,6 +217,11 @@ func update_fire_layout() -> void:
 	var h: float = tree_height
 	var r: float = trunk_radius
 
+	# Skala model pohon agar proporsional dengan tinggi pohon (pohon.fbx tinggi dasarnya ~12-14m)
+	if tree_slot:
+		var s: float = clampf(h / 12.0, 0.4, 2.0)
+		tree_slot.scale = Vector3(s, s, s)
+
 	# 1. Api Pangkal (FireBase): berada di permukaan tanah / akar pohon
 	if fire_base:
 		fire_base.position = Vector3(0.0, 0.3, 0.0)

@@ -88,9 +88,15 @@ const BURNING_TREE_SCENE_PATH = "res://Scenes/forest_fire_tree.tscn"
 @onready var zone_audio: AudioStreamPlayer3D = $ZoneAudio
 
 func _ready() -> void:
+	if not trees_container:
+		trees_container = get_node_or_null("TreesContainer")
+
 	if not Engine.is_editor_hint():
 		if zone_boundary_guide:
 			zone_boundary_guide.visible = false
+		# Otomatis buat pohon di game jika belum ada pohon tersimpan
+		if trees_container and trees_container.get_child_count() == 0:
+			generate_zone()
 	else:
 		_update_zone_preview()
 
@@ -99,6 +105,9 @@ func _ready() -> void:
 # ============================================================================
 ## Menghasilkan hutan pohon terbakar secara acak di dalam area
 func generate_zone() -> void:
+	if not trees_container:
+		trees_container = get_node_or_null("TreesContainer")
+
 	clear_zone()
 
 	if not trees_container:

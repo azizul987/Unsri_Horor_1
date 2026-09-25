@@ -28,20 +28,51 @@ var slot_ui_nodes: Array[InventorySlotUI] = []
 var _info_timer: float = 0.0
 var _inventory_ref: InventoryManager
 
+## Jika diset true, UI dipaksa sembunyi (misal saat cutscene atau dialog)
+var force_hidden: bool = false:
+	set(val):
+		force_hidden = val
+		_update_visibility_state()
+
 func _ready() -> void:
 	add_to_group(&"inventory_ui")
 	layer = 10
 	_build_ui_tree()
 	_connect_to_inventory()
+	_update_visibility_state()
 
 func _process(delta: float) -> void:
+	_update_visibility_state()
 	if _info_timer > 0.0:
 		_info_timer -= delta
 		if _info_timer <= 0.0 and info_panel:
 			var tween: Tween = create_tween()
 			tween.tween_property(info_panel, "modulate:a", 0.0, 0.4)
 
+## Atur visibilitas UI secara manual dari luar
+func set_ui_visible(is_vis: bool) -> void:
+	force_hidden = not is_vis
+
+func _update_visibility_state() -> void:
+	if force_hidden:
+		if visible:
+			visible = false
+		if root_control and root_control.visible:
+			root_control.visible = false
+		return
+
+	# Hanya tampilkan UI jika ada Player aktif di dalam scene tree (mode gameplay)
+	var has_player: bool = _find_player_node() != null
+	if visible != has_player:
+		visible = has_player
+	if root_control and root_control.visible != has_player:
+		root_control.visible = has_player
+
 func _unhandled_input(event: InputEvent) -> void:
+	# Jika UI sedang tersembunyi (misal cutscene), abaikan input inventory
+	if not visible or (root_control and not root_control.visible):
+		return
+
 	var inv: InventoryManager = _get_inventory()
 	if inv == null:
 		return

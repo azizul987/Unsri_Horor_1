@@ -41,7 +41,16 @@ func _ensure_ui() -> void:
 	if not is_inside_tree():
 		return
 	var existing = get_tree().get_nodes_in_group(&"inventory_ui")
-	if existing.is_empty() and _ui_instance == null:
+	if not existing.is_empty():
+		return
+	# Hanya spawn jika ada Player di scene (bukan di cutscene/intro/splash)
+	var players = get_tree().get_nodes_in_group(&"player")
+	if players.is_empty():
+		players = get_tree().get_nodes_in_group(&"Player")
+	if players.is_empty():
+		return
+
+	if _ui_instance == null:
 		var ui_scene: PackedScene = load("res://addons/easy_inventory/ui/inventory_ui.tscn")
 		if ui_scene:
 			_ui_instance = ui_scene.instantiate()

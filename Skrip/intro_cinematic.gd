@@ -44,6 +44,15 @@ func _ready() -> void:
 	title_screen.modulate = Color(1, 1, 1, 0)
 	skip_label.visible = true
 
+	# Pastikan UI inventory disembunyikan selama intro
+	for node in get_tree().get_nodes_in_group(&"inventory_ui"):
+		if node.has_method(&"set_ui_visible"):
+			node.call(&"set_ui_visible", false)
+		elif "force_hidden" in node:
+			node.set("force_hidden", true)
+		elif node is CanvasLayer or node is Control:
+			node.visible = false
+
 	# Pastikan mouse tertangkap atau bebas untuk UI
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -66,12 +75,15 @@ func _skip_cinematic() -> void:
 # SEQUENCE DIRECTOR
 # ============================================================================
 
+func _get_sound_manager() -> Node:
+	return get_node_or_null("/root/SoundManager")
+
 func _start_cinematic_sequence() -> void:
 	if _is_transitioning:
 		return
 
 	# Mainkan suara hutan terbakar
-	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	var sm = _get_sound_manager()
 	if sm:
 		sm.play_sfx_2d("forest_fire", 0.0)
 
@@ -88,7 +100,7 @@ func _start_cinematic_sequence() -> void:
 
 	# Kamera meluncur perlahan
 	var tween_cam = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween_cam.tween_property(cam_forest, ^"position", cam_forest.position + Vector3(0.0, 1.2, -6.0), 7.0)
+	tween_cam.tween_property(cam_forest, ^"position", cam_forest.position + Vector3(0.0, 0.3, -4.0), 7.0)
 
 	await get_tree().create_timer(1.2).timeout
 	if _is_transitioning: return
@@ -126,7 +138,7 @@ func _start_cinematic_sequence() -> void:
 	var tween_fade2 = create_tween()
 	tween_fade2.tween_property(fade_rect, ^"color:a", 0.0, 1.5)
 
-	_show_sub("Rusun UNSRI — Kamar 204")
+	_show_sub("Rusun UNSRI — Kamar 530")
 	await get_tree().create_timer(2.2).timeout
 	if _is_transitioning: return
 
