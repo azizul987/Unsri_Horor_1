@@ -34,24 +34,6 @@ roughness = 0.95
 material = SubResource("StandardMaterial3D_ground")
 size = Vector3(30, 0.2, 30)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dark_butterfly"]
-shader = ExtResource("5_butterfly_shader")
-shader_parameter/butterfly_texture = ExtResource("6_butterfly_tex")
-shader_parameter/flap_speed = 50.0
-shader_parameter/flap_amount = 0.8
-shader_parameter/color_tint = Color(0.0, 0.0, 0.0, 1.0)
-shader_parameter/enable_emission = true
-shader_parameter/emission_color = Color(0.05, 0.0, 0.08, 1.0)
-shader_parameter/emission_energy = 0.5
-
-[sub_resource type="QuadMesh" id="QuadMesh_dark_butterfly"]
-material = SubResource("ShaderMaterial_dark_butterfly")
-size = Vector2(0.28, 0.28)
-
-[sub_resource type="Curve" id="Curve_butterfly_scale"]
-_data = [Vector2(0, 0.4), 0.0, 1.5, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.6), -0.8, 0.0, 0, 0]
-point_count = 3
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fire"]
 render_priority = 0
 shader = ExtResource("4_flame_shader")
@@ -75,6 +57,25 @@ point_count = 3
 offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
 colors = PackedColorArray(1, 1, 1, 0.25, 1, 0.9, 0.6, 1, 1, 0.35, 0.05, 0.9, 0.4, 0.05, 0, 0)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dark_butterfly"]
+render_priority = 0
+shader = ExtResource("5_butterfly_shader")
+shader_parameter/butterfly_texture = ExtResource("6_butterfly_tex")
+shader_parameter/flap_speed = 50.0
+shader_parameter/flap_amount = 0.8
+shader_parameter/color_tint = Color(0, 0, 0, 1)
+shader_parameter/enable_emission = true
+shader_parameter/emission_color = Color(0.05, 0, 0.08, 1)
+shader_parameter/emission_energy = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_dark_butterfly"]
+material = SubResource("ShaderMaterial_dark_butterfly")
+size = Vector2(0.28, 0.28)
+
+[sub_resource type="Curve" id="Curve_butterfly_scale"]
+_data = [Vector2(0, 0.4), 0.0, 1.5, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.6), -0.8, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="LabelSettings" id="LabelSettings_sub"]
 font_size = 19
 outline_size = 5
@@ -95,8 +96,7 @@ outline_color = Color(0, 0, 0, 0.9)
 
 [node name="EndingCinematic" type="Node3D" unique_id=408374442]
 script = ExtResource("1_ending_script")
-is_cure_ending = false
-debug_override_ending = true
+is_cure_ending = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=948785891]
 environment = SubResource("Environment_ending")
@@ -176,7 +176,7 @@ amount = 60
 lifetime = 4.0
 mesh = SubResource("QuadMesh_dark_butterfly")
 emission_shape = 2
-emission_box_extents = Vector3(3.0, 1.5, 3.0)
+emission_sphere_radius = 1.0
 direction = Vector3(0, 0.2, 0)
 spread = 180.0
 gravity = Vector3(0, 0, 0)

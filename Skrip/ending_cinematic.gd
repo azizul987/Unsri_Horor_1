@@ -162,6 +162,10 @@ func _play_ending_burn() -> void:
 
 	_show_sub("")
 	await get_tree().create_timer(1.5).timeout
+
+	var tween_fadein = create_tween()
+	tween_fadein.tween_property(fade_rect, ^"color:a", 0.0, 1.5)
+
 	_show_final_card(
 		"ENDING 2 — ABU DAN KUTUKAN (AMUKAN RAWA)",
 		"Tanpa bunga kehidupan, kutukan hutan menelan segalanya.\nAmir menghilang ke dalam rimba rawa sumatera, menjadi legenda Kupu-Kupu Malam untuk selamanya.",
