@@ -23,6 +23,7 @@ signal door_banged
 		is_open = val
 		if is_inside_tree():
 			_update_door_rotation(false)
+			_update_nav_link()
 
 ## OPSI KUNCI: Apakah pintu ini membutuhkan kunci?
 ## Jika FALSE (OPSI TANPA KUNCI), pintu bebas dibuka-tutup langsung oleh pemain tanpa perlu item kunci!
@@ -74,6 +75,16 @@ signal door_banged
 @onready var interaction_hud: CanvasLayer = get_node_or_null("InteractionHUD")
 @onready var prompt_label: Label = get_node_or_null("InteractionHUD/PromptLabel")
 @onready var door_audio: AudioStreamPlayer3D = get_node_or_null("DoorAudio")
+@onready var nav_link: NavigationLink3D = _find_nav_link()
+
+func _find_nav_link() -> NavigationLink3D:
+	if has_node("NavigationLink3D"):
+		return get_node("NavigationLink3D") as NavigationLink3D
+	return find_child("NavigationLink3D", true, false) as NavigationLink3D
+
+func _update_nav_link() -> void:
+	if nav_link:
+		nav_link.enabled = is_open
 
 func _find_hinge() -> Node3D:
 	if has_node("Hinge"):
@@ -91,6 +102,15 @@ func _ready() -> void:
 	_update_door_rotation(false)
 
 	if not Engine.is_editor_hint():
+		if not nav_link:
+			nav_link = NavigationLink3D.new()
+			nav_link.name = "NavigationLink3D"
+			nav_link.start_position = Vector3(0.0, 0.1, -0.75)
+			nav_link.end_position = Vector3(0.0, 0.1, 0.75)
+			nav_link.bidirectional = true
+			add_child(nav_link)
+		_update_nav_link()
+
 		if interact_area:
 			interact_area.body_entered.connect(_on_body_entered)
 			interact_area.body_exited.connect(_on_body_exited)

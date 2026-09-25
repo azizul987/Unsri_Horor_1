@@ -7,9 +7,6 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
 size = Vector3(1.2140869, 1.731836, 2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_panel"]
-size = Vector3(0.76, 1.61, 0.08)
-
 [sub_resource type="ArrayMesh" id="ArrayMesh_pp1v7"]
 _surfaces = [{
 "aabb": AABB(-1.1920929e-09, -0.0076861084, -0.013760498, 0.012980705, 0.015371931, 0.027520996),
@@ -68,7 +65,11 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_pp1v7")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_panel"]
+size = Vector3(0.76, 1.61, 0.08)
+
 [node name="HorrorDoor" type="Node3D" unique_id=1367131008]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_door_script")
 
 [node name="InteractArea" type="Area3D" parent="." unique_id=1347161814]
@@ -115,3 +116,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38, 0.833, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hinge/StaticBody3D" unique_id=1943827104]
 shape = SubResource("BoxShape3D_panel")
+
+[node name="NavigationLink3D" type="NavigationLink3D" parent="." unique_id=184920195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+enabled = false
+start_position = Vector3(0, 0, -0.75)
+end_position = Vector3(0, 0, 0.75)
