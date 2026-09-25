@@ -222,7 +222,10 @@ func _update_interact_raycast() -> void:
 			# 2. Jika bukan item, periksa apakah yang dilihat adalah InteractiveTable
 			var table: InteractiveTable = _find_interactive_table(collider)
 			if table != null:
-				new_target = table
+				# Kalau laci terbuka dan ada item di dalamnya, skip — biar pemain arahkan ke item
+				var has_item_in_open_drawer: bool = table.is_open and table.current_item_data != null
+				if not has_item_in_open_drawer:
+					new_target = table
 
 	# Update target
 	if _interact_target != new_target:

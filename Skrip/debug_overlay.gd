@@ -78,8 +78,8 @@ func _process(_delta: float) -> void:
 	elif panel:
 		panel.visible = true
 
-	var p_pos = player_node.global_position if is_instance_valid(player_node) else Vector3.ZERO
-	var a_pos = amir_node.global_position if is_instance_valid(amir_node) else Vector3.ZERO
+	var p_pos = player_node.global_position if (is_instance_valid(player_node) and player_node.is_inside_tree()) else Vector3.ZERO
+	var a_pos = amir_node.global_position if (is_instance_valid(amir_node) and amir_node.is_inside_tree()) else Vector3.ZERO
 
 	var dist_3d = p_pos.distance_to(a_pos) if (is_instance_valid(player_node) and is_instance_valid(amir_node)) else 0.0
 	var horiz_dist = Vector2(p_pos.x - a_pos.x, p_pos.z - a_pos.z).length()

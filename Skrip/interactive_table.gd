@@ -29,14 +29,14 @@ signal item_taken(item: ItemData, quantity: int)
 @export_range(0.2, 2.0, 0.05) var animation_duration: float = 0.45
 
 ## Arah geser: 1 (tarik maju keluar +Z), -1 (dorong ke dalam -Z)
-@export_enum("Maju ke Depan (+Z):1", "Maju ke Belakang (-Z):-1") var slide_direction: int = 1
+@export_enum("Maju ke Depan (+Z):1", "Maju ke Belakang (-Z):-1") var slide_direction: int = -1
 
 @export_group("Item di Dalam Laci (Level Designer)")
 ## Item yang diletakkan di dalam laci untuk ditemukan pemain (Kunci, Biskuit, Bunga, dll)
 @export var starting_item: ItemData = null
 
 ## Jumlah item awal
-@export_range(1, 99) var starting_quantity: int = 1
+@export_range(1, 99) var starting_quantity: int = -1
 
 @export_group("Audio")
 @export var sfx_open: AudioStream = preload("res://Asset/Audio/sfx_door_open.wav")

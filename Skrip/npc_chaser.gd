@@ -208,19 +208,16 @@ func set_phase(new_phase: int) -> void:
 func _apply_phase_settings() -> void:
 	match phase:
 		1:
-			# Fase 1 (0-2 Bunga): Lambat, sering merintih/lelah
-			speed = 2.8
-			turn_speed = 7.0
+			speed = randf_range(2.4, 3.1)
+			turn_speed = randf_range(6.0, 8.0)
 			always_chase = false
 		2:
-			# Fase 2 (3-5 Bunga): Kecepatan sedang, patroli aktif
-			speed = 3.6
-			turn_speed = 10.0
+			speed = randf_range(3.2, 4.0)
+			turn_speed = randf_range(9.0, 11.0)
 			always_chase = true
 		3:
-			# Fase 3 (6-8 Bunga): Monster penuh, sangat cepat & agresif
-			speed = 4.8
-			turn_speed = 14.0
+			speed = randf_range(4.4, 5.4)
+			turn_speed = randf_range(12.0, 16.0)
 			always_chase = true
 
 ## 🦋 SIGNATURE MECHANIC: Mengatur intensitas kupu-kupu berdasarkan jarak horizontal
@@ -340,13 +337,34 @@ func _pick_new_patrol_point() -> void:
 
 func teleport_to_other_floor() -> void:
 	var floors = _get_floor_heights()
-	var other_floors: Array[float] = []
+	var player_y: float = target_player.global_position.y if is_instance_valid(target_player) else global_position.y
+
+	# Kumpulkan lantai selain lantai Amir saat ini
+	var candidates: Array[float] = []
 	for f in floors:
 		if abs(f - global_position.y) > 2.0:
-			other_floors.append(f)
-	if other_floors.is_empty():
+			candidates.append(f)
+	if candidates.is_empty():
 		return
-	var target_y: float = other_floors.pick_random()
+
+	# Pilih lantai dengan bobot: makin dekat ke player makin sering dipilih
+	var weights: Array[float] = []
+	for f in candidates:
+		var dist = abs(f - player_y) + 0.5  # +0.5 hindari div by zero
+		weights.append(1.0 / dist)          # jarak dekat = bobot besar
+
+	var total_weight: float = 0.0
+	for w in weights:
+		total_weight += w
+	var roll: float = randf() * total_weight
+	var target_y: float = candidates[0]
+	var accum: float = 0.0
+	for i in candidates.size():
+		accum += weights[i]
+		if roll <= accum:
+			target_y = candidates[i]
+			break
+
 	var raw_pt = Vector3(randf_range(16.5, 17.2), target_y, randf_range(-18.0, 6.0))
 	var final_pos = raw_pt
 	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
@@ -358,7 +376,7 @@ func teleport_to_other_floor() -> void:
 	global_position = final_pos
 	velocity = Vector3.ZERO
 	_is_chasing = false
-	_teleport_timer = teleport_interval
+	_teleport_timer = randf_range(teleport_interval * 0.7, teleport_interval * 1.3)
 	_pick_new_patrol_point()
 
 func get_save_data() -> Dictionary:
