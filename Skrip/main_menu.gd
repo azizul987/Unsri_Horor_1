@@ -13,6 +13,16 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+	# Splash screen plugin mutasi font.fixed_size di shared resource —
+	# reset semua font yang ada di scene ini ke 0
+	var seen_fonts: Array[Font] = []
+	for node in find_children("*", "Control", true, false):
+		for prop in ["font", "bold_font", "italic_font", "normal_font"]:
+			var fnt: Font = (node as Control).get_theme_font(prop) if node is Control else null
+			if fnt and fnt not in seen_fonts:
+				seen_fonts.append(fnt)
+				fnt.fixed_size = 0
+
 	var snd = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
 	if snd:
 		snd.play_music("bgm_tomb", 2.0, -8.0)

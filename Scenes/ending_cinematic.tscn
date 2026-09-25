@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dmiirtf417vky"]
 
 [ext_resource type="Script" uid="uid://5oenrjclciv0" path="res://Skrip/ending_cinematic.gd" id="1_ending_script"]
-[ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="2_altar"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="3_amir"]
 [ext_resource type="Shader" uid="uid://coyg6y1gvq3ks" path="res://Shaders/forest_fire_flame.gdshader" id="4_flame_shader"]
 [ext_resource type="Shader" uid="uid://doq4smie06vfi" path="res://Shaders/butterfly_flap.gdshader" id="5_butterfly_shader"]
+[ext_resource type="PackedScene" uid="uid://vw63pdxf3kh8" path="res://tungku.fbx" id="5_vo11v"]
 [ext_resource type="Texture2D" uid="uid://bsaeqpfefc6oy" path="res://Krita-removebg-preview.png" id="6_butterfly_tex"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
@@ -33,29 +33,6 @@ roughness = 0.95
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 material = SubResource("StandardMaterial3D_ground")
 size = Vector3(30, 0.2, 30)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fire"]
-render_priority = 0
-shader = ExtResource("4_flame_shader")
-shader_parameter/use_texture = false
-shader_parameter/color_core = Color(1, 0.95, 0.5, 1)
-shader_parameter/color_flame = Color(1, 0.45, 0.05, 1)
-shader_parameter/color_tip = Color(0.8, 0.1, 0, 0)
-shader_parameter/flame_speed = 4.5
-shader_parameter/flame_waviness = 0.4
-shader_parameter/emission_boost = 3.0
-
-[sub_resource type="QuadMesh" id="QuadMesh_fire"]
-material = SubResource("ShaderMaterial_fire")
-size = Vector2(1, 1.4)
-
-[sub_resource type="Curve" id="Curve_fire_scale"]
-_data = [Vector2(0, 0.35), 0.0, 2.5, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), -1.8, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="Gradient" id="Gradient_fire"]
-offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
-colors = PackedColorArray(1, 1, 1, 0.25, 1, 0.9, 0.6, 1, 1, 0.35, 0.05, 0.9, 0.4, 0.05, 0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dark_butterfly"]
 render_priority = 0
@@ -94,9 +71,33 @@ font_color = Color(0.9, 0.9, 0.9, 1)
 outline_size = 3
 outline_color = Color(0, 0, 0, 0.9)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fire"]
+render_priority = 0
+shader = ExtResource("4_flame_shader")
+shader_parameter/use_texture = false
+shader_parameter/color_core = Color(1, 0.95, 0.5, 1)
+shader_parameter/color_flame = Color(1, 0.45, 0.05, 1)
+shader_parameter/color_tip = Color(0.8, 0.1, 0, 0)
+shader_parameter/flame_speed = 4.5
+shader_parameter/flame_waviness = 0.4
+shader_parameter/emission_boost = 3.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_fire"]
+material = SubResource("ShaderMaterial_fire")
+size = Vector2(1, 1.4)
+
+[sub_resource type="Curve" id="Curve_fire_scale"]
+_data = [Vector2(0, 0.35), 0.0, 2.5, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), -1.8, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0.25, 1, 0.9, 0.6, 1, 1, 0.35, 0.05, 0.9, 0.4, 0.05, 0, 0)
+
 [node name="EndingCinematic" type="Node3D" unique_id=408374442]
 script = ExtResource("1_ending_script")
-is_cure_ending = true
+is_cure_ending = false
+debug_override_ending = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=948785891]
 environment = SubResource("Environment_ending")
@@ -114,51 +115,6 @@ light_energy = 0.3
 [node name="Ground" type="MeshInstance3D" parent="." unique_id=1838962262]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("BoxMesh_ground")
-
-[node name="FlowerAltar" parent="." unique_id=223160756 instance=ExtResource("2_altar")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
-
-[node name="FireEffect" type="Node3D" parent="FlowerAltar" unique_id=339201841]
-transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 1.2, 0)
-
-[node name="FireBase" type="CPUParticles3D" parent="FlowerAltar/FireEffect" unique_id=441820293]
-emitting = false
-amount = 30
-mesh = SubResource("QuadMesh_fire")
-emission_shape = 1
-emission_sphere_radius = 0.6
-direction = Vector3(0, 1, 0)
-spread = 25.0
-gravity = Vector3(0, 2, 0)
-initial_velocity_min = 1.2
-initial_velocity_max = 2.2
-scale_amount_max = 1.6
-scale_amount_curve = SubResource("Curve_fire_scale")
-color_ramp = SubResource("Gradient_fire")
-
-[node name="FireTop" type="CPUParticles3D" parent="FlowerAltar/FireEffect" unique_id=558291047]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-emitting = false
-amount = 20
-lifetime = 1.2
-mesh = SubResource("QuadMesh_fire")
-emission_shape = 3
-emission_box_extents = Vector3(0.35, 0.5, 0.35)
-direction = Vector3(0, 1, 0)
-spread = 20.0
-gravity = Vector3(0, 2.5, 0)
-initial_velocity_min = 1.5
-initial_velocity_max = 2.8
-scale_amount_min = 0.7
-scale_amount_max = 1.4
-scale_amount_curve = SubResource("Curve_fire_scale")
-color_ramp = SubResource("Gradient_fire")
-
-[node name="AltarLight" type="OmniLight3D" parent="." unique_id=1329648510]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.5)
-light_color = Color(0.4, 1, 0.7, 1)
-light_energy = 2.5
-omni_range = 8.0
 
 [node name="Amir" parent="." unique_id=584547659 instance=ExtResource("3_amir")]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.4, 0.6)
@@ -281,3 +237,47 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="tungku" parent="." unique_id=400771687 instance=ExtResource("5_vo11v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12967205, 0, -0.4227016)
+
+[node name="AltarLight" type="OmniLight3D" parent="tungku" unique_id=1329648510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12967205, 1.4, -0.0772984)
+light_color = Color(0.4, 1, 0.7, 1)
+light_energy = 2.5
+omni_range = 8.0
+
+[node name="FireEffect" type="Node3D" parent="tungku" unique_id=339201841]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.12967205, 1.2, -0.0772984)
+
+[node name="FireBase" type="CPUParticles3D" parent="tungku/FireEffect" unique_id=441820293]
+amount = 30
+mesh = SubResource("QuadMesh_fire")
+emission_shape = 1
+emission_sphere_radius = 0.6
+direction = Vector3(0, 1, 0)
+spread = 25.0
+gravity = Vector3(0, 2, 0)
+initial_velocity_min = 1.2
+initial_velocity_max = 2.2
+scale_amount_max = 1.6
+scale_amount_curve = SubResource("Curve_fire_scale")
+color_ramp = SubResource("Gradient_fire")
+
+[node name="FireTop" type="CPUParticles3D" parent="tungku/FireEffect" unique_id=558291047]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+emitting = false
+amount = 20
+lifetime = 1.2
+mesh = SubResource("QuadMesh_fire")
+emission_shape = 3
+emission_box_extents = Vector3(0.35, 0.5, 0.35)
+direction = Vector3(0, 1, 0)
+spread = 20.0
+gravity = Vector3(0, 2.5, 0)
+initial_velocity_min = 1.5
+initial_velocity_max = 2.8
+scale_amount_min = 0.7
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_fire_scale")
+color_ramp = SubResource("Gradient_fire")

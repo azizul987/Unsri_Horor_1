@@ -3,8 +3,14 @@
 [ext_resource type="Script" uid="uid://ca5gh6nv811en" path="res://addons/awesome_splash/core/SplashContainer.gd" id="1_b04ml"]
 [ext_resource type="PackedScene" uid="uid://b2mainmenu001" path="res://Scenes/main_menu.tscn" id="2_13jq6"]
 [ext_resource type="PackedScene" uid="uid://dl2v33c3p3coa" path="res://src/demo_collection/dark/splash_screen.tscn" id="2_50j67"]
+[ext_resource type="PackedScene" uid="uid://c1a6h17cr3guq" path="res://src/demo_collection/fire/splash_screen.tscn" id="4_xoh7v"]
+[ext_resource type="AudioStream" uid="uid://ft1b6wgjix50" path="res://Asset/Audio/ambience_rusun_drone.wav" id="5_audio"]
+[ext_resource type="Script" uid="uid://mbhm2cv7cqv" path="res://Skrip/splash_music.gd" id="6_splashmusic"]
 
-[node name="SplashContainer" type="Node2D" unique_id=355726111]
+[node name="Root" type="Node2D" unique_id=1358972037]
+
+[node name="SplashContainer" type="Node2D" parent="." unique_id=355726111]
+position = Vector2(1, 0)
 script = ExtResource("1_b04ml")
 custom_node/type = 0
 custom_node/default_time = 1.0
@@ -13,7 +19,21 @@ move_to_scene = ExtResource("2_13jq6")
 transition_time = 1.0
 fade_color = Color(0.014125013, 8.9305106e-09, 0.00022120273, 1)
 
-[node name="SplashDark" parent="." unique_id=1521766926 instance=ExtResource("2_50j67")]
+[node name="SplashFire" parent="SplashContainer" unique_id=1436293580 instance=ExtResource("4_xoh7v")]
+logo_path = "uid://cvwjdoyn1lrf"
+title = "Bantu Amir cari fineshyt"
+description = "Present"
+vfx_color = Color(0.65660524, 0.12526205, 2.8878452e-07, 1)
+title_font_size = 170.0
+description_font_size = 100.0
+
+[node name="SplashDark" parent="SplashContainer" unique_id=1521766926 instance=ExtResource("2_50j67")]
+logo_path = "uid://47ythhcaar8r"
 title = "Unsri-Horor"
 description = "When-Ya"
 vfx_color = Color(0.5847289, 0, 0.16155565, 1)
+
+[node name="SplashMusic" type="AudioStreamPlayer" parent="." unique_id=1364876850]
+stream = ExtResource("5_audio")
+volume_db = -10.0
+script = ExtResource("6_splashmusic")

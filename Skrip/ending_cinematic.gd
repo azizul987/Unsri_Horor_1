@@ -22,10 +22,10 @@ extends Node3D
 @onready var ending_title: Label = $UI/EndingTitle/TitleLabel
 @onready var ending_sub: Label = $UI/EndingTitle/SubLabel
 @onready var restart_btn: Button = $UI/EndingTitle/RestartButton
-@onready var altar_light: OmniLight3D = $AltarLight
+@onready var altar_light: OmniLight3D = $tungku/AltarLight
 @onready var amir_glow: OmniLight3D = $Amir/AmirGlow
-@onready var fire_base: CPUParticles3D = $FlowerAltar/FireEffect/FireBase
-@onready var fire_top: CPUParticles3D = $FlowerAltar/FireEffect/FireTop
+@onready var fire_base: CPUParticles3D = $tungku/FireEffect/FireBase
+@onready var fire_top: CPUParticles3D = $tungku/FireEffect/FireTop
 @onready var butterfly_swarm: CPUParticles3D = $ButterflySwarm
 
 var _is_transitioning: bool = false
@@ -194,4 +194,4 @@ func _show_final_card(title: String, subtitle: String, title_col: Color) -> void
 	tween.tween_property(restart_btn, ^"modulate:a", 1.0, 0.6)
 
 func _on_restart_pressed() -> void:
-	get_tree().change_scene_to_file("res://Scenes/intro_cinematic.tscn")
+	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
