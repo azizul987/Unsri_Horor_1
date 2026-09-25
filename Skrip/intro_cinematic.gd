@@ -54,7 +54,7 @@ func _ready() -> void:
 			node.visible = false
 
 	# Pastikan mouse tertangkap atau bebas untuk UI
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	# Mulai urutan intro setelah 0.5 detik
 	get_tree().create_timer(0.5).timeout.connect(_start_cinematic_sequence)

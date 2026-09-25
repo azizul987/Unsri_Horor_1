@@ -1,7 +1,8 @@
 class_name MainMenuController
 extends Control
 
-@export_file("*.tscn") var start_game_scene: String = "res://Scenes/main.tscn"
+@export_file("*.tscn") var intro_scene: String = "res://Scenes/intro_cinematic.tscn"
+@export_file("*.tscn") var gameplay_scene: String = "res://Scenes/main.tscn"
 
 @onready var play_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PlayButton
 @onready var continue_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContinueButton
@@ -9,6 +10,7 @@ extends Control
 @onready var ambience_audio: AudioStreamPlayer = $AmbienceAudio
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(Color.BLACK)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
 	play_button.pressed.connect(_on_play_pressed)
@@ -47,8 +49,8 @@ func _on_play_pressed() -> void:
 		inv.clear_inventory()
 
 	await get_tree().create_timer(0.15).timeout
-	if not start_game_scene.is_empty():
-		get_tree().change_scene_to_file(start_game_scene)
+	if not intro_scene.is_empty():
+		get_tree().change_scene_to_file(intro_scene)
 
 func _on_continue_pressed() -> void:
 	_animate_button(continue_button)
@@ -71,8 +73,8 @@ func _on_continue_pressed() -> void:
 			ss.load_game()
 
 	await get_tree().create_timer(0.15).timeout
-	if not start_game_scene.is_empty():
-		get_tree().change_scene_to_file(start_game_scene)
+	if not gameplay_scene.is_empty():
+		get_tree().change_scene_to_file(gameplay_scene)
 
 func _on_quit_pressed() -> void:
 	_animate_button(quit_button)

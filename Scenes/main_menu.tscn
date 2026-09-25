@@ -2,19 +2,41 @@
 
 [ext_resource type="Script" uid="uid://bdn0tv0vqevln" path="res://Skrip/main_menu.gd" id="1_menu"]
 [ext_resource type="AudioStream" uid="uid://ft1b6wgjix50" path="res://Asset/Audio/ambience_rusun_drone.wav" id="2_ambience"]
+[ext_resource type="Script" uid="uid://dm0nf48ojecem" path="res://Skrip/forest_fire_zone.gd" id="3_cp0ys"]
+[ext_resource type="PackedScene" uid="uid://bsyavtb5sdys6" path="res://pohon.fbx" id="4_yhxw7"]
+[ext_resource type="PackedScene" uid="uid://ct7uxwbefbd8k" path="res://Scenes/forest_fire_tree.tscn" id="5_trj04"]
+[ext_resource type="FontFile" uid="uid://b611dupw2sgjx" path="res://Asset/font/Kisah Horor Sobat.otf" id="7_trj04"]
+[ext_resource type="Shader" uid="uid://sdpbcsmfkl32" path="res://Shaders/forest_ember.gdshader" id="7_vr1f0"]
+[ext_resource type="FontFile" uid="uid://koxxvlw1v650" path="res://Asset/font/Kisah Horor Sobat.ttf" id="7_yhxw7"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_panel"]
-bg_color = Color(0.08, 0.08, 0.1, 0.94)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.35, 0.16, 0.2, 0.7)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_size = 18
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boundary"]
+transparency = 1
+albedo_color = Color(0.32295337, 0.54067117, 0.3083996, 0.14901961)
+
+[sub_resource type="BoxMesh" id="BoxMesh_boundary"]
+material = SubResource("StandardMaterial3D_boundary")
+size = Vector3(40, 0.2, 40)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ambient_ember"]
+render_priority = 0
+shader = ExtResource("7_vr1f0")
+shader_parameter/ember_color = Color(1, 0.65, 0.2, 1)
+shader_parameter/pulse_speed = 6.0
+shader_parameter/glow_intensity = 3.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_ambient_ember"]
+material = SubResource("ShaderMaterial_ambient_ember")
+size = Vector2(0.2, 0.2)
+
+[sub_resource type="Curve" id="Curve_ambient_scale"]
+_data = [Vector2(0, 0.2), 0.0, 2.0, 0, 0, Vector2(0.4, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), -1.5, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_ambient_ember"]
+offsets = PackedFloat32Array(0, 0.15, 0.8, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 0.8, 0.3, 0.8, 1, 0.45, 0.1, 0.7, 0.5, 0.1, 0, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cp0ys"]
 
 [node name="MainMenu" type="Control" unique_id=623265015]
 layout_mode = 3
@@ -25,14 +47,144 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="Background" type="ColorRect" parent="." unique_id=2029134345]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1553080989]
+modulate = Color(1, 1, 1, 0.35686275)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.04, 0.04, 0.05, 1)
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=506260282]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="ForestFireZone" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1154134575]
+script = ExtResource("3_cp0ys")
+tree_model = ExtResource("4_yhxw7")
+
+[node name="ZoneBoundaryGuide" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/ForestFireZone" unique_id=459242025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("BoxMesh_boundary")
+
+[node name="TreesContainer" type="Node3D" parent="SubViewportContainer/SubViewport/ForestFireZone" unique_id=1858826631]
+
+[node name="ForestFireTree" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=214027030 instance=ExtResource("5_trj04")]
+transform = Transform3D(0.7737795, 0, -0.633455, 0, 1, 0, 0.633455, 0, 0.7737795, -16.209558, 0, 2.1995904)
+tree_height = 6.330858382712361
+trunk_radius = 0.3854822905119657
+
+[node name="@Node3D@30375" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=364349810 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.21394376, 0, 0.976846, 0, 1, 0, -0.976846, 0, -0.21394376, -0.2565919, 0, 5.439229)
+tree_height = 4.7541277232668895
+trunk_radius = 0.5447445450126538
+fire_intensity = 0.2
+smoke_density = 1.3
+
+[node name="@Node3D@30376" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=1083219215 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.28305945, 0, -0.9591024, 0, 1, 0, 0.9591024, 0, -0.28305945, 2.841968, 0, 5.604369)
+tree_height = 4.657515405483188
+trunk_radius = 0.3762494373744487
+
+[node name="@Node3D@30377" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=246022271 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.81266654, 0, -0.58272904, 0, 1, 0, 0.58272904, 0, -0.81266654, 3.5371685, 0, 13.48929)
+tree_height = 6.239335208781376
+trunk_radius = 0.5711579398508174
+
+[node name="@Node3D@30378" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=540971979 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.0018271635, 0, 0.99999833, 0, 1, 0, -0.99999833, 0, -0.0018271635, -16.396538, 0, 19.651834)
+tree_height = 6.780535026023669
+trunk_radius = 0.507500410017605
+enable_light = false
+
+[node name="@Node3D@30379" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=1099587866 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.87168723, 0, -0.49006262, 0, 1, 0, 0.49006262, 0, -0.87168723, -8.092963, 0, 4.6448574)
+tree_height = 5.648593033266336
+trunk_radius = 0.6090499614793148
+enable_light = false
+
+[node name="@Node3D@30380" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=637926439 instance=ExtResource("5_trj04")]
+transform = Transform3D(0.19570115, 0, -0.9806636, 0, 1, 0, 0.9806636, 0, 0.19570115, -16.758461, 0, -3.4697783)
+tree_height = 5.275615892439164
+trunk_radius = 0.551811324864695
+enable_light = false
+
+[node name="@Node3D@30381" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=1718325232 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.8826321, 0, 0.47006446, 0, 1, 0, -0.47006446, 0, -0.8826321, -0.33513245, 0, -7.950852)
+tree_height = 7.914869048573531
+trunk_radius = 0.5972951452351225
+enable_light = false
+
+[node name="@Node3D@30382" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=1545743850 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.9834951, 0, 0.18093483, 0, 1, 0, -0.18093483, 0, -0.9834951, 18.662954, 0, 0.14786476)
+tree_height = 4.655867623413273
+trunk_radius = 0.6469244602947224
+enable_light = false
+
+[node name="@Node3D@30383" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=230873485 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.14907044, 0, -0.9888266, 0, 1, 0, 0.9888266, 0, -0.14907044, -7.5983124, 0, -3.2034376)
+tree_height = 7.980156376180087
+trunk_radius = 0.5092594417849683
+enable_light = false
+
+[node name="@Node3D@30384" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=567999239 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.99619573, 0, 0.08714424, 0, 1, 0, -0.08714424, 0, -0.99619573, 4.905531, 0, 19.24878)
+tree_height = 6.400199300075231
+trunk_radius = 0.5426757102736411
+enable_light = false
+
+[node name="@Node3D@30385" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=2138208877 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.56103164, 0, 0.8277944, 0, 1, 0, -0.8277944, 0, -0.56103164, 19.735989, 0, -8.599133)
+tree_height = 6.35709523672369
+trunk_radius = 0.37260794709884754
+enable_light = false
+
+[node name="@Node3D@30386" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=115662789 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.499246, 0, 0.86646026, 0, 1, 0, -0.86646026, 0, -0.499246, -8.1458235, 0, -7.2181134)
+tree_height = 6.201270587593574
+trunk_radius = 0.391738681532302
+enable_light = false
+
+[node name="@Node3D@30387" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=2087242590 instance=ExtResource("5_trj04")]
+transform = Transform3D(0.70548266, 0, -0.7087272, 0, 1, 0, 0.7087272, 0, 0.70548266, 3.1417382, 0, 9.82964)
+tree_height = 7.490824497442623
+trunk_radius = 0.48044430949225414
+fire_intensity = 0.2
+smoke_density = 1.3
+enable_light = false
+
+[node name="@Node3D@30388" parent="SubViewportContainer/SubViewport/ForestFireZone/TreesContainer" unique_id=1123520594 instance=ExtResource("5_trj04")]
+transform = Transform3D(-0.738535, 0, 0.67421514, 0, 1, 0, -0.67421514, 0, -0.738535, -12.614262, 0, 15.05451)
+tree_height = 7.838055448665762
+trunk_radius = 0.6494710298349107
+enable_light = false
+
+[node name="AmbientEmbers" type="CPUParticles3D" parent="SubViewportContainer/SubViewport/ForestFireZone" unique_id=313620348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+amount = 80
+lifetime = 6.0
+mesh = SubResource("QuadMesh_ambient_ember")
+emission_shape = 3
+emission_box_extents = Vector3(20, 6, 20)
+direction = Vector3(0.5, -0.3, 0.3)
+spread = 60.0
+gravity = Vector3(0, -0.4, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.8
+scale_amount_min = 0.6
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_ambient_scale")
+color_ramp = SubResource("Gradient_ambient_ember")
+
+[node name="ZoneAudio" type="AudioStreamPlayer3D" parent="SubViewportContainer/SubViewport/ForestFireZone" unique_id=221243191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+max_distance = 60.0
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/ForestFireZone" unique_id=690398620]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9883423, 13.154257)
 
 [node name="VignetteOverlay" type="ColorRect" parent="." unique_id=761414518]
 layout_mode = 1
@@ -54,7 +206,7 @@ grow_vertical = 2
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1372296884]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_menu_panel")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_cp0ys")
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=565617105]
 layout_mode = 2
@@ -70,13 +222,15 @@ theme_override_constants/separation = 12
 [node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1010107215]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.2, 0.25, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("7_yhxw7")
+theme_override_font_sizes/font_size = 81
 text = "UNSRI HOROR"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=280993546]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.65, 0.7, 0.8)
+theme_override_fonts/font = ExtResource("7_trj04")
 theme_override_font_sizes/font_size = 13
 text = "WHEN-YA"
 horizontal_alignment = 1
@@ -89,6 +243,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 focus_neighbor_top = NodePath("../QuitButton")
 focus_neighbor_bottom = NodePath("../ContinueButton")
+theme_override_fonts/font = ExtResource("7_yhxw7")
 text = "Mulai Game"
 
 [node name="ContinueButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1060076152]
@@ -96,6 +251,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 focus_neighbor_top = NodePath("../PlayButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
+theme_override_fonts/font = ExtResource("7_trj04")
 text = "Lanjutkan"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=319478611]
@@ -103,6 +259,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 focus_neighbor_top = NodePath("../ContinueButton")
 focus_neighbor_bottom = NodePath("../PlayButton")
+theme_override_fonts/font = ExtResource("7_yhxw7")
 text = "Keluar Game"
 
 [node name="AmbienceAudio" type="AudioStreamPlayer" parent="." unique_id=1432062452]

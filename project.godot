@@ -37,6 +37,10 @@ enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addon
 player=""
 pintu=""
 
+[gui]
+
+theme/custom_font="uid://koxxvlw1v650"
+
 [input]
 
 ui_left={

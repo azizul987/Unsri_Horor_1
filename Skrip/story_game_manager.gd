@@ -30,6 +30,7 @@ static var instance: StoryGameManager
 
 @export_group("Slot SaveSystem")
 @export var active_slot: int = 1
+@export var autosave_interval: float = 30.0
 
 # Referensi node dalam game
 var player_node: Node3D = null
@@ -46,19 +47,24 @@ func _enter_tree() -> void:
 		instance = self
 
 func _ready() -> void:
-	# Pastikan slot save aktif di SaveSystem
+	RenderingServer.set_default_clear_color(Color.BLACK)
 	if SaveSystem:
 		SaveSystem.set_slot(active_slot)
 
 	_setup_save_hud()
 
-	# Hubungkan event selesai dialog dari addon HorrorDialogue
 	if HorrorDialogue:
 		HorrorDialogue.dialogue_finished.connect(_on_dialogue_finished)
 		HorrorDialogue.dialogue_event_triggered.connect(_on_dialogue_event_triggered)
 
-	# Tunggu frame pertama agar node pemain dan Amir sudah siap di scene
 	call_deferred(&"_find_scene_nodes")
+	_start_autosave_loop()
+
+func _start_autosave_loop() -> void:
+	while is_inside_tree():
+		await get_tree().create_timer(autosave_interval).timeout
+		if is_instance_valid(player_node) and not get_tree().paused:
+			save_game_state()
 
 func _exit_tree() -> void:
 	if instance == self:
