@@ -13,6 +13,8 @@ extends Node3D
 
 ## Tipe ending yang dijalankan (true = Ending 1: Sembuh, false = Ending 2: Bakar)
 @export var is_cure_ending: bool = true
+## Centang ini saat testing biar nilai is_cure_ending di atas tidak ditimpa oleh StoryManager
+@export var debug_override_ending: bool = false
 
 @onready var cam: Camera3D = $Camera3D
 @onready var fade_rect: ColorRect = $UI/FadeRect
@@ -22,6 +24,9 @@ extends Node3D
 @onready var restart_btn: Button = $UI/EndingTitle/RestartButton
 @onready var altar_light: OmniLight3D = $AltarLight
 @onready var amir_glow: OmniLight3D = $Amir/AmirGlow
+@onready var fire_base: CPUParticles3D = $FlowerAltar/FireEffect/FireBase
+@onready var fire_top: CPUParticles3D = $FlowerAltar/FireEffect/FireTop
+@onready var butterfly_swarm: CPUParticles3D = $ButterflySwarm
 
 var _is_transitioning: bool = false
 
@@ -31,13 +36,14 @@ func _ready() -> void:
 	ending_title.text = ""
 	ending_sub.text = ""
 	restart_btn.visible = false
+	restart_btn.text = "Kembali ke Menu"
 	restart_btn.pressed.connect(_on_restart_pressed)
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	# Cek apakah tipe ending dioper via StoryGameManager
 	var story = StoryManager if StoryManager else StoryGameManager.instance
-	if story and "is_cure_ending" in story:
+	if not debug_override_ending and story and "is_cure_ending" in story:
 		is_cure_ending = story.is_cure_ending
 
 	get_tree().create_timer(0.6).timeout.connect(_start_ending_sequence)
@@ -112,6 +118,11 @@ func _play_ending_burn() -> void:
 	altar_light.light_color = Color(1.0, 0.25, 0.05, 1.0)
 	altar_light.light_energy = 5.0
 
+	if fire_base:
+		fire_base.emitting = true
+	if fire_top:
+		fire_top.emitting = true
+
 	var tween_fade = create_tween()
 	tween_fade.tween_property(fade_rect, ^"color:a", 0.0, 1.5)
 
@@ -133,10 +144,13 @@ func _play_ending_burn() -> void:
 	var tween_glow2 = create_tween()
 	tween_glow2.tween_property(amir_glow, ^"light_energy", 6.0, 0.2)
 
-	_show_sub("Roh hutan rawa mengamuk! Ribuan ngengat hitam keluar dari pepohonan, menyatu ke dalam raga Amir!")
+	if butterfly_swarm:
+		butterfly_swarm.emitting = true
+
+	_show_sub("Roh hutan rawa mengamuk! Ribuan kupu-kupu hitam keluar dari pepohonan, menyatu ke dalam raga Amir!")
 
 	await get_tree().create_timer(4.5).timeout
-	_show_sub("Sosok Amir lenyap... digantikan oleh monster malam bersayap jelaga dengan mata menyala merah.")
+	_show_sub("Sosok Amir lenyap... digantikan oleh sosok kupu-kupu malam raksasa bersayap jelaga dengan mata menyala merah.")
 
 	await get_tree().create_timer(4.5).timeout
 	if sm:
@@ -164,12 +178,16 @@ func _show_final_card(title: String, subtitle: String, title_col: Color) -> void
 	sub_label.text = ""
 	ending_title.text = title
 	ending_title.modulate = title_col
+	ending_title.modulate.a = 0.0
 	ending_sub.text = subtitle
+	ending_sub.modulate.a = 0.0
+	restart_btn.modulate.a = 0.0
 	restart_btn.visible = true
 
 	var tween = create_tween()
 	tween.tween_property(ending_title, ^"modulate:a", 1.0, 1.2)
 	tween.tween_property(ending_sub, ^"modulate:a", 1.0, 0.8)
+	tween.tween_property(restart_btn, ^"modulate:a", 1.0, 0.6)
 
 func _on_restart_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scenes/intro_cinematic.tscn")

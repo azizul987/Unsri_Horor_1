@@ -1,8 +1,11 @@
-[gd_scene format=3 uid="uid://endingcinematic001"]
+[gd_scene format=3 uid="uid://dmiirtf417vky"]
 
-[ext_resource type="Script" path="res://Skrip/ending_cinematic.gd" id="1_ending_script"]
+[ext_resource type="Script" uid="uid://5oenrjclciv0" path="res://Skrip/ending_cinematic.gd" id="1_ending_script"]
 [ext_resource type="PackedScene" uid="uid://cflwraltar001" path="res://Scenes/flower_altar.tscn" id="2_altar"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="3_amir"]
+[ext_resource type="Shader" uid="uid://coyg6y1gvq3ks" path="res://Shaders/forest_fire_flame.gdshader" id="4_flame_shader"]
+[ext_resource type="Shader" uid="uid://doq4smie06vfi" path="res://Shaders/butterfly_flap.gdshader" id="5_butterfly_shader"]
+[ext_resource type="Texture2D" uid="uid://bsaeqpfefc6oy" path="res://Krita-removebg-preview.png" id="6_butterfly_tex"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.02, 0.01, 0.02, 1)
@@ -31,19 +34,46 @@ roughness = 0.95
 material = SubResource("StandardMaterial3D_ground")
 size = Vector3(30, 0.2, 30)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amir"]
-albedo_color = Color(0.2, 0.22, 0.25, 1)
-roughness = 0.85
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dark_butterfly"]
+shader = ExtResource("5_butterfly_shader")
+shader_parameter/butterfly_texture = ExtResource("6_butterfly_tex")
+shader_parameter/flap_speed = 50.0
+shader_parameter/flap_amount = 0.8
+shader_parameter/color_tint = Color(0.0, 0.0, 0.0, 1.0)
+shader_parameter/enable_emission = true
+shader_parameter/emission_color = Color(0.05, 0.0, 0.08, 1.0)
+shader_parameter/emission_energy = 0.5
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_amir_torso"]
-material = SubResource("StandardMaterial3D_amir")
-radius = 0.22
-height = 0.85
+[sub_resource type="QuadMesh" id="QuadMesh_dark_butterfly"]
+material = SubResource("ShaderMaterial_dark_butterfly")
+size = Vector2(0.28, 0.28)
 
-[sub_resource type="SphereMesh" id="SphereMesh_amir_head"]
-material = SubResource("StandardMaterial3D_amir")
-radius = 0.16
-height = 0.32
+[sub_resource type="Curve" id="Curve_butterfly_scale"]
+_data = [Vector2(0, 0.4), 0.0, 1.5, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.6), -0.8, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fire"]
+render_priority = 0
+shader = ExtResource("4_flame_shader")
+shader_parameter/use_texture = false
+shader_parameter/color_core = Color(1, 0.95, 0.5, 1)
+shader_parameter/color_flame = Color(1, 0.45, 0.05, 1)
+shader_parameter/color_tip = Color(0.8, 0.1, 0, 0)
+shader_parameter/flame_speed = 4.5
+shader_parameter/flame_waviness = 0.4
+shader_parameter/emission_boost = 3.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_fire"]
+material = SubResource("ShaderMaterial_fire")
+size = Vector2(1, 1.4)
+
+[sub_resource type="Curve" id="Curve_fire_scale"]
+_data = [Vector2(0, 0.35), 0.0, 2.5, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), -1.8, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0.25, 1, 0.9, 0.6, 1, 1, 0.35, 0.05, 0.9, 0.4, 0.05, 0, 0)
 
 [sub_resource type="LabelSettings" id="LabelSettings_sub"]
 font_size = 19
@@ -63,48 +93,105 @@ font_color = Color(0.9, 0.9, 0.9, 1)
 outline_size = 3
 outline_color = Color(0, 0, 0, 0.9)
 
-[node name="EndingCinematic" type="Node3D"]
+[node name="EndingCinematic" type="Node3D" unique_id=408374442]
 script = ExtResource("1_ending_script")
+is_cure_ending = false
+debug_override_ending = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=948785891]
 environment = SubResource("Environment_ending")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.0, 3.8)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2095211727]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2, 3.8)
 current = true
 fov = 58.0
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=103630883]
 transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 8, 0)
 light_color = Color(0.5, 0.6, 0.8, 1)
 light_energy = 0.3
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1838962262]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("BoxMesh_ground")
 
-[node name="FlowerAltar" parent="." instance=ExtResource("2_altar")]
+[node name="FlowerAltar" parent="." unique_id=223160756 instance=ExtResource("2_altar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 
-[node name="AltarLight" type="OmniLight3D" parent="."]
+[node name="FireEffect" type="Node3D" parent="FlowerAltar" unique_id=339201841]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 1.2, 0)
+
+[node name="FireBase" type="CPUParticles3D" parent="FlowerAltar/FireEffect" unique_id=441820293]
+emitting = false
+amount = 30
+mesh = SubResource("QuadMesh_fire")
+emission_shape = 1
+emission_sphere_radius = 0.6
+direction = Vector3(0, 1, 0)
+spread = 25.0
+gravity = Vector3(0, 2, 0)
+initial_velocity_min = 1.2
+initial_velocity_max = 2.2
+scale_amount_max = 1.6
+scale_amount_curve = SubResource("Curve_fire_scale")
+color_ramp = SubResource("Gradient_fire")
+
+[node name="FireTop" type="CPUParticles3D" parent="FlowerAltar/FireEffect" unique_id=558291047]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+emitting = false
+amount = 20
+lifetime = 1.2
+mesh = SubResource("QuadMesh_fire")
+emission_shape = 3
+emission_box_extents = Vector3(0.35, 0.5, 0.35)
+direction = Vector3(0, 1, 0)
+spread = 20.0
+gravity = Vector3(0, 2.5, 0)
+initial_velocity_min = 1.5
+initial_velocity_max = 2.8
+scale_amount_min = 0.7
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_fire_scale")
+color_ramp = SubResource("Gradient_fire")
+
+[node name="AltarLight" type="OmniLight3D" parent="." unique_id=1329648510]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.5)
 light_color = Color(0.4, 1, 0.7, 1)
 light_energy = 2.5
 omni_range = 8.0
 
-[node name="Amir" parent="." instance=ExtResource("3_amir")]
+[node name="Amir" parent="." unique_id=584547659 instance=ExtResource("3_amir")]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.4, 0.6)
 
-[node name="AmirGlow" type="OmniLight3D" parent="Amir"]
+[node name="AmirGlow" type="OmniLight3D" parent="Amir" unique_id=19923594]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 light_color = Color(0.2, 1, 0.5, 1)
 light_energy = 3.0
 omni_range = 3.0
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="ButterflySwarm" type="CPUParticles3D" parent="." unique_id=773920481]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.5)
+emitting = false
+amount = 60
+lifetime = 4.0
+mesh = SubResource("QuadMesh_dark_butterfly")
+emission_shape = 2
+emission_box_extents = Vector3(3.0, 1.5, 3.0)
+direction = Vector3(0, 0.2, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.8
+angular_velocity_min = -60.0
+angular_velocity_max = 60.0
+scale_amount_min = 0.6
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_butterfly_scale")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=141082132]
 layer = 10
 
-[node name="Subtitles" type="MarginContainer" parent="UI"]
+[node name="Subtitles" type="MarginContainer" parent="UI" unique_id=842081487]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -116,7 +203,7 @@ theme_override_constants/margin_left = 60
 theme_override_constants/margin_right = 60
 theme_override_constants/margin_bottom = 45
 
-[node name="Label" type="Label" parent="UI/Subtitles"]
+[node name="Label" type="Label" parent="UI/Subtitles" unique_id=173224318]
 layout_mode = 2
 text = "Ending monologue text"
 label_settings = SubResource("LabelSettings_sub")
@@ -124,7 +211,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="EndingTitle" type="Control" parent="UI"]
+[node name="EndingTitle" type="Control" parent="UI" unique_id=346940255]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -133,7 +220,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="UI/EndingTitle"]
+[node name="TitleLabel" type="Label" parent="UI/EndingTitle" unique_id=204781020]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -151,7 +238,7 @@ label_settings = SubResource("LabelSettings_title")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SubLabel" type="Label" parent="UI/EndingTitle"]
+[node name="SubLabel" type="Label" parent="UI/EndingTitle" unique_id=372570434]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -170,7 +257,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="RestartButton" type="Button" parent="UI/EndingTitle"]
+[node name="RestartButton" type="Button" parent="UI/EndingTitle" unique_id=1559771197]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -186,7 +273,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "🔄 Mainkan Lagi dari Prolog"
 
-[node name="FadeRect" type="ColorRect" parent="UI"]
+[node name="FadeRect" type="ColorRect" parent="UI" unique_id=1794326673]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
