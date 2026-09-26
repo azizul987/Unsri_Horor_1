@@ -1,19 +1,12 @@
 [gd_scene format=4 uid="uid://cuhc1rlgfi1hf"]
 
-[ext_resource type="Script" path="res://Skrip/interactive_table.gd" id="1_table_script"]
-[ext_resource type="Resource" path="res://addons/easy_inventory/examples/items/flower_08.tres" id="2_flower_08"]
+[ext_resource type="Script" uid="uid://dqwnlsm0mgwpq" path="res://Skrip/interactive_table.gd" id="1_table_script"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_srugo"]
 resource_name = "Wood"
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.44665962, 0.19491105, 0.114422254, 1)
 emission_enabled = true
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_table_col"]
-size = Vector3(0.75, 0.75, 1.05)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_drawer_front"]
-size = Vector3(1.8, 0.4, 0.1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_d77f6"]
 _surfaces = [{
@@ -83,11 +76,15 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_r4exs")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_drawer_front"]
+size = Vector3(1.8, 0.4, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_table_col"]
+size = Vector3(0.75, 0.75, 1.05)
+
 [node name="InteractiveTable" type="Node3D" unique_id=755558359]
 script = ExtResource("1_table_script")
-slide_distance = 0.45
-slide_direction = 1
-starting_item = ExtResource("2_flower_08")
+slide_direction = -1
 
 [node name="meja_dibuka" type="Node3D" parent="." unique_id=1058529393]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039216638, 0, -1.5974598)
@@ -102,9 +99,10 @@ mesh = SubResource("ArrayMesh_vg4ep")
 
 [node name="ItemSlot" type="Node3D" parent="meja_dibuka/Cube_185" unique_id=184910248]
 transform = Transform3D(3.261245, 0, 0, 0, 3.261245, 0, 0, 0, 3.261245, -0.07, -0.02, 1.12)
+visible = false
 
 [node name="DrawerHandleBody" type="AnimatableBody3D" parent="meja_dibuka/Cube_185" unique_id=987654321]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07, 0, 2.20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07, 0, 2.2)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="meja_dibuka/Cube_185/DrawerHandleBody" unique_id=987654322]
 shape = SubResource("BoxShape3D_drawer_front")

@@ -1,28 +1,31 @@
-class_name MbahRamaNPC
+class_name RamaNPC
 extends Node3D
 
-## NPC Mbah Rama di Lantai 2 Rusun.
-## Memberikan arahan cerita (lore) tentang musibah Amir dan instruksi mencari 8 bunga.
+## NPC Rama di Lantai 2 Rusun (Bagian dari Misi 2).
+## Memberikan lore cerita tentang alasan kenapa Amir berubah agresif sejak pintu dibuka,
+## serta mengarahkan pemain ke Tahap 3 (mengumpulkan 8 bunga).
 
+@export var auto_trigger_on_approach: bool = false
 @onready var interactable: DialogueInteractable3D = get_node_or_null("DialogueInteractable3D")
 
 func _ready() -> void:
+	add_to_group(&"npc_rama")
 	if interactable:
 		interactable.dialogue_data = _build_story_dialogue()
 		interactable.interacted.connect(_on_interacted)
+		interactable.player_approached.connect(_on_player_approached)
 
 func _build_story_dialogue() -> DialogueData:
 	var data := DialogueData.new()
-	data.dialogue_id = "mbah_rama_story"
+	data.dialogue_id = "rama_story"
 	data.repeatable = true
 	data.on_finish_event = "mbah_rama_story_finished"
 
-	var lines_data = [
-		["Mbah Rama", Color(0.3, 0.8, 1.0), "Ssshh... pelankan langkahmu, nak. Kau beruntung masih bisa lolos dari cengkeraman Amir..."],
-		["Aku", Color(0.9, 0.9, 0.9), "Mbah Rama?! Apa yang sebenarnya terjadi padanya?! Kenapa Amir berubah menjadi monster buas?!"],
-		["Mbah Rama", Color(0.3, 0.8, 1.0), "Asap kebakaran hutan kemarin membangkitkan kutukan kuno [wave amp=20.0 freq=3.0]Kupu-Kupu Malam[/wave]. Amir tergigit dan jiwanya kini terbelenggu kegelapan rusun ini."],
-		["Mbah Rama", Color(0.3, 0.8, 1.0), "Hanya ada satu cara menghentikannya: carilah [color=yellow]8 Bunga Kupu-Kupu Malam[/color] yang tercecer di berbagai lantai rusun ini, lalu bawa ke Altar persembahan di lantai dasar."],
-		["Mbah Rama", Color(0.3, 0.8, 1.0), "Dan ingat, jika Amir mengejarmu... [shake rate=15.0 level=4]segera lari dan sembunyi di bawah kasur![/shake] Cepatlah pergi, selamatkan Amir dan rusun ini!"]
+	var lines_data: Array[Array] = [
+		["Rama", Color(0.3, 0.8, 1.0), "Ssshh... pelankan langkahmu! Beruntung kamu bisa lolos saat pintu kamar Amir itu terbuka..."],
+		["Aku", Color(0.9, 0.9, 0.9), "Rama?! Apa yang sebenarnya terjadi padanya?! Kenapa Amir langsung mengamuk begitu pintunya terbuka?!"],
+		["Rama", Color(0.3, 0.8, 1.0), "Kemarin siang Amir tanpa sengaja membakar semak rawa dan memusnahkan sarang serangga mistis. Kutukan Kupu-Kupu Malam merasuki tubuhnya, terkurung di kamar, lalu meledak liar saat pintunya dibuka!"],
+		["Rama", Color(0.3, 0.8, 1.0), "Amir kehilangan akal dan menyerang siapa saja. Satu-satunya cara menolongnya: [color=yellow]kumpulkan 8 bunga mistis[/color] yang tercecer di rusun ini dan bawa ke Altar persembahan!"]
 	]
 
 	for item in lines_data:
@@ -37,16 +40,22 @@ func _build_story_dialogue() -> DialogueData:
 
 func _build_reminder_dialogue() -> DialogueData:
 	var data := DialogueData.new()
-	data.dialogue_id = "mbah_rama_reminder"
+	data.dialogue_id = "rama_reminder"
 	data.repeatable = true
 
 	var line := DialogueLine.new()
-	line.speaker_name = "Mbah Rama"
+	line.speaker_name = "Rama"
 	line.speaker_color = Color(0.3, 0.8, 1.0)
-	line.text = "Cepat cari ke-8 bunga itu nak, dan bawa ke Altar persembahan di lantai 1... Waktu kita tidak banyak!"
+	line.text = "Kumpulkan 8 bunga yang tersebar di sekitar area ini untuk melanjutkan. Jika Amir mengejarmu, cepat sembunyi di bawah kasur!"
 	data.lines.append(line)
 
 	return data
+
+func _on_player_approached(is_inside: bool) -> void:
+	if is_inside and auto_trigger_on_approach and interactable:
+		var sm = StoryGameManager.instance
+		if sm and sm.current_mission == StoryGameManager.MissionStep.FIND_MBAH_RAMA:
+			interactable.interact()
 
 func _on_interacted(_interactor: Node) -> void:
 	var sm = StoryGameManager.instance

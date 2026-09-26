@@ -2,12 +2,26 @@ class_name NPCChaser
 extends CharacterBody3D
 
 ## AI Musuh Amir (Kupu-Kupu Malam).
-## Memiliki 3 Fase Agresivitas berdasarkan jumlah bunga yang ditemukan/didepositkan.
-## Mengendalikan partikel kupu-kupu pemain sebagai radar bahaya (Signature Mechanic).
-## Terintegrasi dengan SaveSystem untuk posisi dan status AI.
+## Menggunakan State Machine (IDLE -> ALERT -> CHASE -> ATTACK) dengan delay kewaspadaan,
+## verifikasi Line-of-Sight (RayCast3D), dan 3 Fase Agresivitas cerita.
+## Game over hanya dipicu saat kontak fisik langsung dalam status ATTACK.
 
 signal caught_player
 signal phase_changed(new_phase: int)
+signal state_changed(old_state: State, new_state: State)
+
+enum State {
+	IDLE,   ## Patroli santai / diam terkunci di kamar
+	ALERT,  ## Mendeteksi pemain, berhenti dan menatap waspada (jeda 1.0 - 1.5 detik)
+	CHASE,  ## Mengejar pemain secara aktif
+	ATTACK  ## Kontak dekat langsung untuk menerkam pemain (pemicu Game Over)
+}
+
+@export_group("State Machine Amir")
+@export var current_state: State = State.IDLE
+@export var alert_duration: float = 1.2
+@export var attack_range: float = 1.2
+@export var los_check_height: float = 1.4
 
 @export_group("Fase Agresivitas Amir")
 ## Fase saat ini (1 = Pasif/Kamar, 2 = Patroli Koridor, 3 = Agresif Penuh)
@@ -33,9 +47,8 @@ signal phase_changed(new_phase: int)
 @export_group("Target")
 @export var target_player: Node3D
 
-@onready var nav_agent: NavigationAgent3D = get_node_or_null("NavigationAgent3D")
-
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
+var _alert_timer: float = 0.0
 var _repath_timer: float = 0.0
 var _last_player_pos: Vector3 = Vector3.ZERO
 var _teleport_timer: float = 45.0
@@ -58,12 +71,24 @@ var _player_light: OmniLight3D = null
 var _creepy_sound_timer: float = 0.0
 var _has_attacked: bool = false
 
+@onready var nav_agent: NavigationAgent3D = get_node_or_null("NavigationAgent3D")
+@onready var los_ray: RayCast3D = get_node_or_null("RayCast3D")
+
 func _ready() -> void:
 	add_to_group(&"chaser")
 	add_to_group(&"saveable")
 
 	floor_snap_length = 0.45
 	floor_constant_speed = true
+
+	if not los_ray:
+		los_ray = get_node_or_null("RayCast3D")
+	if not los_ray:
+		los_ray = RayCast3D.new()
+		los_ray.name = "RayCast3D"
+		los_ray.enabled = true
+		los_ray.exclude_parent = true
+		add_child(los_ray)
 
 	if nav_agent:
 		nav_agent.target_desired_distance = stopping_distance
@@ -74,7 +99,7 @@ func _ready() -> void:
 	_setup_nav.call_deferred()
 
 func _setup_nav() -> void:
-	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	var map: RID = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
 	while is_inside_tree() and map.is_valid() and NavigationServer3D.map_get_iteration_id(map) == 0:
 		await get_tree().physics_frame
 	_nav_ready = true
@@ -94,6 +119,8 @@ func _physics_process(delta: float) -> void:
 
 	# Jika masih mode tidur/kamar belum dibuka, Amir diam di tempat
 	if is_dormant:
+		if current_state != State.IDLE:
+			set_state(State.IDLE)
 		velocity.x = 0.0
 		velocity.z = 0.0
 		move_and_slide()
@@ -114,109 +141,235 @@ func _physics_process(delta: float) -> void:
 	var radar_dist: float = horizontal_dist if same_floor else horizontal_dist + (floors_apart * 6.0)
 	_update_butterfly_radar(radar_dist)
 
+	# Efek audio bisikan & suara seram jika berada di lantai yang sama
 	if _creepy_sound_timer > 0.0:
 		_creepy_sound_timer -= delta
 	elif same_floor and horizontal_dist < 16.0 and target_player.get("is_hidden") != true:
 		_creepy_sound_timer = randf_range(5.0, 9.0)
 		var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
 		if sm and sm.has_method("play_sfx_3d"):
-			var sound_choice = "creepy_rattle" if randf() < 0.5 else "bone_crack"
+			var sound_choice: String = "creepy_rattle" if randf() < 0.5 else "bone_crack"
 			sm.play_sfx_3d(sound_choice, global_position, 20.0, 0.0, randf_range(0.85, 1.15))
 
+	# Jika pemain bersembunyi (misal di bawah kasur), Amir kehilangan jejak
 	if target_player.get("is_hidden") == true:
+		if current_state != State.IDLE:
+			set_state(State.IDLE)
 		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 2.5)
 		velocity.z = move_toward(velocity.z, 0.0, speed * delta * 2.5)
 		move_and_slide()
 		_chase_duration = 0.0
-		_is_chasing = false
 		return
-
-	if phase == 1:
-		if _is_resting:
-			_rest_timer -= delta
-			velocity.x = move_toward(velocity.x, 0.0, speed * delta * 4.0)
-			velocity.z = move_toward(velocity.z, 0.0, speed * delta * 4.0)
-			move_and_slide()
-			if _rest_timer <= 0.0:
-				_is_resting = false
-				_chase_duration = 0.0
-			return
-		elif _is_chasing:
-			_chase_duration += delta
-			if _chase_duration >= 5.5:
-				_is_resting = true
-				_rest_timer = 3.5
-				return
 
 	if _spawn_grace > 0.0:
 		_spawn_grace -= delta
 
+	# Timer teleportasi antar lantai jika terlalu lama
 	_teleport_timer -= delta
 	if _teleport_timer <= 0.0:
-		if _is_chasing:
+		if current_state == State.CHASE or current_state == State.ATTACK:
 			_teleport_timer = 15.0
 		else:
-			# Beri peluang besar (70%) Amir tetap lanjut patroli jalan kaki di lantai saat ini
 			if randf() < 0.7:
 				_teleport_timer = randf_range(teleport_interval * 0.8, teleport_interval * 1.3)
 				_pick_new_patrol_point()
 			else:
 				teleport_to_other_floor()
 
-	_is_chasing = _spawn_grace <= 0.0 and same_floor and (always_chase or horizontal_dist < detection_range)
+	# =========================================================================
+	# STATE MACHINE EXECUTION
+	# =========================================================================
+	match current_state:
+		State.IDLE:
+			_has_attacked = false
+			_patrol_timeout -= delta
+			var dist_to_patrol: float = global_position.distance_to(_patrol_target)
+			if (nav_agent and nav_agent.is_navigation_finished()) or dist_to_patrol < 1.2 or _patrol_timeout <= 0.0:
+				_patrol_wait -= delta
+				if _patrol_wait <= 0.0 or _patrol_timeout <= 0.0:
+					_patrol_wait = randf_range(1.5, 3.5)
+					_pick_new_patrol_point()
 
-	if _is_chasing:
-		_repath_timer += delta
-		if _repath_timer >= 0.15 or player_pos.distance_squared_to(_last_player_pos) > 0.04:
-			_repath_timer = 0.0
-			_update_target_position()
-	else:
-		_patrol_timeout -= delta
-		var dist_to_patrol = global_position.distance_to(_patrol_target)
-		if (nav_agent and nav_agent.is_navigation_finished()) or dist_to_patrol < 1.2 or _patrol_timeout <= 0.0:
-			_patrol_wait -= delta
-			if _patrol_wait <= 0.0 or _patrol_timeout <= 0.0:
-				_patrol_wait = randf_range(1.5, 3.5)
-				_pick_new_patrol_point()
+			var patrol_dir: Vector3 = Vector3.ZERO
+			if nav_agent and not nav_agent.is_navigation_finished():
+				var next_pos: Vector3 = nav_agent.get_next_path_position()
+				var to_pt: Vector3 = Vector3(next_pos.x - global_position.x, 0.0, next_pos.z - global_position.z)
+				if to_pt.length_squared() > 0.04:
+					patrol_dir = to_pt.normalized()
 
-	if same_floor and horizontal_dist <= stopping_distance:
-		_look_towards(player_pos, delta)
-		if not _has_attacked:
-			_has_attacked = true
-			var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
-			if sm:
-				sm.play_jumpscare("jumpscare_hit")
-				sm.play_sfx_3d("monster_screech", global_position, 25.0)
-		caught_player.emit()
-		if not always_chase:
+			if patrol_dir != Vector3.ZERO:
+				velocity.x = patrol_dir.x * patrol_speed
+				velocity.z = patrol_dir.z * patrol_speed
+				_look_towards(global_position + patrol_dir, delta)
+			else:
+				velocity.x = move_toward(velocity.x, 0.0, patrol_speed * delta * 5.0)
+				velocity.z = move_toward(velocity.z, 0.0, patrol_speed * delta * 5.0)
+
+			# Deteksi pemain jika berada di lantai yang sama dan dalam jangkauan
+			if _spawn_grace <= 0.0 and same_floor and (always_chase or horizontal_dist < detection_range):
+				if has_line_of_sight_to_player():
+					set_state(State.ALERT)
+
+		State.ALERT:
+			_has_attacked = false
+			# Amir berhenti bergerak, menatap pemain, dan bersiap memburu (delay 1.0 - 1.5 detik)
 			velocity.x = move_toward(velocity.x, 0.0, speed * delta * 5.0)
 			velocity.z = move_toward(velocity.z, 0.0, speed * delta * 5.0)
-			move_and_slide()
-			return
-	else:
-		_has_attacked = false
+			_look_towards(player_pos, delta)
 
-	var current_speed: float = speed if _is_chasing else patrol_speed
-	var horizontal_dir: Vector3 = Vector3.ZERO
-	if nav_agent and not nav_agent.is_navigation_finished():
-		var next_path_pos: Vector3 = nav_agent.get_next_path_position()
-		var to_waypoint: Vector3 = Vector3(next_path_pos.x - global_position.x, 0.0, next_path_pos.z - global_position.z)
-		if to_waypoint.length_squared() > 0.04:
-			horizontal_dir = to_waypoint.normalized()
-		elif _is_chasing:
-			horizontal_dir = to_player.normalized()
-	elif _is_chasing:
-		horizontal_dir = to_player.normalized()
+			_alert_timer -= delta
+			if _alert_timer <= 0.0:
+				# Verifikasi Line-of-Sight sebelum benar-benar masuk ke CHASE
+				if has_line_of_sight_to_player():
+					set_state(State.CHASE)
+				else:
+					set_state(State.IDLE)
 
-	if horizontal_dir != Vector3.ZERO:
-		velocity.x = horizontal_dir.x * current_speed
-		velocity.z = horizontal_dir.z * current_speed
-		_look_towards(global_position + horizontal_dir, delta)
-	else:
-		velocity.x = move_toward(velocity.x, 0.0, current_speed * delta * 5.0)
-		velocity.z = move_toward(velocity.z, 0.0, current_speed * delta * 5.0)
+		State.CHASE:
+			_has_attacked = false
+			# Mekanik kelelahan di Fase 1
+			if phase == 1:
+				if _is_resting:
+					_rest_timer -= delta
+					velocity.x = move_toward(velocity.x, 0.0, speed * delta * 4.0)
+					velocity.z = move_toward(velocity.z, 0.0, speed * delta * 4.0)
+					move_and_slide()
+					if _rest_timer <= 0.0:
+						_is_resting = false
+						_chase_duration = 0.0
+					return
+				else:
+					_chase_duration += delta
+					if _chase_duration >= 5.5:
+						_is_resting = true
+						_rest_timer = 3.5
+						return
+
+			# Update navigasi berkala
+			_repath_timer += delta
+			if _repath_timer >= 0.15 or player_pos.distance_squared_to(_last_player_pos) > 0.04:
+				_repath_timer = 0.0
+				_update_target_position()
+
+			var chase_dir: Vector3 = Vector3.ZERO
+			if nav_agent and not nav_agent.is_navigation_finished():
+				var next_path_pos: Vector3 = nav_agent.get_next_path_position()
+				var to_waypoint: Vector3 = Vector3(next_path_pos.x - global_position.x, 0.0, next_path_pos.z - global_position.z)
+				if to_waypoint.length_squared() > 0.04:
+					chase_dir = to_waypoint.normalized()
+				else:
+					chase_dir = to_player.normalized()
+			else:
+				chase_dir = to_player.normalized()
+
+			if chase_dir != Vector3.ZERO:
+				velocity.x = chase_dir.x * speed
+				velocity.z = chase_dir.z * speed
+				_look_towards(global_position + chase_dir, delta)
+			else:
+				velocity.x = move_toward(velocity.x, 0.0, speed * delta * 5.0)
+				velocity.z = move_toward(velocity.z, 0.0, speed * delta * 5.0)
+
+			# Masuk ke ATTACK jika jarak dekat dan terlihat langsung
+			if same_floor and horizontal_dist <= attack_range and has_line_of_sight_to_player():
+				set_state(State.ATTACK)
+
+			# Jika pemain pindah lantai dan bukan always_chase, kembali ke IDLE
+			if not same_floor and not always_chase:
+				set_state(State.IDLE)
+
+		State.ATTACK:
+			# Berhenti dan hadapi tubuh pemain langsung
+			velocity.x = move_toward(velocity.x, 0.0, speed * delta * 6.0)
+			velocity.z = move_toward(velocity.z, 0.0, speed * delta * 6.0)
+			_look_towards(player_pos, delta)
+
+			# Game over HANYA dipicu saat state == ATTACK dan terjadi kontak fisik langsung dengan player!
+			if same_floor and horizontal_dist <= stopping_distance and target_player.get("is_hidden") != true:
+				if not _has_attacked:
+					_has_attacked = true
+					var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+					if sm:
+						sm.play_jumpscare("jumpscare_hit")
+						sm.play_sfx_3d("monster_screech", global_position, 25.0)
+				caught_player.emit()
+				move_and_slide()
+				return
+			elif horizontal_dist > attack_range * 1.6 or not same_floor:
+				# Pemain berhasil kabur keluar jangkauan serangan
+				_has_attacked = false
+				set_state(State.CHASE)
 
 	move_and_slide()
+
+## Transisi State Machine AI Amir
+func set_state(new_state: State) -> void:
+	if current_state == new_state:
+		return
+	var old_state: State = current_state
+	current_state = new_state
+	_on_state_transition(old_state, new_state)
+	state_changed.emit(old_state, new_state)
+
+func _on_state_transition(_old_state: State, new_state: State) -> void:
+	match new_state:
+		State.IDLE:
+			_is_chasing = false
+			_alert_timer = 0.0
+		State.ALERT:
+			_is_chasing = false
+			_alert_timer = alert_duration
+			velocity.x = 0.0
+			velocity.z = 0.0
+			var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+			if sm and sm.has_method("play_sfx_3d"):
+				sm.play_sfx_3d("creepy_rattle", global_position, 20.0, 0.0, 1.2)
+		State.CHASE:
+			_is_chasing = true
+			_alert_timer = 0.0
+			_repath_timer = 0.0
+			_update_target_position()
+		State.ATTACK:
+			_is_chasing = false
+			velocity.x = 0.0
+			velocity.z = 0.0
+
+## Pengecekan Line-of-Sight menggunakan RayCast3D (atau query fisik fallback)
+func has_line_of_sight_to_player() -> bool:
+	if not is_instance_valid(target_player):
+		return false
+	if target_player.get("is_hidden") == true:
+		return false
+
+	var from_pos: Vector3 = global_position + Vector3(0.0, los_check_height, 0.0)
+	var to_pos: Vector3 = target_player.global_position + Vector3(0.0, 1.2, 0.0)
+
+	# 1. Pengecekan menggunakan node RayCast3D jika ada
+	if is_instance_valid(los_ray):
+		los_ray.global_position = from_pos
+		los_ray.target_position = los_ray.to_local(to_pos)
+		los_ray.force_raycast_update()
+		if los_ray.is_colliding():
+			var col: Object = los_ray.get_collider()
+			if col == target_player or (col is Node and target_player.is_ancestor_of(col)):
+				return true
+			return false
+		else:
+			return true
+
+	# 2. Fallback direct space state raycast
+	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state if is_inside_tree() and get_world_3d() else null
+	if not space_state:
+		return true
+
+	var query := PhysicsRayQueryParameters3D.create(from_pos, to_pos)
+	query.exclude = [get_rid()]
+	var result: Dictionary = space_state.intersect_ray(query)
+	if result.is_empty():
+		return true
+
+	var collider: Object = result.get("collider")
+	return collider == target_player or (collider is Node and target_player.is_ancestor_of(collider))
 
 ## Mengubah parameter kecepatan dan kelincahan Amir sesuai 3 Fase GDD
 func set_phase(new_phase: int) -> void:
@@ -277,7 +430,7 @@ func _update_butterfly_radar(dist: float) -> void:
 		target_amount = 35
 		target_light = randf_range(0.9, 1.5)
 
-	# PENTING: Hanya set amount jika berubah, karena set amount setiap frame akan me-reset partikel
+	# Hanya set amount jika berubah, karena set amount setiap frame me-reset partikel
 	if target_amount > 0 and _player_particles.amount != target_amount:
 		_player_particles.amount = target_amount
 
@@ -293,10 +446,10 @@ func _update_butterfly_radar(dist: float) -> void:
 func _find_player_particles() -> void:
 	if not is_instance_valid(target_player):
 		return
-	var found = target_player.find_child("KupuKupuParticles_", true, false)
+	var found: Node = target_player.find_child("KupuKupuParticles_", true, false)
 	if found is CPUParticles3D:
 		_player_particles = found
-	var found_light = target_player.find_child("ButterflyLight", true, false)
+	var found_light: Node = target_player.find_child("ButterflyLight", true, false)
 	if found_light is OmniLight3D:
 		_player_light = found_light
 
@@ -305,7 +458,7 @@ func _find_player_particles() -> void:
 		if ResourceLoader.exists("res://kupu_kupu.tscn"):
 			var scene_res = load("res://kupu_kupu.tscn")
 			if scene_res is PackedScene:
-				var instance = scene_res.instantiate()
+				var instance: Node = scene_res.instantiate()
 				target_player.add_child(instance)
 				_player_particles = instance.find_child("KupuKupuParticles_", true, false) as CPUParticles3D
 				_player_light = instance.find_child("ButterflyLight", true, false) as OmniLight3D
@@ -343,16 +496,16 @@ func _find_player() -> void:
 
 func _get_floor_heights() -> Array[float]:
 	var heights: Array[float] = floor_heights.duplicate()
-	var scene = get_tree().current_scene
+	var scene: Node = get_tree().current_scene
 	if scene:
-		var node = scene.find_child("Node", true, false)
+		var node: Node = scene.find_child("Node", true, false)
 		if node:
-			var sb = node.find_child("StaticBody3D", true, false)
+			var sb: Node = node.find_child("StaticBody3D", true, false)
 			if sb:
-				var l1 = sb.find_child("Lantai", true, false)
-				var l2 = sb.find_child("Lantai2", true, false)
-				var l3 = sb.find_child("Lantai3", true, false)
-				var l4 = sb.find_child("Lantai4", true, false)
+				var l1: Node3D = sb.find_child("Lantai", true, false) as Node3D
+				var l2: Node3D = sb.find_child("Lantai2", true, false) as Node3D
+				var l3: Node3D = sb.find_child("Lantai3", true, false) as Node3D
+				var l4: Node3D = sb.find_child("Lantai4", true, false) as Node3D
 				if l1 and l2 and l3 and l4:
 					heights = [
 						1.05,
@@ -365,11 +518,11 @@ func _get_floor_heights() -> Array[float]:
 
 func _pick_new_patrol_point() -> void:
 	_patrol_timeout = 15.0
-	var feet_y = global_position.y - 0.75
-	var raw_pt = Vector3(randf_range(16.5, 17.2), feet_y, randf_range(-20.0, 8.0))
-	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	var feet_y: float = global_position.y - 0.75
+	var raw_pt: Vector3 = Vector3(randf_range(16.5, 17.2), feet_y, randf_range(-20.0, 8.0))
+	var map: RID = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
 	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
-		var snapped = NavigationServer3D.map_get_closest_point(map, raw_pt)
+		var snapped: Vector3 = NavigationServer3D.map_get_closest_point(map, raw_pt)
 		if snapped != Vector3.ZERO and abs(snapped.y - feet_y) < 1.8:
 			_patrol_target = snapped
 		else:
@@ -383,48 +536,40 @@ func _get_floor_index_from_y(y_pos: float, floors: Array[float]) -> int:
 	var closest_idx: int = 0
 	var min_diff: float = 99999.0
 	for i in floors.size():
-		var diff = abs(floors[i] - y_pos)
+		var diff: float = abs(floors[i] - y_pos)
 		if diff < min_diff:
 			min_diff = diff
 			closest_idx = i
 	return closest_idx
 
 func teleport_to_other_floor() -> void:
-	var floors = _get_floor_heights()
+	var floors: Array[float] = _get_floor_heights()
 	var player_y: float = target_player.global_position.y if is_instance_valid(target_player) else global_position.y
 	var player_floor_idx: int = _get_floor_index_from_y(player_y, floors)
-	var amir_floor_idx: int = _get_floor_index_from_y(global_position.y, floors)
 
-	# Kumpulkan lantai selain lantai Amir saat ini
 	var candidates: Array[float] = []
 	var candidate_indices: Array[int] = []
 	for i in floors.size():
-		var f = floors[i]
+		var f: float = floors[i]
 		if abs(f - global_position.y) > 2.0:
 			candidates.append(f)
 			candidate_indices.append(i)
 	if candidates.is_empty():
 		return
 
-	# Decision: Bobot berdasarkan jarak lantai ke posisi player
-	# Misal player di Lantai 5 (idx 4):
-	# - Lantai 5 (jika Amir dari lantai lain): bobot 50 (peluang tertinggi)
-	# - Lantai 4 (selisih 1 lantai): bobot 30
-	# - Lantai 3 (selisih 2 lantai): bobot 15
-	# - Lantai 2 & 1 (selisih >= 3 lantai): bobot 5 (peluang kecil)
 	var weights: Array[float] = []
 	for idx in candidate_indices:
 		var delta_floor: int = abs(idx - player_floor_idx)
 		var w: float = 5.0
 		match delta_floor:
 			0:
-				w = 50.0  # Langsung ke lantai pemain
+				w = 50.0
 			1:
-				w = 30.0  # 1 lantai dekat pemain
+				w = 30.0
 			2:
-				w = 15.0  # 2 lantai dari pemain
+				w = 15.0
 			_:
-				w = 5.0   # Lantai jauh
+				w = 5.0
 		weights.append(w)
 
 	var total_weight: float = 0.0
@@ -439,34 +584,35 @@ func teleport_to_other_floor() -> void:
 			target_y = candidates[i]
 			break
 
-	var raw_pt = Vector3(randf_range(16.5, 17.2), target_y, randf_range(-18.0, 6.0))
-	# Jika teleport ke lantai yang sama dengan player, hindari spawn menabrak pemain langsung
+	var raw_pt: Vector3 = Vector3(randf_range(16.5, 17.2), target_y, randf_range(-18.0, 6.0))
 	if is_instance_valid(target_player) and abs(target_y - player_y) < 2.0:
-		var p_z = target_player.global_position.z
-		var attempts = 0
+		var p_z: float = target_player.global_position.z
+		var attempts: int = 0
 		while attempts < 10 and abs(raw_pt.z - p_z) < 8.0:
 			raw_pt.z = randf_range(-18.0, 6.0)
 			attempts += 1
 
-	var final_pos = raw_pt
-	var map = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	var final_pos: Vector3 = raw_pt
+	var map: RID = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
 	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
-		var feet_pt = Vector3(raw_pt.x, target_y - 0.75, raw_pt.z)
-		var snapped = NavigationServer3D.map_get_closest_point(map, feet_pt)
+		var feet_pt: Vector3 = Vector3(raw_pt.x, target_y - 0.75, raw_pt.z)
+		var snapped: Vector3 = NavigationServer3D.map_get_closest_point(map, feet_pt)
 		if snapped != Vector3.ZERO and abs(snapped.y - feet_pt.y) < 1.8:
 			final_pos = Vector3(snapped.x, snapped.y + 0.85, snapped.z)
 	global_position = final_pos
 	velocity = Vector3.ZERO
-	_is_chasing = false
+	set_state(State.IDLE)
 	_teleport_timer = randf_range(teleport_interval * 0.7, teleport_interval * 1.3)
 	_pick_new_patrol_point()
 
+## Dipanggil saat pintu kamar dibuka / bangun dari mode dormant
 func wake_up() -> void:
 	is_dormant = false
-	_spawn_grace = 3.5
-	_is_chasing = true
+	_spawn_grace = 2.0
 	_teleport_timer = randf_range(teleport_interval * 0.7, teleport_interval * 1.3)
 	_update_target_position()
+	# Masuk ke status ALERT dengan jeda kewaspadaan (±1-1.5 detik), tidak langsung menyerang!
+	set_state(State.ALERT)
 
 func get_save_data() -> Dictionary:
 	return {
@@ -474,12 +620,17 @@ func get_save_data() -> Dictionary:
 		"rotation_y": rotation.y,
 		"phase": phase,
 		"teleport_timer": _teleport_timer,
-		"is_dormant": is_dormant
+		"is_dormant": is_dormant,
+		"current_state": int(current_state)
 	}
 
 func load_save_data(data: Dictionary) -> void:
 	if data.has("position"):
-		global_position = data["position"]
+		var p = data["position"]
+		if p is Vector3:
+			global_position = p
+		elif p is Dictionary and p.get("__type__") == "Vector3":
+			global_position = Vector3(p.get("x", 0.0), p.get("y", 0.0), p.get("z", 0.0))
 	if data.has("rotation_y"):
 		rotation.y = float(data["rotation_y"])
 	if data.has("phase"):
@@ -488,3 +639,5 @@ func load_save_data(data: Dictionary) -> void:
 		_teleport_timer = float(data["teleport_timer"])
 	if data.has("is_dormant"):
 		is_dormant = bool(data["is_dormant"])
+	if data.has("current_state"):
+		current_state = data["current_state"] as State

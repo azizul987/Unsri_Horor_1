@@ -22,11 +22,25 @@ signal game_loaded
 
 enum MissionStep {
 	INVESTIGATE_AMIR = 0,  ## Misi 1: Periksa Kamar Amir di Lantai 5 (Kamar 530)
-	ESCAPE_AND_HIDE = 1,   ## Misi 2: Kabur dari Amir & Sembunyi di Bawah Kasur
-	FIND_MBAH_RAMA = 2,    ## Misi 3: Cari Mbah Rama di Lantai 2 untuk Mendengar Cerita
-	COLLECT_FLOWERS = 3,   ## Misi 4: Kumpulkan 8 Bunga Kupu-Kupu Malam (X/8)
-	FINAL_RITUAL = 4       ## Misi 5: Altar Siap untuk Ritual Akhir
+	ESCAPE_AND_HIDE = 1,   ## Misi 2 (Tahap 1): Kabur dari Amir & Sembunyi di Bawah Kasur
+	FIND_MBAH_RAMA = 2,    ## Misi 2 (Tahap 2): Cari Rama di Lantai 2 untuk Mendengar Cerita
+	COLLECT_FLOWERS = 3,   ## Misi 2 (Tahap 3): Kumpulkan 8 Bunga Kupu-Kupu Malam (X/8)
+	FINAL_RITUAL = 4       ## Misi 3: Altar Siap untuk Ritual Akhir
 }
+
+## Daftar petunjuk (hint teks) per tahap/index misi
+const MISSION_HINTS: Dictionary = {
+	MissionStep.INVESTIGATE_AMIR: "Periksa kamar Amir nomor 530 di Lantai 5.",
+	MissionStep.ESCAPE_AND_HIDE: "Lari dari kejaran Amir dan cari kasur untuk bersembunyi di bawahnya!",
+	MissionStep.FIND_MBAH_RAMA: "Temui Rama di Lantai 2 untuk mencari tahu apa yang terjadi pada Amir.",
+	MissionStep.COLLECT_FLOWERS: "Kumpulkan 8 bunga yang tersebar di sekitar area ini untuk melanjutkan.",
+	MissionStep.FINAL_RITUAL: "Bawa seluruh bunga ke Altar di lantai dasar untuk memulai ritual."
+}
+
+## Mengambil petunjuk (hint teks) berdasarkan tahap misi (default: misi saat ini)
+func get_mission_hint(step_index: int = -1) -> String:
+	var target_step: MissionStep = current_mission if step_index < 0 else (step_index as MissionStep)
+	return MISSION_HINTS.get(target_step, "")
 
 static var instance: StoryGameManager
 
@@ -60,6 +74,7 @@ var _save_hud_layer: CanvasLayer = null
 var _save_hud_label: Label = null
 var _mission_hud_layer: CanvasLayer = null
 var _mission_label: Label = null
+var _hint_label: Label = null
 
 func _enter_tree() -> void:
 	if instance == null:
@@ -510,7 +525,7 @@ func _on_dialogue_event_triggered(event_name: String) -> void:
 		"mbah_rama_story_finished":
 			if current_mission == MissionStep.FIND_MBAH_RAMA:
 				advance_mission(MissionStep.COLLECT_FLOWERS)
-				_show_cinematic_warning("✓ CERITA SELESAI!\nCARI 8 BUNGA KUPU-KUPU & BAWA KE ALTAR", 3.0)
+				_show_cinematic_warning("💡 PETUNJUK TAHAP 3:\nKumpulkan 8 bunga yang tersebar di sekitar area ini untuk melanjutkan.", 3.5)
 
 ## Memulai dialog prolog siang hari
 func play_prologue_day() -> void:
@@ -581,11 +596,11 @@ func _setup_mission_hud() -> void:
 	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	panel.offset_left = 22.0
 	panel.offset_top = 22.0
-	panel.offset_right = 440.0
-	panel.offset_bottom = 62.0
+	panel.offset_right = 520.0
+	panel.offset_bottom = 86.0
 
 	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0.04, 0.05, 0.07, 0.75)
+	style.bg_color = Color(0.04, 0.05, 0.07, 0.8)
 	style.corner_radius_top_left = 6
 	style.corner_radius_top_right = 6
 	style.corner_radius_bottom_left = 6
@@ -598,13 +613,25 @@ func _setup_mission_hud() -> void:
 	style.border_color = Color(0.9, 0.75, 0.25, 0.9)
 	panel.add_theme_stylebox_override("panel", style)
 
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 3)
+	panel.add_child(vbox)
+
 	_mission_label = Label.new()
 	_mission_label.add_theme_font_size_override("font_size", 14)
 	_mission_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	_mission_label.add_theme_constant_override("shadow_offset_x", 1)
 	_mission_label.add_theme_constant_override("shadow_offset_y", 1)
+	vbox.add_child(_mission_label)
 
-	panel.add_child(_mission_label)
+	_hint_label = Label.new()
+	_hint_label.add_theme_font_size_override("font_size", 12)
+	_hint_label.add_theme_color_override("font_color", Color(0.85, 0.9, 0.95, 0.9))
+	_hint_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	_hint_label.add_theme_constant_override("shadow_offset_x", 1)
+	_hint_label.add_theme_constant_override("shadow_offset_y", 1)
+	vbox.add_child(_hint_label)
+
 	_mission_hud_layer.add_child(panel)
 	add_child(_mission_hud_layer)
 	update_mission_hud()
@@ -620,21 +647,29 @@ func update_mission_hud() -> void:
 	_mission_hud_layer.visible = true
 	match current_mission:
 		MissionStep.INVESTIGATE_AMIR:
-			_mission_label.text = "🎯 MISI: Periksa Kamar Amir di Lantai 5 (Kamar 530)"
+			_mission_label.text = "🎯 MISI 1: Periksa Kamar Amir di Lantai 5 (Kamar 530)"
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.4, 1.0))
 		MissionStep.ESCAPE_AND_HIDE:
-			_mission_label.text = "🎯 MISI: Kabur dari Amir & Sembunyi di Bawah Kasur!"
+			_mission_label.text = "🎯 MISI 2 (Tahap 1): Kabur dari Amir & Sembunyi di Bawah Kasur!"
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
 		MissionStep.FIND_MBAH_RAMA:
-			_mission_label.text = "🎯 MISI: Cari Mbah Rama di Lantai 2 untuk Mendengar Ceritanya"
+			_mission_label.text = "🎯 MISI 2 (Tahap 2): Temui Rama di Lantai 2"
 			_mission_label.add_theme_color_override("font_color", Color(0.4, 0.85, 1.0, 1.0))
 		MissionStep.COLLECT_FLOWERS:
 			var total = maxi(flowers_collected, flowers_deposited)
-			_mission_label.text = "🎯 MISI: Kumpulkan 8 Bunga Kupu-Kupu Malam (%d/8)" % total
+			_mission_label.text = "🎯 MISI 2 (Tahap 3): Kumpulkan 8 Bunga Kupu-Kupu Malam (%d/8)" % total
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.35, 1.0))
 		MissionStep.FINAL_RITUAL:
-			_mission_label.text = "🎯 MISI: Pergi ke Altar Lantai 1 & Selesaikan Ritual!"
+			_mission_label.text = "🎯 MISI 3: Pergi ke Altar Lantai 1 & Selesaikan Ritual!"
 			_mission_label.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5, 1.0))
+
+	if _hint_label:
+		var hint: String = get_mission_hint(current_mission)
+		if hint != "":
+			_hint_label.text = "💡 Petunjuk: " + hint
+			_hint_label.visible = true
+		else:
+			_hint_label.visible = false
 
 func advance_mission(new_step: MissionStep) -> void:
 	current_mission = new_step
@@ -656,12 +691,14 @@ func _check_spawn_mbah_rama() -> void:
 	var scene = get_tree().current_scene
 	if not scene:
 		return
-	if scene.find_child("MbahRama", true, false) != null:
+	if scene.find_child("Rama", true, false) != null or scene.find_child("MbahRama", true, false) != null:
 		return
 	var rama_scene = load("res://Scenes/mbah_rama.tscn")
+	if rama_scene == null and ResourceLoader.exists("res://Scenes/rama.tscn"):
+		rama_scene = load("res://Scenes/rama.tscn")
 	if rama_scene is PackedScene:
 		var rama_inst = rama_scene.instantiate()
-		rama_inst.name = "MbahRama"
+		rama_inst.name = "Rama"
 		rama_inst.global_position = Vector3(16.8, 4.65, -10.0)
 		scene.add_child(rama_inst)
 
@@ -831,6 +868,12 @@ func _show_cinematic_warning(msg: String, duration: float = 2.5) -> void:
 func _on_amir_caught_player() -> void:
 	if _is_player_dead or _is_cinematic_active:
 		return
+
+	# Game over HANYA boleh dipicu saat status Amir == ATTACK dan kontak fisik langsung
+	if is_instance_valid(amir_node) and "current_state" in amir_node:
+		if amir_node.current_state != amir_node.State.ATTACK:
+			return
+
 	_is_player_dead = true
 
 	var pm = get_node_or_null("/root/PauseMenu")

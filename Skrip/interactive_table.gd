@@ -23,13 +23,21 @@ signal item_taken(item: ItemData, quantity: int)
 			_update_drawer_position(false)
 
 ## Jarak geser laci saat ditarik keluar (dalam meter)
-@export var slide_distance: float = 0.45
+@export var slide_distance: float = 0.45:
+	set(val):
+		slide_distance = val
+		if is_inside_tree():
+			_update_drawer_position(false)
 
 ## Durasi animasi buka/tutup (detik)
 @export_range(0.2, 2.0, 0.05) var animation_duration: float = 0.45
 
 ## Arah geser: 1 (tarik maju keluar +Z), -1 (dorong ke dalam -Z)
-@export_enum("Maju ke Depan (+Z):1", "Maju ke Belakang (-Z):-1") var slide_direction: int = -1
+@export_enum("Maju ke Depan (+Z):1", "Maju ke Belakang (-Z):-1") var slide_direction: int = -1:
+	set(val):
+		slide_direction = val
+		if is_inside_tree():
+			_update_drawer_position(false)
 
 @export_group("Item di Dalam Laci (Level Designer)")
 ## Item yang diletakkan di dalam laci untuk ditemukan pemain (Kunci, Biskuit, Bunga, dll)
@@ -45,6 +53,8 @@ signal item_taken(item: ItemData, quantity: int)
 # ============================================================================
 # NODE REFERENCES
 # ============================================================================
+const DEFAULT_CLOSED_POS: Vector3 = Vector3(0.3255191, 0.50608504, 1.231879)
+
 @onready var drawer_node: Node3D = _find_drawer_node()
 @onready var item_slot: Node3D = _find_or_create_item_slot()
 @onready var table_audio: AudioStreamPlayer3D = get_node_or_null("TableAudio")
@@ -52,6 +62,7 @@ signal item_taken(item: ItemData, quantity: int)
 # Internal state
 var _closed_local_pos: Vector3 = Vector3.ZERO
 var _is_animating: bool = false
+var _current_tween: Tween = null
 
 # Item yang saat ini ada di dalam laci
 var current_item_data: ItemData = null
@@ -65,7 +76,29 @@ func _find_drawer_node() -> Node3D:
 		return get_node("meja_dibuka/Cube_185") as Node3D
 	if has_node("Cube_185"):
 		return get_node("Cube_185") as Node3D
+	var found = find_child("Cube_185", true, false)
+	if found is Node3D:
+		return found as Node3D
 	return null
+
+func _get_closed_pos() -> Vector3:
+	if _closed_local_pos != Vector3.ZERO:
+		return _closed_local_pos
+
+	var drawer: Node3D = drawer_node if drawer_node else _find_drawer_node()
+	if drawer:
+		# Jika nama node adalah Cube_185 (mesh laci bawaan meja_dibuka),
+		# gunakan posisi asli DEFAULT_CLOSED_POS agar tidak terkorupsi saat dibuka/ditutup
+		if drawer.name == "Cube_185":
+			_closed_local_pos = DEFAULT_CLOSED_POS
+			return _closed_local_pos
+
+		if absf(drawer.position.z) > 0.05:
+			_closed_local_pos = drawer.position
+			return _closed_local_pos
+
+	_closed_local_pos = DEFAULT_CLOSED_POS
+	return _closed_local_pos
 
 func _find_or_create_item_slot() -> Node3D:
 	var drawer = _find_drawer_node()
@@ -87,15 +120,9 @@ func _ready() -> void:
 		drawer_node = _find_drawer_node()
 	if item_slot == null:
 		item_slot = _find_or_create_item_slot()
-	if drawer_node:
-		# Jika posisi Z mesh saat ini adalah posisi terbuka (~1.68), normalkan ke posisi tertutup (~1.23)
-		if absf(drawer_node.position.z - 1.681879) < 0.05:
-			_closed_local_pos = drawer_node.position - Vector3(0, 0, slide_distance)
-		else:
-			_closed_local_pos = drawer_node.position
 
-		# Set posisi awal laci sesuai is_open (default: tertutup di _closed_local_pos)
-		_update_drawer_position(false)
+	_closed_local_pos = _get_closed_pos()
+	_update_drawer_position(false)
 
 	if not Engine.is_editor_hint():
 		# Spawn item awal yang ditentukan oleh level designer
@@ -140,22 +167,29 @@ func toggle_drawer() -> void:
 		drawer_closed.emit()
 
 func _update_drawer_position(animated: bool = true) -> void:
+	if drawer_node == null:
+		drawer_node = _find_drawer_node()
 	if not drawer_node:
 		return
 
-	var target_pos: Vector3 = _closed_local_pos
+	var closed_pos: Vector3 = _get_closed_pos()
+	var target_pos: Vector3 = closed_pos
 	if is_open:
-		target_pos = _closed_local_pos + Vector3(0, 0, slide_distance * slide_direction)
+		target_pos = closed_pos + Vector3(0, 0, slide_distance * float(slide_direction))
+
+	if _current_tween and _current_tween.is_valid():
+		_current_tween.kill()
 
 	if animated and not Engine.is_editor_hint() and is_inside_tree():
 		_is_animating = true
-		var tween: Tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		tween.tween_property(drawer_node, ^"position", target_pos, animation_duration)
-		tween.tween_callback(func():
+		_current_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_current_tween.tween_property(drawer_node, ^"position", target_pos, animation_duration)
+		_current_tween.tween_callback(func():
 			_is_animating = false
 			_update_item_visibility()
 		)
 	else:
+		_is_animating = false
 		drawer_node.position = target_pos
 		_update_item_visibility()
 

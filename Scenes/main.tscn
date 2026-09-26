@@ -13,10 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://8e3fxltyw1y7" path="res://Skrip/npc_mesh.fbx" id="22_gt3je"]
 [ext_resource type="Material" uid="uid://k0w7cqetwurr" path="res://Asset/Rusun/Materials/Dinding.material" id="22_k2e45"]
 [ext_resource type="Material" uid="uid://dlmthbsc2co37" path="res://Asset/Rusun/Materials/Meta.001.material" id="23_536cc"]
-[ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="23_gt3je"]
+[ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Scenes/meja_bisa_dibuka.tscn" id="23_gt3je"]
 [ext_resource type="PackedScene" uid="uid://5o843i3bprqq" path="res://kasur.fbx" id="24_3pmx8"]
 [ext_resource type="Material" uid="uid://cjgyhla4quhiv" path="res://Asset/Rusun/Materials/Material.006.material" id="24_aqgau"]
-[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://Scenes/lemari.tscn" id="25_cbgmd"]
+[ext_resource type="PackedScene" path="res://Scenes/lemari.tscn" id="25_cbgmd"]
 [ext_resource type="Material" uid="uid://cbuoxslyubnt2" path="res://Asset/Rusun/Materials/Meta.material" id="26_o1aky"]
 [ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="27_1w6v2"]
 [ext_resource type="Material" uid="uid://kdc5nc7p1hdk" path="res://Asset/Rusun/Materials/Pink.material" id="27_kwxat"]
@@ -36,14 +36,15 @@
 [ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="36_aa8k8"]
 [ext_resource type="PackedScene" uid="uid://c6wkseqsl2044" path="res://addons/easy_inventory/item_pickup_3d.tscn" id="36_key_pickup"]
 [ext_resource type="Resource" uid="uid://k0chtb88wrm7" path="res://addons/easy_inventory/examples/items/room_key.tres" id="37_key_item"]
-[ext_resource type="PackedScene" uid="uid://da65j4fmpohbs" path="res://Scenes/karpet.tscn" id="37_kqrg6"]
+[ext_resource type="PackedScene" path="res://Scenes/karpet.tscn" id="37_kqrg6"]
 [ext_resource type="PackedScene" path="res://addons/easy_inventory/ui/inventory_ui.tscn" id="38_inv_ui"]
-[ext_resource type="PackedScene" uid="uid://bqqd002lf3p6c" path="res://Scenes/kamar.tscn" id="38_k2e45"]
-[ext_resource type="PackedScene" uid="uid://btx37np6pr1o1" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
+[ext_resource type="PackedScene" path="res://Scenes/kamar.tscn" id="38_k2e45"]
+[ext_resource type="PackedScene" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="39_amir"]
-[ext_resource type="PackedScene" uid="uid://cvgvjf8pp0gr5" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
-[ext_resource type="PackedScene" uid="uid://hbr8fcjhy5lk" path="res://Scenes/flower_pickup.tscn" id="43_kqrg6"]
+[ext_resource type="PackedScene" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
+[ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="43_kqrg6"]
 [ext_resource type="PackedScene" uid="uid://dy48wcd804n81" path="res://lemari.fbx" id="44_nwwfm"]
+[ext_resource type="PackedScene" uid="uid://dmbarama001" path="res://Scenes/mbah_rama.tscn" id="45_rama"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_top_color = Color(0.35, 0.55, 0.85, 1)
@@ -3604,6 +3605,9 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kh53f")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ovncm"]
+size = Vector3(1, 2.328125, 1.6365967)
 
 [node name="Main" type="Node3D" unique_id=448454425]
 script = ExtResource("1_main_script")
@@ -10952,18 +10956,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.648294, 7.842553, -13.1458
 visible = false
 
 [node name="CharacterBody3D2" type="CharacterBody3D" parent="." unique_id=909632673]
-transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 22.095985, 14.718572, -24.202484)
+transform = Transform3D(0.22875139, 0, 0.76659817, 0, 0.8, 0, -0.76659817, 0, 0.22875139, 24.063318, 14.718572, -24.58421)
 script = ExtResource("7_6bp64")
 speed = 1.0
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterBody3D2" unique_id=1575761501]
 
 [node name="AmirModel" parent="CharacterBody3D2" unique_id=402694052 instance=ExtResource("39_amir")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.84000015, 0)
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, -0.84000015, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D2" unique_id=1572720710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)
 shape = SubResource("CapsuleShape3D_5vw27")
+
+[node name="RayCast3D" type="RayCast3D" parent="CharacterBody3D2" unique_id=1572720711]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+target_position = Vector3(0, 0, -10)
 
 [node name="Crosshair" type="CanvasLayer" parent="." unique_id=1310687115]
 layer = 5
@@ -14166,8 +14174,39 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05041313, -9.870119, 7.417)
 [node name="Kamar40" parent="Kamar" unique_id=2018852322 instance=ExtResource("39_536cc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0007305145, -9.8724985, 11.198814)
 
-[node name="Kamar41" parent="Kamar" unique_id=964041215 instance=ExtResource("38_k2e45")]
+[node name="Kamar41" type="Node3D" parent="Kamar" unique_id=964041215]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.114528656, -9.832855, 14.950989)
+
+[node name="meja" parent="Kamar/Kamar41" unique_id=1198816854 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.18178749, -0.0024745464, 1.0124788)
+
+[node name="kasur" parent="Kamar/Kamar41" unique_id=930801935 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(-4.371139e-08, -3.821371e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, 4.371139e-08, 1.3595326, -0.0024745464, 2.3661125)
+
+[node name="InteractiveTable" parent="Kamar/Kamar41" unique_id=408622441 instance=ExtResource("23_gt3je")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -1.2097938, -0.035830557, 1.4185529)
+
+[node name="lemari" parent="Kamar/Kamar41" unique_id=911407635 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 1.3052058, -0.0024745464, -0.19264245)
+
+[node name="lemari2" parent="Kamar/Kamar41" unique_id=507991232 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 0.4689079, -0.0024745464, -0.19354963)
+
+[node name="lemari3" parent="Kamar/Kamar41" unique_id=699710318 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -0.4942369, -0.0024745464, -0.19382346)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kamar/Kamar41" unique_id=708772324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0889795, -0.0024745464, 2.2131698)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kamar/Kamar41/StaticBody3D" unique_id=916997786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6640625, 0.31829834)
+shape = SubResource("BoxShape3D_ovncm")
+
+[node name="BedHidingSpot3D" parent="Kamar/Kamar41" unique_id=472229158 instance=ExtResource("28_hiding_bed")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4640032, -0.0024745464, 2.358238)
+
+[node name="InteractiveTable2" parent="Kamar/Kamar41" unique_id=2067616680 instance=ExtResource("43_kqrg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.326597, 9.951791, -11.294516)
 
 [node name="Kamar42" parent="Kamar" unique_id=36057220 instance=ExtResource("38_k2e45")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03675461, -9.827902, 18.610352)
@@ -14563,3 +14602,6 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -1.8695827, 13.517928, 8.7862
 
 [node name="Karpet2" parent="." unique_id=383665266 instance=ExtResource("37_kqrg6")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.5274474, 13.4992695, 2.5953064)
+
+[node name="Rama" parent="." unique_id=1988220011 instance=ExtResource("45_rama")]
+transform = Transform3D(0.03360874, 0, -0.99943507, 0, 1, 0, 0.99943507, 0, 0.03360874, 22.600801, 3.7163444, -10)

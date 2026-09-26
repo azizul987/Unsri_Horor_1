@@ -84,6 +84,7 @@ size = Vector3(0.75, 0.75, 1.05)
 
 [node name="InteractiveTable" type="Node3D" unique_id=755558359]
 script = ExtResource("1_table_script")
+slide_direction = -1
 starting_quantity = 1
 
 [node name="meja_dibuka" type="Node3D" parent="." unique_id=1058529393]

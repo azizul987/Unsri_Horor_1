@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dmbarama001"]
+[gd_scene format=3 uid="uid://dmbarama002"]
 
 [ext_resource type="Script" path="res://Skrip/mbah_rama.gd" id="1_rama_script"]
 [ext_resource type="PackedScene" uid="uid://bmpoh07v56s72" path="res://rama.fbx" id="2_rama_mesh"]
