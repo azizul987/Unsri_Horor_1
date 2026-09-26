@@ -13,10 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://8e3fxltyw1y7" path="res://Skrip/npc_mesh.fbx" id="22_gt3je"]
 [ext_resource type="Material" uid="uid://k0w7cqetwurr" path="res://Asset/Rusun/Materials/Dinding.material" id="22_k2e45"]
 [ext_resource type="Material" uid="uid://dlmthbsc2co37" path="res://Asset/Rusun/Materials/Meta.001.material" id="23_536cc"]
-[ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Scenes/meja_bisa_dibuka.tscn" id="23_gt3je"]
 [ext_resource type="PackedScene" uid="uid://5o843i3bprqq" path="res://kasur.fbx" id="24_3pmx8"]
 [ext_resource type="Material" uid="uid://cjgyhla4quhiv" path="res://Asset/Rusun/Materials/Material.006.material" id="24_aqgau"]
-[ext_resource type="PackedScene" path="res://Scenes/lemari.tscn" id="25_cbgmd"]
+[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://Scenes/lemari.tscn" id="25_cbgmd"]
 [ext_resource type="Material" uid="uid://cbuoxslyubnt2" path="res://Asset/Rusun/Materials/Meta.material" id="26_o1aky"]
 [ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="27_1w6v2"]
 [ext_resource type="Material" uid="uid://kdc5nc7p1hdk" path="res://Asset/Rusun/Materials/Pink.material" id="27_kwxat"]
@@ -36,12 +35,12 @@
 [ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="36_aa8k8"]
 [ext_resource type="PackedScene" uid="uid://c6wkseqsl2044" path="res://addons/easy_inventory/item_pickup_3d.tscn" id="36_key_pickup"]
 [ext_resource type="Resource" uid="uid://k0chtb88wrm7" path="res://addons/easy_inventory/examples/items/room_key.tres" id="37_key_item"]
-[ext_resource type="PackedScene" path="res://Scenes/karpet.tscn" id="37_kqrg6"]
+[ext_resource type="PackedScene" uid="uid://da65j4fmpohbs" path="res://Scenes/karpet.tscn" id="37_kqrg6"]
 [ext_resource type="PackedScene" path="res://addons/easy_inventory/ui/inventory_ui.tscn" id="38_inv_ui"]
-[ext_resource type="PackedScene" path="res://Scenes/kamar.tscn" id="38_k2e45"]
-[ext_resource type="PackedScene" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
+[ext_resource type="PackedScene" uid="uid://bqqd002lf3p6c" path="res://Scenes/kamar.tscn" id="38_k2e45"]
+[ext_resource type="PackedScene" uid="uid://btx37np6pr1o1" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="39_amir"]
-[ext_resource type="PackedScene" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
+[ext_resource type="PackedScene" uid="uid://cvgvjf8pp0gr5" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
 [ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="43_kqrg6"]
 [ext_resource type="PackedScene" uid="uid://dy48wcd804n81" path="res://lemari.fbx" id="44_nwwfm"]
 [ext_resource type="PackedScene" uid="uid://dmbarama001" path="res://Scenes/mbah_rama.tscn" id="45_rama"]
@@ -12234,7 +12233,7 @@ transform = Transform3D(0, -16.736757, 1.4807547e-06, -1.4807547e-06, 0, 49.6858
 mesh = SubResource("ArrayMesh_yirjo")
 
 [node name="Cube_607" type="MeshInstance3D" parent="rusun2" unique_id=400824165]
-transform = Transform3D(0, -36.69843, -2.980231e-06, -8.305528e-07, 0, 99.99996, -27.868727, 1.0936984e-06, 0, -1.7699738, -4.3201666, -20.545208)
+transform = Transform3D(0, -36.69843, -2.980231e-06, -8.305528e-07, 0, 99.99996, -27.868727, 1.0936984e-06, 0, -1.7973452, -4.3180256, -20.602898)
 mesh = SubResource("ArrayMesh_rts61")
 
 [node name="Cube_475" type="MeshInstance3D" parent="rusun2" unique_id=564440298]
@@ -13906,7 +13905,7 @@ transform = Transform3D(23.028593, 7.9347797e-07, -13.362589, 13.362589, 0, 23.0
 mesh = SubResource("ArrayMesh_3x5hj")
 
 [node name="Cube_014" type="MeshInstance3D" parent="rusun2" unique_id=183475425]
-transform = Transform3D(100, 0, 0, 0, -1.1920929e-05, 74.09666, 0, -99.99999, -8.833011e-06, -1.2063904, 8.839596, 1.068203)
+transform = Transform3D(100, 0, 0, 0, -1.1920929e-05, 74.09666, 0, -99.99999, -8.833011e-06, -1.2227507, 8.829737, 1.0690308)
 mesh = SubResource("ArrayMesh_ig6px")
 
 [node name="Cube_011" type="MeshInstance3D" parent="rusun2" unique_id=542605454]
@@ -13953,49 +13952,13 @@ mesh = SubResource("ArrayMesh_lp5i8")
 transform = Transform3D(100, 0, 0, 0, -1.1920929e-05, 99.99999, 0, -99.99999, -1.1920929e-05, -1.4347721, -0.11181116, -14.874912)
 mesh = SubResource("ArrayMesh_3cwdw")
 
-[node name="kasur" parent="rusun2" unique_id=1354446252 instance=ExtResource("36_aa8k8")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, -1, 0, 4.371139e-08, -14.89446, 5.7122602, 23.596554)
-
-[node name="lemari" parent="rusun2" unique_id=1025874477 instance=ExtResource("25_cbgmd")]
-transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -12.506959, 5.707138, 23.73029)
-
-[node name="lemari2" parent="rusun2" unique_id=847868328 instance=ExtResource("25_cbgmd")]
-transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -12.305941, 5.6674957, 20.981361)
-
-[node name="kasur2" parent="rusun2" unique_id=1064149236 instance=ExtResource("36_aa8k8")]
-transform = Transform3D(1.1924881e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1, 8.742278e-08, -1.1924881e-08, -13.639633, 5.8722563, 17.367973)
-
-[node name="meja" parent="rusun2" unique_id=1788380376 instance=ExtResource("27_1w6v2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.477599, 5.811534, 20.141052)
-
 [node name="Karpet" parent="rusun2" unique_id=1091703123 instance=ExtResource("37_kqrg6")]
 transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.283737, 5.6895056, 18.951359)
 
 [node name="Karpet2" parent="rusun2" unique_id=96997263 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -14.805288, 5.6403017, 15.744508)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -14.805288, 5.813475, 15.744508)
 
-[node name="kasur3" parent="rusun2" unique_id=1471285122 instance=ExtResource("36_aa8k8")]
-transform = Transform3D(1.1924881e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1, 8.742278e-08, -1.1924881e-08, -15.334213, 5.866989, 13.791856)
-
-[node name="meja2" parent="rusun2" unique_id=628900719 instance=ExtResource("27_1w6v2")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -12.392667, 5.825899, 13.597965)
-
-[node name="lemari3" parent="rusun2" unique_id=1310994884 instance=ExtResource("25_cbgmd")]
-transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -15.674043, 5.86016, 16.41277)
-
-[node name="Kamar1" parent="rusun2" unique_id=1699191951 instance=ExtResource("38_k2e45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.382697, 5.876234, 9.92208)
-
-[node name="Karpet3" parent="rusun2" unique_id=1736604972 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.065198, 5.871874, 8.404194)
-
-[node name="Karpet4" parent="rusun2" unique_id=672170094 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.0289135, 5.850815, 6.257002)
-
-[node name="Kamar2" parent="rusun2" unique_id=743470017 instance=ExtResource("39_536cc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.294643, 5.9961853, 6.3313923)
-
-[node name="InteractiveTable" parent="." unique_id=755558359 instance=ExtResource("23_gt3je")]
+[node name="InteractiveTable" parent="." unique_id=755558359 instance=ExtResource("43_kqrg6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.13466, 13.81033, -24.314915)
 
 [node name="AmirRoomDoor" parent="." unique_id=287565494 instance=ExtResource("35_door")]
@@ -14183,7 +14146,7 @@ transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.18
 [node name="kasur" parent="Kamar/Kamar41" unique_id=930801935 instance=ExtResource("36_aa8k8")]
 transform = Transform3D(-4.371139e-08, -3.821371e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, 4.371139e-08, 1.3595326, -0.0024745464, 2.3661125)
 
-[node name="InteractiveTable" parent="Kamar/Kamar41" unique_id=408622441 instance=ExtResource("23_gt3je")]
+[node name="InteractiveTable" parent="Kamar/Kamar41" unique_id=408622441 instance=ExtResource("43_kqrg6")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -1.2097938, -0.035830557, 1.4185529)
 
 [node name="lemari" parent="Kamar/Kamar41" unique_id=911407635 instance=ExtResource("25_cbgmd")]
@@ -14591,12 +14554,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.12886, 0, 7.1525574e-07)
 [node name="Kamar1" parent="." unique_id=484220900 instance=ExtResource("38_k2e45")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6017535, 13.843898, -36.815506)
 
-[node name="meja" parent="." unique_id=1321692483 instance=ExtResource("27_1w6v2")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -3.2426372, 13.51987, 7.7127695)
-
-[node name="lemari" parent="." unique_id=1732612948 instance=ExtResource("44_nwwfm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.199135, 13.6174965, 3.8263617)
-
 [node name="Karpet" parent="." unique_id=566694924 instance=ExtResource("37_kqrg6")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -1.8695827, 13.517928, 8.786248)
 
@@ -14605,3 +14562,238 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.5274474, 13.4992695, 2.595
 
 [node name="Rama" parent="." unique_id=1988220011 instance=ExtResource("45_rama")]
 transform = Transform3D(0.03360874, 0, -0.99943507, 0, 1, 0, 0.99943507, 0, 0.03360874, 22.600801, 3.7163444, -10)
+
+[node name="KamarKiri" type="Node3D" parent="." unique_id=1333174184]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.345049, 13.843898, -30.643496)
+
+[node name="kasur4" parent="KamarKiri" unique_id=1354446252 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(1.1924882e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1, 8.742278e-08, -1.1924882e-08, -1.0471236, -3.4548655, 3.8357792)
+
+[node name="meja2" parent="KamarKiri/kasur4" unique_id=1286065701 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(-1, -8.742278e-08, -3.1786506e-08, -8.742278e-08, 1, -2.7788646e-15, -3.1786506e-08, 2.1175824e-22, 1, -0.19388956, -0.04109001, 2.9415464)
+
+[node name="lemari3" parent="KamarKiri/kasur4" unique_id=1836434722 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.99999994, -8.742278e-08, -3.1786502e-08, -8.742277e-08, 1, -2.7788644e-15, -3.1786502e-08, 2.1175824e-22, 0.99999994, 2.6209145, -0.0068302155, -0.33982944)
+
+[node name="Kamar10" parent="KamarKiri" unique_id=1699191951 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09560752, -3.4817772, -0.033996582)
+
+[node name="Kamar11" parent="KamarKiri" unique_id=743470017 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0075540543, -3.3137703, -3.6246834)
+
+[node name="Karpet4" parent="KamarKiri/Kamar11" unique_id=2007375040 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.2657299, -0.14537048, -0.07439041)
+
+[node name="Karpet3" parent="KamarKiri/Kamar11" unique_id=1986743954 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.22944546, -0.12431145, 2.0728016)
+
+[node name="Kamar12" parent="KamarKiri" unique_id=252049843 instance=ExtResource("39_536cc")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.3966596, -3.4611588, -5.0297947)
+
+[node name="Kamar13" parent="KamarKiri" unique_id=1533345468 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1084007, -3.4263763, -11.293903)
+
+[node name="Kamar14" parent="KamarKiri" unique_id=599200536 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.32504678, -3.4084072, -12.522026)
+
+[node name="Kamar15" parent="KamarKiri" unique_id=44028410 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16985452, -3.423191, -18.596043)
+
+[node name="Kamar16" parent="KamarKiri" unique_id=326824205 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12537587, -3.4620132, -22.322212)
+
+[node name="Kamar17" parent="KamarKiri" unique_id=599170640 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16854882, -3.4554176, -26.089622)
+
+[node name="Kamar18" parent="KamarKiri" unique_id=1070962577 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2940408, -3.4554176, -27.418571)
+
+[node name="kasur3" parent="KamarKiri" unique_id=1471285122 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(7.5497894e-08, 6.6002357e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, -7.5497894e-08, 1.3411671, -0.13390827, -31.25435)
+
+[node name="meja2" parent="KamarKiri/kasur3" unique_id=628900719 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(-1, -8.742278e-08, -3.1786506e-08, -8.742278e-08, 1, -2.7788646e-15, -3.1786506e-08, 2.1175824e-22, 1, -0.19388956, -0.04109001, 2.9415464)
+
+[node name="lemari3" parent="KamarKiri/kasur3" unique_id=1310994884 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.99999994, -8.742278e-08, -3.1786502e-08, -8.742277e-08, 1, -2.7788644e-15, -3.1786502e-08, 2.1175824e-22, 0.99999994, 2.6209145, -0.0068302155, -0.33982944)
+
+[node name="kasur2" parent="KamarKiri" unique_id=1064149236 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(7.5497894e-08, 6.6002357e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, -7.5497894e-08, -0.35341263, -0.12864208, -34.830467)
+
+[node name="lemari" parent="KamarKiri/kasur2" unique_id=1732612948 instance=ExtResource("44_nwwfm")]
+transform = Transform3D(1.1924882e-08, -8.742278e-08, 1, 1.0425063e-15, 1, 8.742278e-08, 1, 2.1175824e-22, -1.1924882e-08, -0.36060977, -0.09775925, -2.2075016)
+
+[node name="meja" parent="KamarKiri/kasur2" unique_id=1788380376 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1.1924882e-08, -8.742278e-08, 1, 1.0425063e-15, 1, 8.742278e-08, 1, 2.1175824e-22, -1.1924882e-08, 2.7730813, -0.060721397, 1.1620339)
+
+[node name="kasur" parent="KamarKiri" unique_id=1902547590 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, 1, 0, 4.371139e-08, 0.74737895, -0.28863811, -41.05905)
+
+[node name="meja" parent="KamarKiri/kasur" unique_id=1321692483 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, 1, 0, -1.3113416e-07, 2.7027864, -0.0353899, 0.6687288)
+
+[node name="lemari2" parent="KamarKiri/kasur" unique_id=847868328 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.99999994, 0, 8.742277e-08, 0, 1, 0, 8.742277e-08, 0, 0.99999994, 2.6151943, -0.044763565, -2.1040921)
+
+[node name="lemari" parent="KamarKiri/kasur" unique_id=1025874477 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -0.13373375, -0.005121231, -2.0009334)
+
+[node name="Kamar3" parent="KamarKiri/kasur" unique_id=1050150491 instance=ExtResource("40_aqgau")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, -1, 0, 4.371139e-08, 2.4502335, -3.119606, -0.6063055)
+
+[node name="Kamar3" parent="KamarKiri/kasur/Kamar3" unique_id=356519337 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, -8.742278e-08, 0, 8.742278e-08, 1, 0, 0, 0, -1, -0.04952383, -3.4144354, 2.456399)
+
+[node name="Kamar1" parent="KamarKiri" unique_id=1471281988 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.3896507, -0.12466335, -27.384575)
+
+[node name="Kamar9" parent="KamarKiri" unique_id=894273506 instance=ExtResource("39_536cc")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.30159664, -0.004712105, -23.793888)
+
+[node name="Karpet4" parent="KamarKiri/Kamar9" unique_id=672170094 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.2657299, -0.14537048, -0.07439041)
+
+[node name="Karpet3" parent="KamarKiri/Kamar9" unique_id=1736604972 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.22944546, -0.12431145, 2.0728016)
+
+[node name="Kamar2" parent="KamarKiri" unique_id=1198486754 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.102617145, -0.1692257, -22.388777)
+
+[node name="Kamar3" parent="KamarKiri" unique_id=1350170538 instance=ExtResource("40_aqgau")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.18564153, -0.16120243, -16.124668)
+
+[node name="Kamar4" parent="KamarKiri" unique_id=192050166 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.031004667, -0.14201832, -15.017208)
+
+[node name="Kamar5" parent="KamarKiri" unique_id=1186382438 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.46389592, 0, -8.822529)
+
+[node name="Kamar6" parent="KamarKiri" unique_id=1025581596 instance=ExtResource("40_aqgau")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.41941702, 0.14579487, -5.0963593)
+
+[node name="Kamar7" parent="KamarKiri" unique_id=1517788375 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.46258974, 0, -1.328949)
+
+[node name="Kamar8" parent="KamarKiri" unique_id=14808860 instance=ExtResource("38_k2e45")]
+
+[node name="KamarKiri" type="Node3D" parent="KamarKiri" unique_id=1774272265]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.41993868, -6.7998567, -31.2154)
+
+[node name="kasur4" parent="KamarKiri/KamarKiri" unique_id=1934396732 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(1.1924882e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1, 8.742278e-08, -1.1924882e-08, -1.047122, -3.2639332, -3.6174643)
+
+[node name="meja2" parent="KamarKiri/KamarKiri/kasur4" unique_id=314654143 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(-1, -8.742278e-08, -3.1786506e-08, -8.742278e-08, 1, -2.7788646e-15, -3.1786506e-08, 2.1175824e-22, 1, -0.19388956, -0.04109001, 2.9415464)
+
+[node name="lemari3" parent="KamarKiri/KamarKiri/kasur4" unique_id=1264309943 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.99999994, -8.742278e-08, -3.1786502e-08, -8.742277e-08, 1, -2.7788644e-15, -3.1786502e-08, 2.1175824e-22, 0.99999994, 2.6209145, -0.0068302155, -0.33982944)
+
+[node name="kasur5" parent="KamarKiri/KamarKiri" unique_id=1905593662 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(1.1924882e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1, 8.742278e-08, -1.1924882e-08, 0.6474577, -3.258667, -0.04134792)
+
+[node name="lemari" parent="KamarKiri/KamarKiri/kasur5" unique_id=414563103 instance=ExtResource("44_nwwfm")]
+transform = Transform3D(1.1924882e-08, -8.742278e-08, 1, 1.0425063e-15, 1, 8.742278e-08, 1, 2.1175824e-22, -1.1924882e-08, -0.36060977, -0.09775925, -2.2075016)
+
+[node name="meja" parent="KamarKiri/KamarKiri/kasur5" unique_id=326909283 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1.1924882e-08, -8.742278e-08, 1, 1.0425063e-15, 1, 8.742278e-08, 1, 2.1175824e-22, -1.1924882e-08, 2.7730813, -0.060721397, 1.1620339)
+
+[node name="kasur6" parent="KamarKiri/KamarKiri" unique_id=751369459 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(-4.371138e-08, 0, -1, 0, 1, 0, -1, 0, 4.371138e-08, -0.15703332, -3.418663, 6.187235)
+
+[node name="meja" parent="KamarKiri/KamarKiri/kasur6" unique_id=474624902 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, 1, 0, -1.3113416e-07, 2.7027864, -0.0353899, 0.99617696)
+
+[node name="lemari2" parent="KamarKiri/KamarKiri/kasur6" unique_id=478754842 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.99999994, 0, 8.742276e-08, 0, 1, 0, 8.742276e-08, 0, 0.99999994, 2.6151943, -0.044763565, -1.9753962)
+
+[node name="lemari" parent="KamarKiri/KamarKiri/kasur6" unique_id=1961235028 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, -0.99999994, -0.13373375, -0.005121231, -2.1307354)
+
+[node name="Kamar2" parent="KamarKiri/KamarKiri/kasur6" unique_id=347596113 instance=ExtResource("39_536cc")]
+transform = Transform3D(1.1924882e-08, -1.0425061e-15, 1, 8.742278e-08, 1, 0, 1, -8.742278e-08, -1.1924882e-08, -0.017878056, 6.7344193, -0.7168908)
+
+[node name="Kamar2" parent="KamarKiri/KamarKiri/kasur6/Kamar2" unique_id=754843335 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, -8.742278e-08, 0, 8.742278e-08, 1, 0, 0, 0, -1, 0.10445452, -3.312964, 2.5360713)
+
+[node name="Kamar10" parent="KamarKiri/KamarKiri" unique_id=1972859469 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09560609, -3.2546883, -7.48724)
+
+[node name="Kamar11" parent="KamarKiri/KamarKiri" unique_id=930019747 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.007552266, -3.134737, -11.077927)
+
+[node name="Karpet4" parent="KamarKiri/KamarKiri/Kamar11" unique_id=498785809 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.2657299, -0.14537048, -0.07439041)
+
+[node name="Karpet3" parent="KamarKiri/KamarKiri/Kamar11" unique_id=1377344199 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.22944546, -0.12431145, 2.0728016)
+
+[node name="Kamar12" parent="KamarKiri/KamarKiri" unique_id=1338803175 instance=ExtResource("39_536cc")]
+transform = Transform3D(-1, 0, -8.742276e-08, 0, 1, 0, 8.742276e-08, 0, -1, 0.39666128, -3.2992506, -12.646141)
+
+[node name="Kamar13" parent="KamarKiri/KamarKiri" unique_id=179634550 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10840213, -3.2912273, -18.747145)
+
+[node name="Kamar14" parent="KamarKiri/KamarKiri" unique_id=1424418055 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, -8.742276e-08, 0, 1, 0, 8.742276e-08, 0, -1, 0.3250482, -3.2720432, -19.854605)
+
+[node name="Kamar15" parent="KamarKiri/KamarKiri" unique_id=343676105 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16985309, -3.130025, -26.049284)
+
+[node name="Kamar16" parent="KamarKiri/KamarKiri" unique_id=2110914503 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12537444, -2.98423, -29.775454)
+
+[node name="Kamar17" parent="KamarKiri/KamarKiri" unique_id=53582074 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16854751, -3.130025, -33.54286)
+
+[node name="Kamar18" parent="KamarKiri/KamarKiri" unique_id=2048956296 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, -8.742276e-08, 0, 1, 0, 8.742276e-08, 0, -1, 0.2940421, -3.130025, -34.871807)
+
+[node name="kasur3" parent="KamarKiri/KamarKiri" unique_id=1258121319 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(7.5497894e-08, 6.6002357e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, -7.5497894e-08, 1.3411671, -0.13390827, -31.25435)
+
+[node name="meja2" parent="KamarKiri/KamarKiri/kasur3" unique_id=1750695438 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(-1, -8.742278e-08, -3.1786506e-08, -8.742278e-08, 1, -2.7788646e-15, -3.1786506e-08, 2.1175824e-22, 1, -0.19388956, -0.04109001, 2.9415464)
+
+[node name="lemari3" parent="KamarKiri/KamarKiri/kasur3" unique_id=998871576 instance=ExtResource("25_cbgmd")]
+transform = Transform3D(-0.99999994, -8.742278e-08, -3.1786502e-08, -8.742277e-08, 1, -2.7788644e-15, -3.1786502e-08, 2.1175824e-22, 0.99999994, 2.6209145, -0.0068302155, -0.33982944)
+
+[node name="kasur2" parent="KamarKiri/KamarKiri" unique_id=510960800 instance=ExtResource("36_aa8k8")]
+transform = Transform3D(7.5497894e-08, 6.6002357e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, -7.5497894e-08, -0.35341263, -0.12864208, -34.830467)
+
+[node name="lemari" parent="KamarKiri/KamarKiri/kasur2" unique_id=1194952877 instance=ExtResource("44_nwwfm")]
+transform = Transform3D(1.1924882e-08, -8.742278e-08, 1, 1.0425063e-15, 1, 8.742278e-08, 1, 2.1175824e-22, -1.1924882e-08, -0.36060977, -0.09775925, -2.2075016)
+
+[node name="meja" parent="KamarKiri/KamarKiri/kasur2" unique_id=1535214753 instance=ExtResource("27_1w6v2")]
+transform = Transform3D(1.1924882e-08, -8.742278e-08, 1, 1.0425063e-15, 1, 8.742278e-08, 1, 2.1175824e-22, -1.1924882e-08, 2.7730813, -0.060721397, 1.1620339)
+
+[node name="Kamar1" parent="KamarKiri/KamarKiri" unique_id=179078562 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.3896507, -0.12466335, -27.384575)
+
+[node name="Kamar9" parent="KamarKiri/KamarKiri" unique_id=1607730160 instance=ExtResource("39_536cc")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.30159664, -0.004712105, -23.793888)
+
+[node name="Karpet4" parent="KamarKiri/KamarKiri/Kamar9" unique_id=698585451 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.2657299, -0.14537048, -0.07439041)
+
+[node name="Karpet3" parent="KamarKiri/KamarKiri/Kamar9" unique_id=1528903057 instance=ExtResource("37_kqrg6")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.22944546, -0.12431145, 2.0728016)
+
+[node name="Kamar2" parent="KamarKiri/KamarKiri" unique_id=935654065 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.102617145, -0.1692257, -22.388777)
+
+[node name="Kamar3" parent="KamarKiri/KamarKiri" unique_id=1416017004 instance=ExtResource("40_aqgau")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.18564153, -0.16120243, -16.124668)
+
+[node name="Kamar4" parent="KamarKiri/KamarKiri" unique_id=1034483906 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.031004667, -0.14201832, -15.018435)
+
+[node name="Kamar5" parent="KamarKiri/KamarKiri" unique_id=1661081688 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.46389592, 0, -8.822529)
+
+[node name="Kamar6" parent="KamarKiri/KamarKiri" unique_id=2088709614 instance=ExtResource("40_aqgau")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.41941702, 0.14579487, -5.0963593)
+
+[node name="Kamar7" parent="KamarKiri/KamarKiri" unique_id=862882062 instance=ExtResource("38_k2e45")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.46258974, 0, -1.328949)
+
+[node name="Kamar8" parent="KamarKiri/KamarKiri" unique_id=506492161 instance=ExtResource("38_k2e45")]
