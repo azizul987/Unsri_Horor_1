@@ -58,6 +58,7 @@ var _patrol_timeout: float = 10.0
 var _is_chasing: bool = false
 var _spawn_grace: float = 5.0
 var _nav_ready: bool = false
+var _player_was_hidden: bool = false
 
 var _chase_duration: float = 0.0
 var _rest_timer: float = 0.0
@@ -151,15 +152,25 @@ func _physics_process(delta: float) -> void:
 			var sound_choice: String = "creepy_rattle" if randf() < 0.5 else "bone_crack"
 			sm.play_sfx_3d(sound_choice, global_position, 20.0, 0.0, randf_range(0.85, 1.15))
 
-	# Jika pemain bersembunyi (misal di bawah kasur), Amir kehilangan jejak
-	if target_player.get("is_hidden") == true:
-		if current_state != State.IDLE:
-			set_state(State.IDLE)
-		velocity.x = move_toward(velocity.x, 0.0, speed * delta * 2.5)
-		velocity.z = move_toward(velocity.z, 0.0, speed * delta * 2.5)
-		move_and_slide()
-		_chase_duration = 0.0
-		return
+	var is_player_hidden: bool = (target_player.get("is_hidden") == true)
+
+	# Saat pemain bersembunyi (misal di bawah kasur)
+	if is_player_hidden:
+		if not _player_was_hidden:
+			_player_was_hidden = true
+			if current_state != State.IDLE:
+				set_state(State.IDLE)
+			_chase_duration = 0.0
+			_spawn_grace = 6.0
+			# Amir kehilangan jejak -> langsung berpatroli menjauh dari posisi kasur pemain
+			_pick_patrol_away_from_player()
+			# Setelah 3.5 - 5.5 detik mencari menjauh, Amir akan berteleportasi pergi ke lantai lain
+			_teleport_timer = randf_range(3.5, 5.5)
+	else:
+		if _player_was_hidden:
+			_player_was_hidden = false
+			# Beri jeda perlindungan 3.0 detik saat pemain baru saja keluar dari bawah kasur
+			_spawn_grace = 3.0
 
 	if _spawn_grace > 0.0:
 		_spawn_grace -= delta
@@ -167,7 +178,10 @@ func _physics_process(delta: float) -> void:
 	# Timer teleportasi antar lantai
 	_teleport_timer -= delta
 	if _teleport_timer <= 0.0:
-		if not same_floor and target_player.get("is_hidden") != true:
+		if is_player_hidden:
+			# Jika pemain sedang sembunyi di bawah kasur, Amir berteleportasi pergi ke lantai lain!
+			teleport_to_other_floor()
+		elif not same_floor and not is_player_hidden:
 			# Pemain berada di lantai lain dan tidak sembunyi -> Amir menyusul ke lantai pemain!
 			teleport_to_other_floor()
 		elif same_floor and (current_state == State.CHASE or current_state == State.ATTACK):
@@ -193,7 +207,10 @@ func _physics_process(delta: float) -> void:
 				_patrol_wait -= delta
 				if _patrol_wait <= 0.0 or _patrol_timeout <= 0.0:
 					_patrol_wait = randf_range(1.5, 3.5)
-					_pick_new_patrol_point()
+					if is_player_hidden:
+						_pick_patrol_away_from_player()
+					else:
+						_pick_new_patrol_point()
 
 			var patrol_dir: Vector3 = Vector3.ZERO
 			if nav_agent and not nav_agent.is_navigation_finished():
@@ -210,8 +227,8 @@ func _physics_process(delta: float) -> void:
 				velocity.x = move_toward(velocity.x, 0.0, patrol_speed * delta * 5.0)
 				velocity.z = move_toward(velocity.z, 0.0, patrol_speed * delta * 5.0)
 
-			# Deteksi pemain jika berada di lantai yang sama dan dalam jangkauan
-			if _spawn_grace <= 0.0 and same_floor and (always_chase or horizontal_dist < detection_range):
+			# Deteksi pemain jika berada di lantai yang sama, dalam jangkauan, dan TIDAK SEDANG BERSEMBUNYI
+			if _spawn_grace <= 0.0 and same_floor and not is_player_hidden and (always_chase or horizontal_dist < detection_range):
 				if always_chase or has_line_of_sight_to_player():
 					set_state(State.ALERT)
 
@@ -522,6 +539,29 @@ func _pick_new_patrol_point() -> void:
 	if nav_agent:
 		nav_agent.target_position = _patrol_target
 
+## Memilih titik patroli di koridor yang menjauh dari posisi kasur/pemain
+func _pick_patrol_away_from_player() -> void:
+	_patrol_timeout = 15.0
+	var feet_y: float = global_position.y - 0.75
+	var p_z: float = target_player.global_position.z if is_instance_valid(target_player) else global_position.z
+	
+	# Pilih titik koridor yang berlawanan atau sejauh mungkin dari posisi pemain
+	var target_z: float = 6.0 if p_z < -6.0 else -18.0
+	target_z += randf_range(-2.0, 2.0)
+	
+	var raw_pt: Vector3 = Vector3(randf_range(16.5, 17.2), feet_y, target_z)
+	var map: RID = get_world_3d().navigation_map if is_inside_tree() and get_world_3d() else RID()
+	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
+		var snapped: Vector3 = NavigationServer3D.map_get_closest_point(map, raw_pt)
+		if snapped != Vector3.ZERO and abs(snapped.y - feet_y) < 1.8:
+			_patrol_target = snapped
+		else:
+			_patrol_target = raw_pt
+	else:
+		_patrol_target = raw_pt
+	if nav_agent:
+		nav_agent.target_position = _patrol_target
+
 func _get_floor_index_from_y(y_pos: float, floors: Array[float]) -> int:
 	var closest_idx: int = 0
 	var min_diff: float = 99999.0
@@ -551,15 +591,27 @@ func teleport_to_other_floor() -> void:
 	for idx in candidate_indices:
 		var delta_floor: int = abs(idx - player_floor_idx)
 		var w: float = 5.0
-		match delta_floor:
-			0:
-				w = 50.0
-			1:
-				w = 30.0
-			2:
-				w = 15.0
-			_:
-				w = 5.0
+		if target_player and target_player.get("is_hidden") == true:
+			# Jika pemain sedang sembunyi di bawah kasur, prioritaskan teleportasi ke lantai lain (menjauh dari pemain)
+			match delta_floor:
+				0:
+					w = 0.0
+				1:
+					w = 50.0
+				2:
+					w = 30.0
+				_:
+					w = 20.0
+		else:
+			match delta_floor:
+				0:
+					w = 50.0
+				1:
+					w = 30.0
+				2:
+					w = 15.0
+				_:
+					w = 5.0
 		weights.append(w)
 
 	var total_weight: float = 0.0
@@ -598,7 +650,10 @@ func teleport_to_other_floor() -> void:
 		set_state(State.CHASE)
 	else:
 		set_state(State.IDLE)
-		_pick_new_patrol_point()
+		if target_player and target_player.get("is_hidden") == true:
+			_pick_patrol_away_from_player()
+		else:
+			_pick_new_patrol_point()
 
 ## Dipanggil saat pintu kamar dibuka / bangun dari mode dormant
 func wake_up() -> void:
