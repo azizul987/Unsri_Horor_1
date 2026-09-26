@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://da65j4fmpohbs"]
+
+[ext_resource type="PackedScene" uid="uid://dh065wrmp2nsy" path="res://Scenes/karpet_model.fbx" id="1_00opo"]
+
+[node name="Karpet" type="Node3D" unique_id=1091703123]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="karpet_model" parent="." unique_id=560215577 instance=ExtResource("1_00opo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5228195)

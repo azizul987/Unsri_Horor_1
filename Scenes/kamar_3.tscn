@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="1_h1lkp"]
 [ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="2_inbja"]
 [ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="3_6omog"]
-[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://lemari.tscn" id="4_ivf0b"]
+[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://Scenes/lemari.tscn" id="4_ivf0b"]
 [ext_resource type="PackedScene" uid="uid://c8m3wap7q2k1r" path="res://Scenes/bed_hiding_spot.tscn" id="5_woax2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tqgxn"]

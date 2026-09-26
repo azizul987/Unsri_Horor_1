@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bsaeqpfefc6oy" path="res://Krita-removebg-preview.png" id="4_butterfly_tex"]
 [ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="5_meja"]
 [ext_resource type="PackedScene" uid="uid://5o843i3bprqq" path="res://kasur.fbx" id="6_kasur"]
-[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://lemari.tscn" id="7_lemari"]
+[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://Scenes/lemari.tscn" id="7_lemari"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="11_amir"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
