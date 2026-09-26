@@ -19,6 +19,7 @@ transform = Transform3D(-4.371139e-08, -3.821371e-15, -1, -8.742278e-08, 1, 0, -
 
 [node name="InteractiveTable" parent="." unique_id=755558359 instance=ExtResource("3_lctp0")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.175231, -0.03335601, -0.079997)
+starting_item = null
 
 [node name="lemari" parent="." unique_id=1518109869 instance=ExtResource("4_6m8f4")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 1.3049997, 0, -0.19463891)
