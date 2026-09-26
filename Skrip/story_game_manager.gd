@@ -674,6 +674,7 @@ func update_mission_hud() -> void:
 func advance_mission(new_step: MissionStep) -> void:
 	current_mission = new_step
 	mission_changed.emit(current_mission)
+	_sync_amir_state()
 	update_mission_hud()
 	save_game_state()
 
@@ -819,15 +820,22 @@ func play_amir_transformation_cinematic() -> void:
 	if pm:
 		pm.pause_enabled = true
 
-	# Amir bangun dan mulai memburu pemain
-	if is_instance_valid(amir_node):
-		amir_node.wake_up()
-
+	# 1. Update status babak dan misi cerita terlebih dahulu sebelum membangunkan Amir
 	if current_chapter == Chapter.PROLOGUE_DAY:
-		set_chapter(Chapter.FIRST_NIGHT)
+		current_chapter = Chapter.FIRST_NIGHT
+		chapter_changed.emit(current_chapter)
 
 	if current_mission == MissionStep.INVESTIGATE_AMIR:
-		advance_mission(MissionStep.ESCAPE_AND_HIDE)
+		current_mission = MissionStep.ESCAPE_AND_HIDE
+		mission_changed.emit(current_mission)
+
+	# 2. Sinkronkan status Amir (fase agresivitas & is_dormant = false)
+	_sync_amir_state()
+	update_mission_hud()
+
+	# 3. Baru bangunkan Amir dan aktifkan status ALERT/CHASE
+	if is_instance_valid(amir_node):
+		amir_node.wake_up()
 
 	save_game_state()
 	_is_cinematic_active = false

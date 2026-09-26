@@ -604,11 +604,10 @@ func teleport_to_other_floor() -> void:
 func wake_up() -> void:
 	is_dormant = false
 	_spawn_grace = 4.0 # Jeda perlindungan 4 detik agar tidak langsung menyergap pemain
-	_alert_timer = 2.5 # Jeda raungan waspada di dalam kamar selama 2.5 detik memberi waktu MC lari
 	_teleport_timer = randf_range(teleport_interval * 0.8, teleport_interval * 1.2)
 	_update_target_position()
-	# Masuk ke status ALERT dengan jeda kewaspadaan di dalam kamar
 	set_state(State.ALERT)
+	_alert_timer = 2.5 # Diset SETELAH set_state agar tidak tertimpa alert_duration (1.2) di _on_state_transition
 
 func get_save_data() -> Dictionary:
 	return {
