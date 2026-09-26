@@ -199,7 +199,7 @@ func _find_scene_nodes() -> void:
 	update_mission_hud()
 
 ## ============================================================================
-## 💾 SISTEM PENYIMPANAN DATA (SAVESYSTEM EASY_SAVE)
+## SISTEM PENYIMPANAN DATA (SAVESYSTEM EASY_SAVE)
 ## ============================================================================
 
 ## Menyimpan posisi, rotasi, status cerita, dan progres bunga ke disk
@@ -493,7 +493,7 @@ func set_chapter(new_chapter: Chapter) -> void:
 	save_game_state()
 
 ## ============================================================================
-## 🎭 DIALOG & EVENT HANDLERS
+## DIALOG & EVENT HANDLERS
 ## ============================================================================
 
 func _on_dialogue_finished(_dialogue_id: String = "") -> void:
@@ -525,7 +525,7 @@ func _on_dialogue_event_triggered(event_name: String) -> void:
 		"mbah_rama_story_finished":
 			if current_mission == MissionStep.FIND_MBAH_RAMA:
 				advance_mission(MissionStep.COLLECT_FLOWERS)
-				_show_cinematic_warning("💡 PETUNJUK TAHAP 3:\nKumpulkan 8 bunga yang tersebar di sekitar area ini untuk melanjutkan.", 3.5)
+				_show_cinematic_warning("PETUNJUK TAHAP 3:\nKumpulkan 8 bunga yang tersebar di sekitar area ini untuk melanjutkan.", 3.5)
 
 ## Memulai dialog prolog siang hari
 func play_prologue_day() -> void:
@@ -548,7 +548,7 @@ func play_ending(is_cure: bool) -> void:
 	get_tree().change_scene_to_file("res://Scenes/ending_cinematic.tscn")
 
 ## ============================================================================
-## 🖥️ UI AUTOSAVE INDICATOR
+## UI AUTOSAVE INDICATOR
 ## ============================================================================
 
 func _setup_save_hud() -> void:
@@ -582,7 +582,7 @@ func _show_save_indicator(text: String) -> void:
 	tween.tween_property(_save_hud_label, ^"modulate:a", 0.0, 0.6)
 
 ## ============================================================================
-## 🎯 SISTEM MISI & HUD PETUNJUK OBJEKTIF
+## SISTEM MISI & HUD PETUNJUK OBJEKTIF
 ## ============================================================================
 
 func _setup_mission_hud() -> void:
@@ -647,26 +647,26 @@ func update_mission_hud() -> void:
 	_mission_hud_layer.visible = true
 	match current_mission:
 		MissionStep.INVESTIGATE_AMIR:
-			_mission_label.text = "🎯 MISI 1: Periksa Kamar Amir di Lantai 5 (Kamar 530)"
+			_mission_label.text = "MISI 1: Periksa Kamar Amir di Lantai 5 (Kamar 530)"
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.4, 1.0))
 		MissionStep.ESCAPE_AND_HIDE:
-			_mission_label.text = "🎯 MISI 2 (Tahap 1): Kabur dari Amir & Sembunyi di Bawah Kasur!"
+			_mission_label.text = "MISI 2 (Tahap 1): Kabur dari Amir & Sembunyi di Bawah Kasur!"
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
 		MissionStep.FIND_MBAH_RAMA:
-			_mission_label.text = "🎯 MISI 2 (Tahap 2): Temui Rama di Lantai 2"
+			_mission_label.text = "MISI 2 (Tahap 2): Temui Rama di Lantai 2"
 			_mission_label.add_theme_color_override("font_color", Color(0.4, 0.85, 1.0, 1.0))
 		MissionStep.COLLECT_FLOWERS:
 			var total = maxi(flowers_collected, flowers_deposited)
-			_mission_label.text = "🎯 MISI 2 (Tahap 3): Kumpulkan 8 Bunga Kupu-Kupu Malam (%d/8)" % total
+			_mission_label.text = "MISI 2 (Tahap 3): Kumpulkan 8 Bunga Kupu-Kupu Malam (%d/8)" % total
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.35, 1.0))
 		MissionStep.FINAL_RITUAL:
-			_mission_label.text = "🎯 MISI 3: Pergi ke Altar Lantai 1 & Selesaikan Ritual!"
+			_mission_label.text = "MISI 3: Pergi ke Altar Lantai 1 & Selesaikan Ritual!"
 			_mission_label.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5, 1.0))
 
 	if _hint_label:
 		var hint: String = get_mission_hint(current_mission)
 		if hint != "":
-			_hint_label.text = "💡 Petunjuk: " + hint
+			_hint_label.text = "Petunjuk: " + hint
 			_hint_label.visible = true
 		else:
 			_hint_label.visible = false
@@ -682,7 +682,7 @@ func _on_player_hiding_changed(is_hidden: bool) -> void:
 		var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
 		if sm:
 			sm.play_sfx_2d("ui_click", 2.0)
-		_show_cinematic_warning("✓ BERHASIL SEMBUNYI DARI AMIR!\nJEJAKMU HILANG.", 2.5)
+		_show_cinematic_warning("BERHASIL SEMBUNYI DARI AMIR!\nJEJAKMU HILANG.", 2.5)
 		advance_mission(MissionStep.FIND_MBAH_RAMA)
 
 func _check_spawn_mbah_rama() -> void:
@@ -703,7 +703,7 @@ func _check_spawn_mbah_rama() -> void:
 		scene.add_child(rama_inst)
 
 ## ============================================================================
-## 🎬 SINEMATIK TRANSFORMASI AMIR & SISTEM GAME OVER / MATI
+## SINEMATIK TRANSFORMASI AMIR & SISTEM GAME OVER / MATI
 ## ============================================================================
 
 func _on_amir_door_opened() -> void:
@@ -731,11 +731,14 @@ func play_amir_transformation_cinematic() -> void:
 		if p_cam:
 			p_cam.look_locked = true
 
-	# Posisikan Amir menghadap ke arah pemain
-	if is_instance_valid(player_node):
-		var target_look = Vector3(player_node.global_position.x, amir_node.global_position.y, player_node.global_position.z)
-		if (target_look - amir_node.global_position).length_squared() > 0.1:
-			amir_node.look_at(target_look, Vector3.UP)
+	# Pastikan Amir berada aman di dalam kamar 530 (di sudut kamar, berjarak dari pintu)
+	if is_instance_valid(amir_node):
+		amir_node.global_position = Vector3(24.06, 14.71, -24.58)
+		amir_node.velocity = Vector3.ZERO
+		if is_instance_valid(player_node):
+			var target_look = Vector3(player_node.global_position.x, amir_node.global_position.y, player_node.global_position.z)
+			if (target_look - amir_node.global_position).length_squared() > 0.1:
+				amir_node.look_at(target_look, Vector3.UP)
 
 	# Kamera sinematik close-up ke Amir
 	var amir_head = amir_node.global_position + Vector3(0, 1.45, 0)
