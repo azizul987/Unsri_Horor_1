@@ -26,7 +26,7 @@ signal phase_changed(new_phase: int)
 @export var turn_speed: float = 10.0
 @export var stopping_distance: float = 0.8
 @export var detection_range: float = 8.0
-@export var teleport_interval: float = 35.0
+@export var teleport_interval: float = 55.0
 @export var always_chase: bool = true
 @export var floor_heights: Array[float] = [1.05, 4.65, 8.15, 11.35, 14.65]
 
@@ -153,10 +153,15 @@ func _physics_process(delta: float) -> void:
 
 	_teleport_timer -= delta
 	if _teleport_timer <= 0.0:
-		if not _is_chasing or horizontal_dist > 8.0:
-			teleport_to_other_floor()
+		if _is_chasing:
+			_teleport_timer = 15.0
 		else:
-			_teleport_timer = 5.0
+			# Beri peluang besar (70%) Amir tetap lanjut patroli jalan kaki di lantai saat ini
+			if randf() < 0.7:
+				_teleport_timer = randf_range(teleport_interval * 0.8, teleport_interval * 1.3)
+				_pick_new_patrol_point()
+			else:
+				teleport_to_other_floor()
 
 	_is_chasing = _spawn_grace <= 0.0 and same_floor and (always_chase or horizontal_dist < detection_range)
 
@@ -458,7 +463,7 @@ func teleport_to_other_floor() -> void:
 
 func wake_up() -> void:
 	is_dormant = false
-	_spawn_grace = 0.5
+	_spawn_grace = 3.5
 	_is_chasing = true
 	_teleport_timer = randf_range(teleport_interval * 0.7, teleport_interval * 1.3)
 	_update_target_position()

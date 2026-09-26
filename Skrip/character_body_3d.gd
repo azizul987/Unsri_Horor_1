@@ -226,6 +226,8 @@ func _update_interact_raycast() -> void:
 				var has_item_in_open_drawer: bool = table.is_open and table.current_item_data != null
 				if not has_item_in_open_drawer:
 					new_target = table
+			elif collider is DialogueInteractable3D or collider.has_method("interact"):
+				new_target = collider
 
 	# Update target
 	if _interact_target != new_target:

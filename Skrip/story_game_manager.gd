@@ -16,13 +16,22 @@ enum Chapter {
 signal chapter_changed(new_chapter: Chapter)
 signal flower_count_changed(collected: int, deposited: int)
 signal amir_phase_changed(new_phase: int)
+signal mission_changed(new_mission: int)
 signal game_saved
 signal game_loaded
+
+enum MissionStep {
+	ESCAPE_AND_HIDE = 0,   ## Misi 1: Kabur dari Amir & Sembunyi di Bawah Kasur
+	FIND_MBAH_RAMA = 1,    ## Misi 2: Cari Mbah Rama di Lantai 2 untuk Mendengar Cerita
+	COLLECT_FLOWERS = 2,   ## Misi 3: Kumpulkan 8 Bunga Kupu-Kupu Malam (X/8)
+	FINAL_RITUAL = 3       ## Misi 4: Altar Siap untuk Ritual Akhir
+}
 
 static var instance: StoryGameManager
 
 @export_group("Progres Cerita")
 @export var current_chapter: Chapter = Chapter.PROLOGUE_DAY
+@export var current_mission: MissionStep = MissionStep.ESCAPE_AND_HIDE
 @export var flowers_collected: int = 0
 @export var flowers_deposited: int = 0
 @export var max_flowers: int = 8
@@ -44,9 +53,11 @@ var _is_player_dead: bool = false
 var _death_hud_layer: CanvasLayer = null
 var _warning_hud_layer: CanvasLayer = null
 
-# CanvasLayer HUD notifikasi autosave
+# CanvasLayer HUD notifikasi autosave & misi
 var _save_hud_layer: CanvasLayer = null
 var _save_hud_label: Label = null
+var _mission_hud_layer: CanvasLayer = null
+var _mission_label: Label = null
 
 func _enter_tree() -> void:
 	if instance == null:
@@ -58,6 +69,7 @@ func _ready() -> void:
 		SaveSystem.set_slot(active_slot)
 
 	_setup_save_hud()
+	_setup_mission_hud()
 
 	if HorrorDialogue:
 		HorrorDialogue.dialogue_finished.connect(_on_dialogue_finished)
@@ -123,8 +135,21 @@ func _find_scene_nodes() -> void:
 			if not door.door_opened.is_connected(_on_amir_door_opened):
 				door.door_opened.connect(_on_amir_door_opened)
 
+	# Hubungkan sinyal sembunyi pemain untuk Misi 1
+	if is_instance_valid(player_node):
+		if player_node.has_signal("hiding_state_changed"):
+			if not player_node.hiding_state_changed.is_connected(_on_player_hiding_changed):
+				player_node.hiding_state_changed.connect(_on_player_hiding_changed)
+
+	call_deferred(&"_check_spawn_mbah_rama")
+
+	# Jika misi awal (Kabur dari Amir & Sembunyi), langsung bangunkan Amir agar mengejar
+	if current_mission == MissionStep.ESCAPE_AND_HIDE:
+		call_deferred(&"_start_initial_amir_chase")
+
 	# Terapkan fase Amir sesuai progres saat ini
 	_sync_amir_state()
+	update_mission_hud()
 
 ## ============================================================================
 ## 💾 SISTEM PENYIMPANAN DATA (SAVESYSTEM EASY_SAVE)
@@ -150,6 +175,7 @@ func save_game_state(custom_slot: int = -1) -> bool:
 			SaveSystem.set_value("player_crouching", player_node.is_crouching)
 
 	SaveSystem.set_value("current_chapter", int(current_chapter))
+	SaveSystem.set_value("current_mission", int(current_mission))
 	SaveSystem.set_value("flowers_collected", flowers_collected)
 	SaveSystem.set_value("flowers_deposited", flowers_deposited)
 	SaveSystem.set_value("amir_phase", amir_phase)
@@ -191,6 +217,7 @@ func load_game_state(custom_slot: int = -1) -> bool:
 		_find_scene_nodes()
 
 	current_chapter = SaveSystem.get_value("current_chapter", Chapter.PROLOGUE_DAY) as Chapter
+	current_mission = SaveSystem.get_value("current_mission", MissionStep.ESCAPE_AND_HIDE) as MissionStep
 	flowers_collected = int(SaveSystem.get_value("flowers_collected", 0))
 	flowers_deposited = int(SaveSystem.get_value("flowers_deposited", 0))
 	amir_phase = int(SaveSystem.get_value("amir_phase", 1))
@@ -243,6 +270,7 @@ func load_game_state(custom_slot: int = -1) -> bool:
 	_sync_amir_state()
 	flower_count_changed.emit(flowers_collected, flowers_deposited)
 	chapter_changed.emit(current_chapter)
+	update_mission_hud()
 	_show_save_indicator("PROGRES DIMUAT")
 	game_loaded.emit()
 
@@ -266,6 +294,7 @@ func apply_loaded_game() -> void:
 
 func reset_story_state() -> void:
 	current_chapter = Chapter.PROLOGUE_DAY
+	current_mission = MissionStep.ESCAPE_AND_HIDE
 	flowers_collected = 0
 	flowers_deposited = 0
 	picked_flower_indices.clear()
@@ -273,6 +302,7 @@ func reset_story_state() -> void:
 	amir_cinematic_played = false
 	_is_cinematic_active = false
 	_is_player_dead = false
+	update_mission_hud()
 	if is_instance_valid(_death_hud_layer):
 		_death_hud_layer.queue_free()
 		_death_hud_layer = null
@@ -292,6 +322,7 @@ func collect_flower(idx: int = -1) -> void:
 	flowers_collected = mini(flowers_collected + 1, max_flowers)
 	flower_count_changed.emit(flowers_collected, flowers_deposited)
 	_evaluate_amir_phase()
+	update_mission_hud()
 	save_game_state()
 
 ## Mendepositkan bunga yang ada di inventory ke Altar (mengosongkan slot tas)
@@ -303,6 +334,9 @@ func deposit_flower_to_altar(amount: int = 1) -> void:
 	# Jika 8 bunga sudah terkumpul di altar, masuk ke babak ritual akhir
 	if flowers_deposited >= max_flowers and current_chapter != Chapter.FINAL_RITUAL:
 		set_chapter(Chapter.FINAL_RITUAL)
+		advance_mission(MissionStep.FINAL_RITUAL)
+	else:
+		update_mission_hud()
 
 	# Autosave setiap kali deposit bunga berhasil
 	save_game_state()
@@ -331,7 +365,10 @@ func _sync_amir_state() -> void:
 	if amir_node.has_method("set_phase"):
 		amir_node.set_phase(amir_phase)
 
-	amir_node.is_dormant = not amir_cinematic_played
+	if current_mission == MissionStep.ESCAPE_AND_HIDE:
+		amir_node.is_dormant = false
+	else:
+		amir_node.is_dormant = not amir_cinematic_played
 	amir_node.process_mode = Node.PROCESS_MODE_INHERIT
 	amir_node.visible = true
 
@@ -374,6 +411,10 @@ func _on_dialogue_event_triggered(event_name: String) -> void:
 			play_ending(true)
 		"game_ending_burn_completed":
 			play_ending(false)
+		"mbah_rama_story_finished":
+			if current_mission == MissionStep.FIND_MBAH_RAMA:
+				advance_mission(MissionStep.COLLECT_FLOWERS)
+				_show_cinematic_warning("✓ CERITA SELESAI!\nCARI 8 BUNGA KUPU-KUPU & BAWA KE ALTAR", 3.0)
 
 ## Memulai dialog prolog siang hari
 func play_prologue_day() -> void:
@@ -428,6 +469,106 @@ func _show_save_indicator(text: String) -> void:
 	tween.tween_property(_save_hud_label, ^"modulate:a", 1.0, 0.3)
 	tween.tween_interval(1.8)
 	tween.tween_property(_save_hud_label, ^"modulate:a", 0.0, 0.6)
+
+## ============================================================================
+## 🎯 SISTEM MISI & HUD PETUNJUK OBJEKTIF
+## ============================================================================
+
+func _setup_mission_hud() -> void:
+	if _mission_hud_layer != null:
+		return
+	_mission_hud_layer = CanvasLayer.new()
+	_mission_hud_layer.layer = 35
+
+	var panel = PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	panel.offset_left = 22.0
+	panel.offset_top = 22.0
+	panel.offset_right = 440.0
+	panel.offset_bottom = 62.0
+
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.04, 0.05, 0.07, 0.75)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	style.content_margin_left = 14.0
+	style.content_margin_right = 14.0
+	style.content_margin_top = 8.0
+	style.content_margin_bottom = 8.0
+	style.border_width_left = 3
+	style.border_color = Color(0.9, 0.75, 0.25, 0.9)
+	panel.add_theme_stylebox_override("panel", style)
+
+	_mission_label = Label.new()
+	_mission_label.add_theme_font_size_override("font_size", 14)
+	_mission_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
+	_mission_label.add_theme_constant_override("shadow_offset_x", 1)
+	_mission_label.add_theme_constant_override("shadow_offset_y", 1)
+
+	panel.add_child(_mission_label)
+	_mission_hud_layer.add_child(panel)
+	add_child(_mission_hud_layer)
+	update_mission_hud()
+
+func update_mission_hud() -> void:
+	if _mission_label == null:
+		return
+	match current_mission:
+		MissionStep.ESCAPE_AND_HIDE:
+			_mission_label.text = "🎯 MISI: Kabur dari Amir & Sembunyi di Bawah Kasur!"
+			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
+		MissionStep.FIND_MBAH_RAMA:
+			_mission_label.text = "🎯 MISI: Cari Mbah Rama di Lantai 2 untuk Mendengar Ceritanya"
+			_mission_label.add_theme_color_override("font_color", Color(0.4, 0.85, 1.0, 1.0))
+		MissionStep.COLLECT_FLOWERS:
+			var total = maxi(flowers_collected, flowers_deposited)
+			_mission_label.text = "🎯 MISI: Kumpulkan 8 Bunga Kupu-Kupu Malam (%d/8)" % total
+			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.35, 1.0))
+		MissionStep.FINAL_RITUAL:
+			_mission_label.text = "🎯 MISI: Pergi ke Altar Lantai 1 & Selesaikan Ritual!"
+			_mission_label.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5, 1.0))
+
+func advance_mission(new_step: MissionStep) -> void:
+	current_mission = new_step
+	mission_changed.emit(current_mission)
+	update_mission_hud()
+	save_game_state()
+
+func _on_player_hiding_changed(is_hidden: bool) -> void:
+	if is_hidden and current_mission == MissionStep.ESCAPE_AND_HIDE:
+		var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+		if sm:
+			sm.play_sfx_2d("ui_click", 2.0)
+		_show_cinematic_warning("✓ BERHASIL SEMBUNYI DARI AMIR!\nJEJAKMU HILANG.", 2.5)
+		advance_mission(MissionStep.FIND_MBAH_RAMA)
+
+func _start_initial_amir_chase() -> void:
+	if not is_instance_valid(amir_node) or not is_instance_valid(player_node):
+		return
+	amir_cinematic_played = true
+	var p_pos = player_node.global_position
+	amir_node.global_position = Vector3(17.0, p_pos.y, p_pos.z + 8.0)
+	amir_node.wake_up()
+	amir_node._spawn_grace = 3.5
+
+	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
+	if sm:
+		sm.play_sfx_3d("monster_screech", amir_node.global_position, 30.0)
+
+func _check_spawn_mbah_rama() -> void:
+	var scene = get_tree().current_scene
+	if not scene:
+		return
+	if scene.find_child("MbahRama", true, false) != null:
+		return
+	var rama_scene = load("res://Scenes/mbah_rama.tscn")
+	if rama_scene is PackedScene:
+		var rama_inst = rama_scene.instantiate()
+		rama_inst.name = "MbahRama"
+		rama_inst.global_position = Vector3(16.8, 4.65, -10.0)
+		scene.add_child(rama_inst)
 
 ## ============================================================================
 ## 🎬 SINEMATIK TRANSFORMASI AMIR & SISTEM GAME OVER / MATI
