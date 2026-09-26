@@ -81,6 +81,12 @@ func _find_or_create_item_slot() -> Node3D:
 	return slot
 
 func _ready() -> void:
+	add_to_group("meja")
+	add_to_group("saveable")
+	if drawer_node == null:
+		drawer_node = _find_drawer_node()
+	if item_slot == null:
+		item_slot = _find_or_create_item_slot()
 	if drawer_node:
 		# Jika posisi Z mesh saat ini adalah posisi terbuka (~1.68), normalkan ke posisi tertutup (~1.23)
 		if absf(drawer_node.position.z - 1.681879) < 0.05:
@@ -95,6 +101,9 @@ func _ready() -> void:
 		# Spawn item awal yang ditentukan oleh level designer
 		if starting_item != null:
 			put_item(starting_item, starting_quantity)
+		elif current_item_data != null:
+			_create_item_in_slot()
+			_update_item_visibility()
 		else:
 			_update_item_visibility()
 
@@ -162,6 +171,11 @@ func put_item(item: ItemData, qty: int = 1) -> bool:
 	current_item_data = item
 	current_item_quantity = qty
 
+	if drawer_node == null:
+		drawer_node = _find_drawer_node()
+	if item_slot == null:
+		item_slot = _find_or_create_item_slot()
+
 	_create_item_in_slot()
 	_update_item_visibility()
 	return true
@@ -169,6 +183,8 @@ func put_item(item: ItemData, qty: int = 1) -> bool:
 ## Spawn visual item di dalam ItemSlot (terikat sebagai child agar bergerak bersama laci)
 func _create_item_in_slot() -> void:
 	_clear_item_in_slot_visual()
+	if item_slot == null:
+		item_slot = _find_or_create_item_slot()
 	if not item_slot or current_item_data == null:
 		return
 
@@ -182,6 +198,7 @@ func _create_item_in_slot() -> void:
 				var fl_inst = fl_scene.instantiate() as Node3D
 				if fl_inst:
 					fl_inst.set("flower_index", current_item_data.flower_index)
+					fl_inst.set("item_data", current_item_data)
 					fl_inst.set("enable_hover", false)
 					fl_inst.set("enable_spin", false)
 					fl_inst.scale = Vector3.ONE * 0.7
@@ -247,12 +264,16 @@ func _clear_item_in_slot_visual() -> void:
 	if _spawned_item_node and is_instance_valid(_spawned_item_node):
 		_spawned_item_node.queue_free()
 		_spawned_item_node = null
+	if item_slot == null:
+		item_slot = _find_or_create_item_slot()
 	if item_slot:
 		for child in item_slot.get_children():
 			child.queue_free()
 
 ## Update visibilitas & interaksi item: hanya aktif saat laci terbuka
 func _update_item_visibility() -> void:
+	if item_slot == null:
+		item_slot = _find_or_create_item_slot()
 	if not item_slot:
 		return
 

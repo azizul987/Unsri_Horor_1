@@ -108,6 +108,8 @@ func _check_continue_game() -> void:
 	var sm = get_node_or_null("/root/StoryManager")
 	if sm and sm.has_method("apply_loaded_game"):
 		sm.apply_loaded_game()
+	if sm and sm.has_method("on_main_level_ready"):
+		sm.on_main_level_ready()
 
 func _input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():

@@ -21,17 +21,18 @@ signal game_saved
 signal game_loaded
 
 enum MissionStep {
-	ESCAPE_AND_HIDE = 0,   ## Misi 1: Kabur dari Amir & Sembunyi di Bawah Kasur
-	FIND_MBAH_RAMA = 1,    ## Misi 2: Cari Mbah Rama di Lantai 2 untuk Mendengar Cerita
-	COLLECT_FLOWERS = 2,   ## Misi 3: Kumpulkan 8 Bunga Kupu-Kupu Malam (X/8)
-	FINAL_RITUAL = 3       ## Misi 4: Altar Siap untuk Ritual Akhir
+	INVESTIGATE_AMIR = 0,  ## Misi 1: Periksa Kamar Amir di Lantai 5 (Kamar 530)
+	ESCAPE_AND_HIDE = 1,   ## Misi 2: Kabur dari Amir & Sembunyi di Bawah Kasur
+	FIND_MBAH_RAMA = 2,    ## Misi 3: Cari Mbah Rama di Lantai 2 untuk Mendengar Cerita
+	COLLECT_FLOWERS = 3,   ## Misi 4: Kumpulkan 8 Bunga Kupu-Kupu Malam (X/8)
+	FINAL_RITUAL = 4       ## Misi 5: Altar Siap untuk Ritual Akhir
 }
 
 static var instance: StoryGameManager
 
 @export_group("Progres Cerita")
 @export var current_chapter: Chapter = Chapter.PROLOGUE_DAY
-@export var current_mission: MissionStep = MissionStep.ESCAPE_AND_HIDE
+@export var current_mission: MissionStep = MissionStep.INVESTIGATE_AMIR
 @export var flowers_collected: int = 0
 @export var flowers_deposited: int = 0
 @export var max_flowers: int = 8
@@ -47,6 +48,7 @@ var amir_node: NPCChaser = null
 var pending_restore: bool = false
 var picked_flower_indices: Array = []
 @export var amir_cinematic_played: bool = false
+var flowers_randomized: bool = false
 
 var _is_cinematic_active: bool = false
 var _is_player_dead: bool = false
@@ -62,6 +64,21 @@ var _mission_label: Label = null
 func _enter_tree() -> void:
 	if instance == null:
 		instance = self
+
+func is_main_gameplay_scene() -> bool:
+	var cur = get_tree().current_scene if is_inside_tree() else null
+	if not cur:
+		return false
+	return cur is MainLevel or cur.name == "Main" or cur.scene_file_path.ends_with("main.tscn")
+
+func _process(_delta: float) -> void:
+	if _mission_hud_layer != null:
+		var in_main = is_main_gameplay_scene()
+		if _mission_hud_layer.visible != in_main:
+			_mission_hud_layer.visible = in_main
+
+func on_main_level_ready() -> void:
+	call_deferred(&"_find_scene_nodes")
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
@@ -90,17 +107,24 @@ func _exit_tree() -> void:
 		instance = null
 
 func _on_tree_node_added(node: Node) -> void:
-	if node is NPCChaser:
+	if node is MainLevel or node.name == "Main":
+		call_deferred(&"_find_scene_nodes")
+		update_mission_hud()
+	elif node is NPCChaser:
 		amir_node = node
 		if not amir_node.caught_player.is_connected(_on_amir_caught_player):
 			amir_node.caught_player.connect(_on_amir_caught_player)
 		_sync_amir_state()
-	elif node.name == "HorrorDoor" and node.has_signal("door_opened"):
+	elif (node.name == "AmirRoomDoor" or (node.name == "HorrorDoor" and node.get_parent() == get_tree().current_scene)) and node.has_signal("door_opened"):
 		if not node.door_opened.is_connected(_on_amir_door_opened):
 			node.door_opened.connect(_on_amir_door_opened)
 
 ## Mencari node Player dan Amir di dalam scene saat ini
 func _find_scene_nodes() -> void:
+	if not is_main_gameplay_scene():
+		update_mission_hud()
+		return
+
 	# Cari Player
 	for node in get_tree().get_nodes_in_group(&"player"):
 		if node is Node3D:
@@ -127,15 +151,20 @@ func _find_scene_nodes() -> void:
 		if not amir_node.caught_player.is_connected(_on_amir_caught_player):
 			amir_node.caught_player.connect(_on_amir_caught_player)
 
-	# Cari Pintu Kamar Amir (HorrorDoor)
+	# Cari Pintu Kamar Amir (AmirRoomDoor atau HorrorDoor di root scene)
 	var scene = get_tree().current_scene
 	if scene:
-		var door = scene.find_child("HorrorDoor", true, false)
+		var door = scene.find_child("AmirRoomDoor", true, false)
+		if door == null and scene.has_node("HorrorDoor"):
+			door = scene.get_node("HorrorDoor")
+		elif door == null:
+			door = scene.find_child("HorrorDoor", true, false)
+
 		if door and door.has_signal("door_opened"):
 			if not door.door_opened.is_connected(_on_amir_door_opened):
 				door.door_opened.connect(_on_amir_door_opened)
 
-	# Hubungkan sinyal sembunyi pemain untuk Misi 1
+	# Hubungkan sinyal sembunyi pemain untuk Misi 2 (ESCAPE_AND_HIDE)
 	if is_instance_valid(player_node):
 		if player_node.has_signal("hiding_state_changed"):
 			if not player_node.hiding_state_changed.is_connected(_on_player_hiding_changed):
@@ -143,11 +172,14 @@ func _find_scene_nodes() -> void:
 
 	call_deferred(&"_check_spawn_mbah_rama")
 
-	# Jika misi awal (Kabur dari Amir & Sembunyi), langsung bangunkan Amir agar mengejar
-	if current_mission == MissionStep.ESCAPE_AND_HIDE:
-		call_deferred(&"_start_initial_amir_chase")
+	# Distribusikan bunga 1 - 7 ke laci meja secara acak jika belum pernah didistribusikan
+	if not pending_restore and not flowers_randomized:
+		if SaveSystem and SaveSystem.get_value("flowers_randomized", false):
+			flowers_randomized = true
+		else:
+			distribute_random_flowers_to_tables()
 
-	# Terapkan fase Amir sesuai progres saat ini
+	# Terapkan fase Amir sesuai progres saat ini (Amir diam di dalam kamar jika belum dibuka)
 	_sync_amir_state()
 	update_mission_hud()
 
@@ -181,6 +213,7 @@ func save_game_state(custom_slot: int = -1) -> bool:
 	SaveSystem.set_value("amir_phase", amir_phase)
 	SaveSystem.set_value("picked_flower_indices", picked_flower_indices)
 	SaveSystem.set_value("amir_cinematic_played", amir_cinematic_played)
+	SaveSystem.set_value("flowers_randomized", flowers_randomized)
 
 	if is_instance_valid(amir_node):
 		SaveSystem.set_value("amir_position", amir_node.global_position)
@@ -217,12 +250,13 @@ func load_game_state(custom_slot: int = -1) -> bool:
 		_find_scene_nodes()
 
 	current_chapter = SaveSystem.get_value("current_chapter", Chapter.PROLOGUE_DAY) as Chapter
-	current_mission = SaveSystem.get_value("current_mission", MissionStep.ESCAPE_AND_HIDE) as MissionStep
+	current_mission = SaveSystem.get_value("current_mission", MissionStep.INVESTIGATE_AMIR) as MissionStep
 	flowers_collected = int(SaveSystem.get_value("flowers_collected", 0))
 	flowers_deposited = int(SaveSystem.get_value("flowers_deposited", 0))
 	amir_phase = int(SaveSystem.get_value("amir_phase", 1))
 	picked_flower_indices = SaveSystem.get_value("picked_flower_indices", [])
 	amir_cinematic_played = bool(SaveSystem.get_value("amir_cinematic_played", false))
+	flowers_randomized = bool(SaveSystem.get_value("flowers_randomized", false))
 
 	if is_instance_valid(player_node):
 		var saved_pos = SaveSystem.get_value("player_position", null)
@@ -294,12 +328,13 @@ func apply_loaded_game() -> void:
 
 func reset_story_state() -> void:
 	current_chapter = Chapter.PROLOGUE_DAY
-	current_mission = MissionStep.ESCAPE_AND_HIDE
+	current_mission = MissionStep.INVESTIGATE_AMIR
 	flowers_collected = 0
 	flowers_deposited = 0
 	picked_flower_indices.clear()
 	amir_phase = 1
 	amir_cinematic_played = false
+	flowers_randomized = false
 	_is_cinematic_active = false
 	_is_player_dead = false
 	update_mission_hud()
@@ -315,6 +350,65 @@ func has_save_file(slot: int = -1) -> bool:
 		return false
 	var target_slot: int = active_slot if slot < 0 else slot
 	return SaveSystem.slot_exists(target_slot)
+
+## Mendistribusikan bunga mistis (Bunga 1 - 7) secara acak ke dalam laci meja-meja di seluruh kamar
+func distribute_random_flowers_to_tables() -> void:
+	if not is_main_gameplay_scene():
+		return
+	if flowers_randomized:
+		return
+
+	# Ambil semua meja interaktif dari group "meja"
+	var all_tables: Array[InteractiveTable] = []
+	for node in get_tree().get_nodes_in_group(&"meja"):
+		if node is InteractiveTable:
+			all_tables.append(node as InteractiveTable)
+
+	# Fallback pencarian rekursif jika belum terdaftar di group
+	if all_tables.is_empty():
+		var scene = get_tree().current_scene
+		if scene:
+			for child in scene.find_children("*", "InteractiveTable", true, false):
+				if child is InteractiveTable:
+					all_tables.append(child as InteractiveTable)
+
+	if all_tables.is_empty():
+		push_warning("StoryGameManager: Tidak ditemukan meja (InteractiveTable) untuk distribusi bunga acak.")
+		return
+
+	# Saring meja yang belum memiliki item (jangan menimpa kunci atau item level designer)
+	var candidate_tables: Array[InteractiveTable] = []
+	for table in all_tables:
+		if table.starting_item == null and table.current_item_data == null:
+			candidate_tables.append(table)
+
+	if candidate_tables.is_empty():
+		candidate_tables = all_tables.duplicate()
+
+	randomize()
+	candidate_tables.shuffle()
+
+	# Distribusikan bunga 1 sampai 7 (bunga 8 adalah bunga cerita khusus di kamar Amir, tidak diacak di meja)
+	var flower_count: int = 7
+	var placed_count: int = 0
+	for i in range(1, flower_count + 1):
+		if i - 1 >= candidate_tables.size():
+			break
+		var item_res_path: String = "res://addons/easy_inventory/examples/items/flower_0%d.tres" % i
+		if not ResourceLoader.exists(item_res_path):
+			push_warning("StoryGameManager: File bunga tidak ditemukan: %s" % item_res_path)
+			continue
+
+		var flower_item: ItemData = load(item_res_path) as ItemData
+		if flower_item:
+			var target_table: InteractiveTable = candidate_tables[i - 1]
+			target_table.put_item(flower_item, 1)
+			placed_count += 1
+
+	flowers_randomized = true
+	if SaveSystem:
+		SaveSystem.set_value("flowers_randomized", true)
+	print("StoryGameManager: Berhasil menaruh %d bunga (1-7) ke dalam laci meja secara acak dari %d meja." % [placed_count, candidate_tables.size()])
 
 func collect_flower(idx: int = -1) -> void:
 	if idx > 0 and not picked_flower_indices.has(idx):
@@ -365,10 +459,12 @@ func _sync_amir_state() -> void:
 	if amir_node.has_method("set_phase"):
 		amir_node.set_phase(amir_phase)
 
-	if current_mission == MissionStep.ESCAPE_AND_HIDE:
-		amir_node.is_dormant = false
-	else:
+	if current_mission == MissionStep.INVESTIGATE_AMIR:
+		amir_node.is_dormant = true
+	elif current_mission == MissionStep.ESCAPE_AND_HIDE:
 		amir_node.is_dormant = not amir_cinematic_played
+	else:
+		amir_node.is_dormant = false
 	amir_node.process_mode = Node.PROCESS_MODE_INHERIT
 	amir_node.visible = true
 
@@ -479,6 +575,7 @@ func _setup_mission_hud() -> void:
 		return
 	_mission_hud_layer = CanvasLayer.new()
 	_mission_hud_layer.layer = 35
+	_mission_hud_layer.visible = false
 
 	var panel = PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -513,9 +610,18 @@ func _setup_mission_hud() -> void:
 	update_mission_hud()
 
 func update_mission_hud() -> void:
-	if _mission_label == null:
+	if _mission_hud_layer == null or _mission_label == null:
 		return
+
+	if not is_main_gameplay_scene():
+		_mission_hud_layer.visible = false
+		return
+
+	_mission_hud_layer.visible = true
 	match current_mission:
+		MissionStep.INVESTIGATE_AMIR:
+			_mission_label.text = "🎯 MISI: Periksa Kamar Amir di Lantai 5 (Kamar 530)"
+			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.4, 1.0))
 		MissionStep.ESCAPE_AND_HIDE:
 			_mission_label.text = "🎯 MISI: Kabur dari Amir & Sembunyi di Bawah Kasur!"
 			_mission_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
@@ -544,20 +650,9 @@ func _on_player_hiding_changed(is_hidden: bool) -> void:
 		_show_cinematic_warning("✓ BERHASIL SEMBUNYI DARI AMIR!\nJEJAKMU HILANG.", 2.5)
 		advance_mission(MissionStep.FIND_MBAH_RAMA)
 
-func _start_initial_amir_chase() -> void:
-	if not is_instance_valid(amir_node) or not is_instance_valid(player_node):
-		return
-	amir_cinematic_played = true
-	var p_pos = player_node.global_position
-	amir_node.global_position = Vector3(17.0, p_pos.y, p_pos.z + 8.0)
-	amir_node.wake_up()
-	amir_node._spawn_grace = 3.5
-
-	var sm = SoundManager.instance if SoundManager.instance else get_node_or_null("/root/SoundManager")
-	if sm:
-		sm.play_sfx_3d("monster_screech", amir_node.global_position, 30.0)
-
 func _check_spawn_mbah_rama() -> void:
+	if not is_main_gameplay_scene():
+		return
 	var scene = get_tree().current_scene
 	if not scene:
 		return
@@ -690,6 +785,9 @@ func play_amir_transformation_cinematic() -> void:
 
 	if current_chapter == Chapter.PROLOGUE_DAY:
 		set_chapter(Chapter.FIRST_NIGHT)
+
+	if current_mission == MissionStep.INVESTIGATE_AMIR:
+		advance_mission(MissionStep.ESCAPE_AND_HIDE)
 
 	save_game_state()
 	_is_cinematic_active = false

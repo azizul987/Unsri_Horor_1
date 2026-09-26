@@ -44,7 +44,11 @@ func _ready() -> void:
 	title_screen.modulate = Color(1, 1, 1, 0)
 	skip_label.visible = true
 
-	# Pastikan UI inventory disembunyikan selama intro
+	# Pastikan HUD Misi & inventory disembunyikan selama intro
+	var sm = get_node_or_null("/root/StoryManager")
+	if sm and sm.has_method("update_mission_hud"):
+		sm.update_mission_hud()
+
 	for node in get_tree().get_nodes_in_group(&"inventory_ui"):
 		if node.has_method(&"set_ui_visible"):
 			node.call(&"set_ui_visible", false)

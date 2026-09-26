@@ -13,6 +13,10 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+	var sm = get_node_or_null("/root/StoryManager")
+	if sm and sm.has_method("update_mission_hud"):
+		sm.update_mission_hud()
+
 	# Splash screen plugin mutasi font.fixed_size di shared resource —
 	# reset semua font yang ada di scene ini ke 0
 	var seen_fonts: Array[Font] = []
