@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bljm2p3ureypy" path="res://Skrip/npc_chaser.gd" id="7_6bp64"]
 [ext_resource type="Texture2D" uid="uid://cfrwb2aqwmun7" path="res://Breathing Idle_2.png" id="7_neg2b"]
 [ext_resource type="Animation" uid="uid://dmxxi13vxkvey" path="res://IDLE.TRES" id="8_r33sp"]
+[ext_resource type="PackedScene" uid="uid://cs35nfaud7dc5" path="res://monster.fbx" id="11_kqrg6"]
 [ext_resource type="PackedScene" uid="uid://c8ketx4y6ojst" path="res://fire.tscn" id="16_ee4r6"]
 [ext_resource type="Material" uid="uid://qtp1xklkg8s3" path="res://Asset/Rusun/Materials/Besi Kuning.material" id="21_jwpg7"]
 [ext_resource type="PackedScene" uid="uid://8e3fxltyw1y7" path="res://Skrip/npc_mesh.fbx" id="22_gt3je"]
@@ -10963,6 +10964,7 @@ speed = 1.0
 
 [node name="AmirModel" parent="CharacterBody3D2" unique_id=402694052 instance=ExtResource("39_amir")]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, -0.84000015, 0)
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D2" unique_id=1572720710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.086621165, 0)
@@ -10971,6 +10973,9 @@ shape = SubResource("CapsuleShape3D_5vw27")
 [node name="RayCast3D" type="RayCast3D" parent="CharacterBody3D2" unique_id=1572720711]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 target_position = Vector3(0, 0, -10)
+
+[node name="monster" parent="CharacterBody3D2" unique_id=707325560 instance=ExtResource("11_kqrg6")]
+transform = Transform3D(-1.0000001, 0, -8.7422784e-08, 0, 1, 0, 8.7422784e-08, 0, -1.0000001, 0, -1.2554607, 0)
 
 [node name="Crosshair" type="CanvasLayer" parent="." unique_id=1310687115]
 layer = 5
@@ -13968,10 +13973,10 @@ transform = Transform3D(1.1924881e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1,
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.477599, 5.811534, 20.141052)
 
 [node name="Karpet" parent="rusun2" unique_id=1091703123 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.283737, 5.6895056, 18.951359)
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.283737, 5.8117986, 18.951359)
 
 [node name="Karpet2" parent="rusun2" unique_id=96997263 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -14.805288, 5.6403017, 15.744508)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -14.805288, 5.8236194, 15.744508)
 
 [node name="kasur3" parent="rusun2" unique_id=1471285122 instance=ExtResource("36_aa8k8")]
 transform = Transform3D(1.1924881e-08, 1.0425061e-15, 1, -8.742278e-08, 1, 0, 1, 8.742278e-08, -1.1924881e-08, -15.334213, 5.866989, 13.791856)
@@ -13986,17 +13991,16 @@ transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.382697, 5.876234, 9.92208)
 
 [node name="Karpet3" parent="rusun2" unique_id=1736604972 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.065198, 5.871874, 8.404194)
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.065198, 5.994168, 8.404194)
 
 [node name="Karpet4" parent="rusun2" unique_id=672170094 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.0289135, 5.850815, 6.257002)
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.0289135, 5.973109, 6.9881663)
 
 [node name="Kamar2" parent="rusun2" unique_id=743470017 instance=ExtResource("39_536cc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.294643, 5.9961853, 6.3313923)
 
 [node name="InteractiveTable" parent="." unique_id=755558359 instance=ExtResource("43_kqrg6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.13466, 13.81033, -24.314915)
-slide_direction = -1
 
 [node name="AmirRoomDoor" parent="." unique_id=287565494 instance=ExtResource("35_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 19.07907, 13.57862, -24.051212)
@@ -14185,7 +14189,6 @@ transform = Transform3D(-4.371139e-08, -3.821371e-15, -1, -8.742278e-08, 1, 0, -
 
 [node name="InteractiveTable" parent="Kamar/Kamar41" unique_id=408622441 instance=ExtResource("43_kqrg6")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -1.2097938, -0.035830557, 1.4185529)
-slide_direction = -1
 
 [node name="lemari" parent="Kamar/Kamar41" unique_id=911407635 instance=ExtResource("25_cbgmd")]
 transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 1.3052058, -0.0024745464, -0.19264245)
@@ -14208,7 +14211,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4640032, -0.0024745464, 2.3
 
 [node name="InteractiveTable2" parent="Kamar/Kamar41" unique_id=2067616680 instance=ExtResource("43_kqrg6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.326597, 9.951791, -11.294516)
-slide_direction = -1
 
 [node name="Kamar42" parent="Kamar" unique_id=36057220 instance=ExtResource("38_k2e45")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03675461, -9.827902, 18.610352)
@@ -14600,10 +14602,10 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -3.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.199135, 13.6174965, 3.8263617)
 
 [node name="Karpet" parent="." unique_id=566694924 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -1.8695827, 13.517928, 8.786248)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -1.8695827, 13.682989, 8.786248)
 
 [node name="Karpet2" parent="." unique_id=383665266 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.5274474, 13.4992695, 2.5953064)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.5274474, 13.656711, 2.5953064)
 
 [node name="Rama" parent="." unique_id=1988220011 instance=ExtResource("45_rama")]
 transform = Transform3D(0.03360874, 0, -0.99943507, 0, 1, 0, 0.99943507, 0, 0.03360874, 22.600801, 3.7163444, -10)
