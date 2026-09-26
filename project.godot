@@ -15,7 +15,8 @@ run/main_scene="uid://bgckxom3otchv"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/show_image=false
 boot_splash/use_filter=false
-config/icon="res://icon.svg"
+config/icon="res://logo.png"
+config/windows_native_icon="res://logo.ico"
 
 [autoload]
 
@@ -28,6 +29,14 @@ StoryManager="*res://Skrip/story_game_manager.gd"
 SoundManager="*uid://bwr2swiqxurjt"
 PauseMenu="*res://addons/easy_pause/pause_menu.tscn"
 DebugOverlay="*res://Skrip/debug_overlay.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/mode=0
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [editor_plugins]
 
