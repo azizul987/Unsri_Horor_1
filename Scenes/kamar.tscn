@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://bqqd002lf3p6c"]
+
+[ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="1_6y2wh"]
+[ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="2_g04ut"]
+[ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="3_mg2eg"]
+[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://lemari.tscn" id="4_1pivw"]
+[ext_resource type="PackedScene" uid="uid://c8m3wap7q2k1r" path="res://Scenes/bed_hiding_spot.tscn" id="5_jwury"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ovncm"]
+size = Vector3(1, 2.328125, 1.6365967)
+
+[node name="Kamar1" type="Node3D" unique_id=1699191951]
+
+[node name="meja" parent="." unique_id=1743351357 instance=ExtResource("1_6y2wh")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -1.3557937, -0.0024745464, 2.509553)
+
+[node name="kasur" parent="." unique_id=1354446252 instance=ExtResource("2_g04ut")]
+transform = Transform3D(-4.371139e-08, -3.821371e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, 4.371139e-08, 1.3595326, -0.0024745464, 2.3661125)
+
+[node name="InteractiveTable" parent="." unique_id=755558359 instance=ExtResource("3_mg2eg")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -1.2097938, -0.035830557, 1.4185529)
+
+[node name="lemari" parent="." unique_id=1518109869 instance=ExtResource("4_1pivw")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 1.3052058, -0.0024745464, -0.19264245)
+
+[node name="lemari2" parent="." unique_id=507991232 instance=ExtResource("4_1pivw")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 0.4689079, -0.0024745464, -0.19354963)
+
+[node name="lemari3" parent="." unique_id=699710318 instance=ExtResource("4_1pivw")]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, -0.4942369, -0.0024745464, -0.19382346)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=708772324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0889795, -0.0024745464, 2.2131698)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=916997786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6640625, 0.31829834)
+shape = SubResource("BoxShape3D_ovncm")
+
+[node name="BedHidingSpot3D" parent="." unique_id=472229158 instance=ExtResource("5_jwury")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4640032, -0.0024745464, 2.358238)

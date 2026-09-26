@@ -36,7 +36,10 @@
 [ext_resource type="PackedScene" uid="uid://c6wkseqsl2044" path="res://addons/easy_inventory/item_pickup_3d.tscn" id="36_key_pickup"]
 [ext_resource type="Resource" uid="uid://k0chtb88wrm7" path="res://addons/easy_inventory/examples/items/room_key.tres" id="37_key_item"]
 [ext_resource type="PackedScene" path="res://addons/easy_inventory/ui/inventory_ui.tscn" id="38_inv_ui"]
+[ext_resource type="PackedScene" uid="uid://bqqd002lf3p6c" path="res://Scenes/kamar.tscn" id="38_k2e45"]
+[ext_resource type="PackedScene" uid="uid://btx37np6pr1o1" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="39_amir"]
+[ext_resource type="PackedScene" uid="uid://cvgvjf8pp0gr5" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_top_color = Color(0.35, 0.55, 0.85, 1)
@@ -13937,3 +13940,197 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.13466, 13.81033, -24.31491
 
 [node name="HorrorDoor" parent="." unique_id=1367131008 instance=ExtResource("35_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 19.07907, 13.57862, -24.051212)
+
+[node name="Kamar" type="Node3D" parent="." unique_id=876898921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.052624, 13.673686, -29.409584)
+
+[node name="Kamar60" parent="Kamar" unique_id=743470017 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.038129807, -3.22258, 3.7008228)
+
+[node name="Kamar61" parent="Kamar" unique_id=998306755 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.046993256, -6.44516, 3.7127361)
+
+[node name="Kamar62" parent="Kamar" unique_id=221831390 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0166893, -9.869907, 3.6767845)
+
+[node name="Kamar63" parent="Kamar" unique_id=1162186159 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0333786, -13.216349, 3.715702)
+
+[node name="Kamar" parent="Kamar" unique_id=1699191951 instance=ExtResource("38_k2e45")]
+
+[node name="Kamar2" parent="Kamar" unique_id=1314472600 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.065460205, 0.14955235, -3.7645302)
+
+[node name="Kamar3" parent="Kamar" unique_id=1114021051 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036180496, 0.14570427, -7.4518204)
+
+[node name="Kamar4" parent="Kamar" unique_id=265583501 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04499626, 0.1429739, 7.439457)
+
+[node name="Kamar5" parent="Kamar" unique_id=1300165550 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0046863556, 0.14059448, 11.221273)
+
+[node name="Kamar1" parent="Kamar" unique_id=1577522711 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.119945526, 0.18023777, 14.973445)
+
+[node name="Kamar6" parent="Kamar" unique_id=1342989207 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04217148, 0.18519115, 18.632809)
+
+[node name="Kamar7" parent="Kamar" unique_id=1164623827 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.044977188, 0.14518261, 22.354076)
+
+[node name="Kamar8" parent="Kamar" unique_id=1408459232 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02825737, 0.17532825, 26.088224)
+
+[node name="Kamar9" parent="Kamar" unique_id=700881199 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06815338, 0.15239048, 29.755146)
+
+[node name="Kamar10" parent="Kamar" unique_id=1968256841 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.031726837, 0.17532825, 33.612785)
+
+[node name="Kamar11" parent="Kamar" unique_id=1957020056 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0015506744, 0.13633728, 37.320633)
+
+[node name="Kamar12" parent="Kamar" unique_id=762288464 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00029182434, -3.3719292, -0.0045394897)
+
+[node name="Kamar48" parent="Kamar" unique_id=259053010 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0072727203, -13.341664, -0.008544922)
+
+[node name="Kamar49" parent="Kamar" unique_id=365260356 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.058187485, -13.192113, -3.773075)
+
+[node name="Kamar50" parent="Kamar" unique_id=280111946 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043453217, -13.195958, -7.4603653)
+
+[node name="Kamar51" parent="Kamar" unique_id=989891433 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.052268982, -13.198689, 7.430912)
+
+[node name="Kamar52" parent="Kamar" unique_id=829392056 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0025863647, -13.20107, 11.2127285)
+
+[node name="Kamar53" parent="Kamar" unique_id=110670003 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.034898758, -13.156468, 18.624264)
+
+[node name="Kamar54" parent="Kamar" unique_id=343802248 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05224991, -13.196477, 22.345531)
+
+[node name="Kamar55" parent="Kamar" unique_id=668058169 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02098465, -13.166326, 26.07968)
+
+[node name="Kamar56" parent="Kamar" unique_id=2090198977 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06088066, -13.189275, 29.746601)
+
+[node name="Kamar57" parent="Kamar" unique_id=2036410497 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024454117, -13.166326, 33.60424)
+
+[node name="Kamar58" parent="Kamar" unique_id=37482714 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.008823395, -13.205327, 37.312088)
+
+[node name="Kamar59" parent="Kamar" unique_id=487211342 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006980896, -16.713581, -0.013084412)
+
+[node name="Kamar13" parent="Kamar" unique_id=1764394699 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06575203, -3.2223768, -3.7690659)
+
+[node name="Kamar14" parent="Kamar" unique_id=1726231886 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.035888672, -3.226225, -7.45636)
+
+[node name="Kamar15" parent="Kamar" unique_id=2070684474 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.044704437, -3.2289553, 7.4349174)
+
+[node name="Kamar16" parent="Kamar" unique_id=477241683 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00497818, -3.2313347, 11.216734)
+
+[node name="Kamar17" parent="Kamar" unique_id=1309501573 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12023735, -3.1916914, 14.968906)
+
+[node name="Kamar18" parent="Kamar" unique_id=946738768 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042463303, -3.186738, 18.62827)
+
+[node name="Kamar19" parent="Kamar" unique_id=117917222 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.044685364, -3.2267466, 22.349537)
+
+[node name="Kamar20" parent="Kamar" unique_id=381909656 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.028549194, -3.196601, 26.083687)
+
+[node name="Kamar21" parent="Kamar" unique_id=1821925177 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.068445206, -3.2195387, 29.750607)
+
+[node name="Kamar22" parent="Kamar" unique_id=290173753 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03201866, -3.196601, 33.608246)
+
+[node name="Kamar23" parent="Kamar" unique_id=688337348 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0012588501, -3.235592, 37.316093)
+
+[node name="Kamar24" parent="Kamar" unique_id=1951551248 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0057086945, -6.641164, -0.017917633)
+
+[node name="Kamar25" parent="Kamar" unique_id=2070893292 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05975151, -6.4916115, -3.7824478)
+
+[node name="Kamar26" parent="Kamar" unique_id=1037152720 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04188919, -6.4954596, -7.469738)
+
+[node name="Kamar27" parent="Kamar" unique_id=384901663 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.050704956, -6.49819, 7.4215393)
+
+[node name="Kamar28" parent="Kamar" unique_id=858714565 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0010223389, -6.5005693, 11.203354)
+
+[node name="Kamar29" parent="Kamar" unique_id=1416336395 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11423683, -6.460926, 14.955528)
+
+[node name="Kamar30" parent="Kamar" unique_id=2121848384 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.036462784, -6.4559727, 18.614891)
+
+[node name="Kamar31" parent="Kamar" unique_id=448045358 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.050685883, -6.495981, 22.336159)
+
+[node name="Kamar32" parent="Kamar" unique_id=243017590 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.022548676, -6.4658356, 26.070309)
+
+[node name="Kamar33" parent="Kamar" unique_id=385595223 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.062444687, -6.4887733, 29.737228)
+
+[node name="Kamar34" parent="Kamar" unique_id=241982127 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.026018143, -6.4658356, 33.594868)
+
+[node name="Kamar35" parent="Kamar" unique_id=1031006596 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007259369, -6.5048265, 37.302715)
+
+[node name="Kamar36" parent="Kamar" unique_id=962015387 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00541687, -10.013093, -0.022457123)
+
+[node name="Kamar37" parent="Kamar" unique_id=1526690969 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.060043335, -9.863541, -3.7869835)
+
+[node name="Kamar38" parent="Kamar" unique_id=764187430 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.041597366, -9.867389, -7.4742775)
+
+[node name="Kamar39" parent="Kamar" unique_id=1449400090 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05041313, -9.870119, 7.417)
+
+[node name="Kamar40" parent="Kamar" unique_id=2018852322 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0007305145, -9.8724985, 11.198814)
+
+[node name="Kamar41" parent="Kamar" unique_id=964041215 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.114528656, -9.832855, 14.950989)
+
+[node name="Kamar42" parent="Kamar" unique_id=36057220 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03675461, -9.827902, 18.610352)
+
+[node name="Kamar43" parent="Kamar" unique_id=1005563090 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05039406, -9.86791, 22.33162)
+
+[node name="Kamar44" parent="Kamar" unique_id=1908771889 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0228405, -9.837765, 26.06577)
+
+[node name="Kamar45" parent="Kamar" unique_id=2051945754 instance=ExtResource("40_aqgau")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06273651, -9.8607025, 29.732689)
+
+[node name="Kamar46" parent="Kamar" unique_id=1375144459 instance=ExtResource("38_k2e45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.026309967, -9.837765, 33.59033)
+
+[node name="Kamar47" parent="Kamar" unique_id=1341773835 instance=ExtResource("39_536cc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0069675446, -9.876756, 37.298176)

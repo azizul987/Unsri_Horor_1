@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://cvgvjf8pp0gr5"]
+
+[ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="1_h1lkp"]
+[ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="2_inbja"]
+[ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="3_6omog"]
+[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://lemari.tscn" id="4_ivf0b"]
+[ext_resource type="PackedScene" uid="uid://c8m3wap7q2k1r" path="res://Scenes/bed_hiding_spot.tscn" id="5_woax2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tqgxn"]
+size = Vector3(1, 2.328125, 1.6365967)
+
+[node name="Kamar3" type="Node3D" unique_id=1114021051]
+
+[node name="meja" parent="." unique_id=1743351357 instance=ExtResource("1_h1lkp")]
+transform = Transform3D(-1, 1.5285484e-14, 8.742278e-08, 0, 1, -1.7484555e-07, -8.742278e-08, -1.7484555e-07, -1, -1.2726499, 0, -0.22338784)
+
+[node name="kasur" parent="." unique_id=1354446252 instance=ExtResource("2_inbja")]
+transform = Transform3D(-4.371139e-08, -3.821371e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, 4.371139e-08, -0.35971338, 0, 2.364116)
+
+[node name="InteractiveTable" parent="." unique_id=755558359 instance=ExtResource("3_6omog")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.175231, -0.03335601, -0.079997)
+
+[node name="lemari" parent="." unique_id=1518109869 instance=ExtResource("4_ivf0b")]
+transform = Transform3D(-0.9500398, 0.31137544, 0.021671643, 0.26672927, 0.8459572, -0.46174857, -0.16211043, -0.43289912, -0.886746, 1.3049997, 0, 0.45158684)
+
+[node name="lemari2" parent="." unique_id=1406872843 instance=ExtResource("4_ivf0b")]
+transform = Transform3D(-4.3711385e-08, 0.2923717, -0.9563047, 0, 0.9563048, 0.29237166, 0.99999994, 1.2779973e-08, -4.1801407e-08, 0.8929225, 0, -0.19554609)
+
+[node name="lemari3" parent="." unique_id=2142637232 instance=ExtResource("4_ivf0b")]
+transform = Transform3D(-2.630617e-08, 0.60181504, -0.7986355, -0.99999994, -4.371139e-08, 0, -3.4909466e-08, 0.79863554, 0.601815, 0.35163474, 0, -0.19273204)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=301369289]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.63026637, 0, 2.2111733)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=541970838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6640625, 0.31829834)
+shape = SubResource("BoxShape3D_tqgxn")
+
+[node name="BedHidingSpot3D" parent="." unique_id=32895962 instance=ExtResource("5_woax2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2552427, 0, 2.3562415)
