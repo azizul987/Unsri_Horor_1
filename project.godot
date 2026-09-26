@@ -33,6 +33,10 @@ DebugOverlay="*res://Skrip/debug_overlay.gd"
 
 enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addons/easy_inventory/plugin.cfg", "res://addons/easy_pause/plugin.cfg", "res://addons/easy_save/plugin.cfg", "res://addons/godot-action/plugin.cfg", "res://addons/horror_audio/plugin.cfg", "res://addons/horror_dialogue/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [global_group]
 
 player=""

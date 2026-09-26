@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bnd6b508rcwlo"]
+
+[ext_resource type="PackedScene" uid="uid://bhrc2de13tup8" path="res://satu_kasur_obj.fbx" id="1_5mt2w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_07kp3"]
+size = Vector3(0.8041382, 0.16705322, 1.6812744)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qqgnu"]
+size = Vector3(0.45481873, 0.13381958, 0.27798462)
+
+[node name="Node3D" type="Node3D" unique_id=1678880218]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1197532593]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1777059066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.007659912, 0.08627319, 0.24786377)
+shape = SubResource("BoxShape3D_07kp3")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" unique_id=2079631449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.013206482, 0.2026799, -0.40626526)
+shape = SubResource("BoxShape3D_qqgnu")
+
+[node name="satu_kasur_obj" parent="StaticBody3D" unique_id=1828352014 instance=ExtResource("1_5mt2w")]
