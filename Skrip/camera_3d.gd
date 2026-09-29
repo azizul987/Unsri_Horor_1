@@ -1,9 +1,11 @@
+class_name PlayerCamera
 extends Camera3D
 
 @export var mouse_sensitivity: float = 0.003
 @export var pitch_limit: float = deg_to_rad(89)
 @export var enable_camcorder_shader: bool = true # Centang ini di inspector untuk menyalakan/mematikan
 @export var enable_color_bleed: bool = true # Opsi untuk mematikan color bleed jika terasa berat
+@export var auto_disable_in_debug: bool = true # Otomatis matikan shader saat mode debug/play dari editor
 @export var look_locked: bool = false
 
 var yaw: float = 0.0
@@ -17,52 +19,87 @@ var pitch_limit_default: float = deg_to_rad(89)
 var current_pitch_limit_min: float = -deg_to_rad(89)
 var current_pitch_limit_max: float = deg_to_rad(89)
 
+var _camcorder_canvas: CanvasLayer = null
+var _camcorder_rect: ColorRect = null
+var _camcorder_material: ShaderMaterial = null
+
 func _ready() -> void:
+	add_to_group(&"player_camera")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	# Set near clipping plane kecil agar objek sangat dekat (seperti lantai) tidak tembus
 	near = 0.03
 	yaw = get_parent().rotation.y
 	pitch = rotation.x
 	
-	if enable_camcorder_shader:
-		# Setup Camcorder Shader
-		var canvas = CanvasLayer.new()
-		var rect = ColorRect.new()
-		rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		
-		var material = ShaderMaterial.new()
-		material.shader = preload("res://Shaders/camcorder.gdshader")
-		
-		# Perbaiki noise agar tidak terlihat seperti pixel/blok besar (gunakan noise halus)
-		var noise = FastNoiseLite.new()
-		noise.noise_type = FastNoiseLite.TYPE_VALUE
-		noise.frequency = 1.0 # Frekuensi tinggi agar bintiknya kecil-kecil
-		
-		var noise_tex = NoiseTexture2D.new()
-		noise_tex.noise = noise
-		noise_tex.seamless = true # Supaya tekstur menyambung mulus
-		material.set_shader_parameter("film_grain_noise", noise_tex)
-		
-		# Matikan ketajaman (sharpness) sementara karena sering bikin gambar jadi pecah/pixelate
-		# jika mipmap layar tidak diaktifkan di pengaturan project
-		material.set_shader_parameter("sharpness_enabled", false)
-		
-		# Opsi untuk menyalakan atau mematikan Color Bleed dari Inspector
-		material.set_shader_parameter("color_bleed_enabled", enable_color_bleed)
-		
-		# Efek Color Bleed dikembalikan ke 0.2 (halus)
-		material.set_shader_parameter("color_bleed_intensity", 0.2)
-		material.set_shader_parameter("anti_bleed_intensity", 1.8)
-		
-		rect.material = material
-		canvas.add_child(rect)
-		add_child(canvas)
+	if auto_disable_in_debug and OS.is_debug_build():
+		enable_camcorder_shader = false
+
+	_setup_camcorder_shader()
+
+func _setup_camcorder_shader() -> void:
+	if is_instance_valid(_camcorder_canvas):
+		return
+	
+	# Setup Camcorder Shader
+	_camcorder_canvas = CanvasLayer.new()
+	_camcorder_canvas.name = "CamcorderShaderLayer"
+	_camcorder_canvas.layer = 10
+	
+	_camcorder_rect = ColorRect.new()
+	_camcorder_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_camcorder_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	_camcorder_material = ShaderMaterial.new()
+	_camcorder_material.shader = preload("res://Shaders/camcorder.gdshader")
+	
+	# Perbaiki noise agar tidak terlihat seperti pixel/blok besar (gunakan noise halus)
+	var noise: FastNoiseLite = FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_VALUE
+	noise.frequency = 1.0 # Frekuensi tinggi agar bintiknya kecil-kecil
+	
+	var noise_tex: NoiseTexture2D = NoiseTexture2D.new()
+	noise_tex.noise = noise
+	noise_tex.seamless = true # Supaya tekstur menyambung mulus
+	_camcorder_material.set_shader_parameter("film_grain_noise", noise_tex)
+	
+	# Matikan ketajaman (sharpness) sementara karena sering bikin gambar jadi pecah/pixelate
+	# jika mipmap layar tidak diaktifkan di pengaturan project
+	_camcorder_material.set_shader_parameter("sharpness_enabled", false)
+	
+	# Opsi untuk menyalakan atau mematikan Color Bleed dari Inspector
+	_camcorder_material.set_shader_parameter("color_bleed_enabled", enable_color_bleed)
+	
+	# Efek Color Bleed dikembalikan ke 0.2 (halus)
+	_camcorder_material.set_shader_parameter("color_bleed_intensity", 0.2)
+	_camcorder_material.set_shader_parameter("anti_bleed_intensity", 1.8)
+	
+	_camcorder_rect.material = _camcorder_material if enable_camcorder_shader else null
+	_camcorder_rect.visible = enable_camcorder_shader
+	_camcorder_canvas.add_child(_camcorder_rect)
+	add_child(_camcorder_canvas)
+	_camcorder_canvas.visible = enable_camcorder_shader
+
+## Mengatur aktif atau tidaknya shader VHS/Camcorder
+func set_camcorder_shader_enabled(val: bool) -> void:
+	enable_camcorder_shader = val
+	if not is_instance_valid(_camcorder_canvas):
+		_setup_camcorder_shader()
+	if is_instance_valid(_camcorder_canvas):
+		_camcorder_canvas.visible = enable_camcorder_shader
+	if is_instance_valid(_camcorder_rect):
+		_camcorder_rect.visible = enable_camcorder_shader
+		_camcorder_rect.material = _camcorder_material if enable_camcorder_shader else null
+
+## Melakukan toggle aktif/tidaknya shader VHS/Camcorder (mengembalikan status baru)
+func toggle_camcorder_shader() -> bool:
+	set_camcorder_shader_enabled(not enable_camcorder_shader)
+	return enable_camcorder_shader
 
 
 
 
 func _unhandled_input(event: InputEvent) -> void:
+
 	if look_locked:
 		return
 

@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cgy7fi8rrds5r"]
+
+[ext_resource type="Script" uid="uid://cr7p3xpcs0m2a" path="res://Skrip/character_body_3d.gd" id="1_6t5aa"]
+[ext_resource type="Texture2D" uid="uid://bty4jfhkb03af" path="res://Asset/Red/texture_05.png" id="2_vgqql"]
+[ext_resource type="Script" uid="uid://bi4608udhce61" path="res://Skrip/camera_3d.gd" id="3_fkybt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_272bh"]
+albedo_texture = ExtResource("2_vgqql")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ig7tw"]
+radius = 0.3
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
+radius = 0.26
+height = 1.4
+
+[node name="Player" type="CharacterBody3D" unique_id=980457211 groups=["player"]]
+transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 0, 0, 0)
+script = ExtResource("1_6t5aa")
+speed = 3.525
+step_check_distance = 0.435
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1717798096]
+material_override = SubResource("StandardMaterial3D_272bh")
+mesh = SubResource("CapsuleMesh_ig7tw")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=234554141]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 9.536743e-07, 0.38961887, -0.049999237)
+near = 0.02
+script = ExtResource("3_fkybt")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Camera3D" unique_id=453386075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.08, -0.1)
+light_color = Color(0.59185225, 0.76334935, 0.42892903, 1)
+light_energy = 3.2
+shadow_enabled = true
+spot_range = 15.0
+spot_angle = 28.0
+spot_angle_attenuation = 1.35
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=63085951]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.09934044, 0)
+shape = SubResource("CapsuleShape3D_5vw27")

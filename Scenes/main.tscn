@@ -1,9 +1,7 @@
 [gd_scene format=4 uid="uid://ceeayny1krlwd"]
 
 [ext_resource type="Script" uid="uid://cma0axil24axn" path="res://Skrip/main_level.gd" id="1_main_script"]
-[ext_resource type="Script" uid="uid://cr7p3xpcs0m2a" path="res://Skrip/character_body_3d.gd" id="2_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://bty4jfhkb03af" path="res://Asset/Red/texture_05.png" id="3_lquwl"]
-[ext_resource type="Script" uid="uid://bi4608udhce61" path="res://Skrip/camera_3d.gd" id="4_7mycd"]
+[ext_resource type="PackedScene" uid="uid://cgy7fi8rrds5r" path="res://Scenes/player.tscn" id="2_kwxat"]
 [ext_resource type="Texture2D" uid="uid://b6nq88clhcvyi" path="res://Breathing Idle_0.png" id="6_e08e2"]
 [ext_resource type="Script" uid="uid://bljm2p3ureypy" path="res://Skrip/npc_chaser.gd" id="7_6bp64"]
 [ext_resource type="Texture2D" uid="uid://cfrwb2aqwmun7" path="res://Breathing Idle_2.png" id="7_neg2b"]
@@ -16,7 +14,7 @@
 [ext_resource type="Material" uid="uid://dlmthbsc2co37" path="res://Asset/Rusun/Materials/Meta.001.material" id="23_536cc"]
 [ext_resource type="PackedScene" uid="uid://5o843i3bprqq" path="res://kasur.fbx" id="24_3pmx8"]
 [ext_resource type="Material" uid="uid://cjgyhla4quhiv" path="res://Asset/Rusun/Materials/Material.006.material" id="24_aqgau"]
-[ext_resource type="PackedScene" uid="uid://dhxklont66tkk" path="res://Scenes/lemari.tscn" id="25_cbgmd"]
+[ext_resource type="PackedScene" path="res://Scenes/lemari.tscn" id="25_cbgmd"]
 [ext_resource type="Material" uid="uid://cbuoxslyubnt2" path="res://Asset/Rusun/Materials/Meta.material" id="26_o1aky"]
 [ext_resource type="PackedScene" uid="uid://cfmw41ymfllaw" path="res://meja.tscn" id="27_1w6v2"]
 [ext_resource type="Material" uid="uid://kdc5nc7p1hdk" path="res://Asset/Rusun/Materials/Pink.material" id="27_kwxat"]
@@ -36,12 +34,13 @@
 [ext_resource type="PackedScene" uid="uid://ck8b71mcsvebc" path="res://kasur.tscn" id="36_aa8k8"]
 [ext_resource type="PackedScene" uid="uid://c6wkseqsl2044" path="res://addons/easy_inventory/item_pickup_3d.tscn" id="36_key_pickup"]
 [ext_resource type="Resource" uid="uid://k0chtb88wrm7" path="res://addons/easy_inventory/examples/items/room_key.tres" id="37_key_item"]
-[ext_resource type="PackedScene" uid="uid://da65j4fmpohbs" path="res://Scenes/karpet.tscn" id="37_kqrg6"]
+[ext_resource type="PackedScene" path="res://Scenes/karpet.tscn" id="37_kqrg6"]
 [ext_resource type="PackedScene" path="res://addons/easy_inventory/ui/inventory_ui.tscn" id="38_inv_ui"]
-[ext_resource type="PackedScene" uid="uid://bqqd002lf3p6c" path="res://Scenes/kamar.tscn" id="38_k2e45"]
-[ext_resource type="PackedScene" uid="uid://btx37np6pr1o1" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
+[ext_resource type="PackedScene" path="res://Scenes/kamar.tscn" id="38_k2e45"]
+[ext_resource type="PackedScene" path="res://Scenes/kamar_2.tscn" id="39_536cc"]
 [ext_resource type="PackedScene" uid="uid://dpxvfk485e5b4" path="res://amir.tscn" id="39_amir"]
-[ext_resource type="PackedScene" uid="uid://cvgvjf8pp0gr5" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
+[ext_resource type="PackedScene" path="res://Scenes/kamar_3.tscn" id="40_aqgau"]
+[ext_resource type="Resource" path="res://addons/easy_inventory/examples/items/flower_08.tres" id="42_aa8k8"]
 [ext_resource type="PackedScene" uid="uid://cuhc1rlgfi1hf" path="res://Meja_bisa dibuka.tscn" id="43_kqrg6"]
 [ext_resource type="PackedScene" uid="uid://dy48wcd804n81" path="res://lemari.fbx" id="44_nwwfm"]
 [ext_resource type="PackedScene" uid="uid://dmbarama001" path="res://Scenes/mbah_rama.tscn" id="45_rama"]
@@ -68,17 +67,6 @@ glow_intensity = 0.8
 glow_bloom = 0.15
 fog_light_color = Color(0.03, 0.035, 0.05, 1)
 fog_density = 0.02
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_272bh"]
-albedo_texture = ExtResource("3_lquwl")
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ig7tw"]
-radius = 0.3
-height = 1.7
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
-radius = 0.26
-height = 1.4
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4w656"]
 size = Vector3(0.18041992, 3.1475334, 1.744873)
@@ -750,6 +738,10 @@ agent_height = 0.5
 agent_radius = 0.2
 agent_max_slope = 80.0
 region_min_size = 1.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
+radius = 0.26
+height = 1.4
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3pmx8"]
 size = Vector3(1, 2.328125, 1.6365967)
@@ -3622,33 +3614,8 @@ shadow_opacity = 0.95
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=747896932]
 environment = SubResource("Environment_7mycd")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1199465831 groups=["player"]]
+[node name="Player" parent="." unique_id=980457211 instance=ExtResource("2_kwxat")]
 transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, 17.011475, 15.735907, -22.772379)
-script = ExtResource("2_1bvp3")
-speed = 3.525
-step_check_distance = 0.435
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=861928305]
-material_override = SubResource("StandardMaterial3D_272bh")
-mesh = SubResource("CapsuleMesh_ig7tw")
-
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1481125246]
-transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 9.536743e-07, 0.38961887, -0.049999237)
-near = 0.02
-script = ExtResource("4_7mycd")
-
-[node name="SpotLight3D" type="SpotLight3D" parent="CharacterBody3D/Camera3D" unique_id=1441273246]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.08, -0.1)
-light_color = Color(0.59185225, 0.76334935, 0.42892903, 1)
-light_energy = 3.2
-shadow_enabled = true
-spot_range = 15.0
-spot_angle = 28.0
-spot_angle_attenuation = 1.35
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=311514290]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.09934044, 0)
-shape = SubResource("CapsuleShape3D_5vw27")
 
 [node name="Lig" type="Node3D" parent="." unique_id=472868734]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.240326, 0)
@@ -11126,7 +11093,7 @@ transform = Transform3D(0.00010661434, -49.661816, -1.546435, -1.4807547e-06, -1
 mesh = SubResource("ArrayMesh_lnjuh")
 
 [node name="Cube_978" type="MeshInstance3D" parent="rusun2" unique_id=1360146815]
-transform = Transform3D(0.00010661434, -16.728651, -1.546435, -1.4807547e-06, -0.52091676, 49.661816, 49.68589, 3.4915596e-05, 1.18460375e-05, -9.969421, 7.166741, 15.989623)
+transform = Transform3D(0.00010661434, -16.728651, -1.546435, -1.4807547e-06, -0.52091676, 49.661816, 49.68589, 3.4915596e-05, 1.18460375e-05, -9.969421, 7.424483, 15.989623)
 mesh = SubResource("ArrayMesh_yirjo")
 
 [node name="Cube_976" type="MeshInstance3D" parent="rusun2" unique_id=203027292]
@@ -13934,7 +13901,7 @@ transform = Transform3D(31.946701, 0, 0, 0, -4.6354944e-06, 36.20674, 0, -38.885
 mesh = SubResource("ArrayMesh_5ydv0")
 
 [node name="Cube_2415" type="MeshInstance3D" parent="rusun2" unique_id=1563581159]
-transform = Transform3D(-0.43100417, -99.99783, -0.49776128, 0.29717904, -0.49904454, 99.99832, -99.99863, 0.42951703, 0.2993235, -10.167, -4.432, 20.506)
+transform = Transform3D(-0.43100417, -99.99783, -0.49776128, 0.29717904, -0.49904454, 99.99832, -99.99863, 0.42951703, 0.2993235, -10.267, -4.327, 20.501)
 mesh = SubResource("ArrayMesh_366fi")
 
 [node name="Cube_001" type="MeshInstance3D" parent="rusun2" unique_id=1699871074]
@@ -13961,8 +13928,6 @@ mesh = SubResource("ArrayMesh_3cwdw")
 transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -14.283737, 5.8117986, 18.951359)
 
 [node name="Karpet2" parent="rusun2" unique_id=96997263 instance=ExtResource("37_kqrg6")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -14.805288, 5.813475, 15.744508)
-
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -14.805288, 5.8236194, 15.744508)
 
 [node name="kasur3" parent="rusun2" unique_id=1471285122 instance=ExtResource("36_aa8k8")]
@@ -14077,9 +14042,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.024454117, -13.166326, 33.
 
 [node name="Kamar58" parent="Kamar" unique_id=37482714 instance=ExtResource("39_536cc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.008823395, -13.205327, 37.312088)
-
-[node name="Kamar59" parent="Kamar" unique_id=487211342 instance=ExtResource("38_k2e45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006980896, -16.713581, -0.013084412)
 
 [node name="Kamar13" parent="Kamar" unique_id=1764394699 instance=ExtResource("39_536cc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06575203, -3.2223768, -3.7690659)
@@ -14197,7 +14159,8 @@ shape = SubResource("BoxShape3D_ovncm")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4640032, -0.0024745464, 2.358238)
 
 [node name="InteractiveTable2" parent="Kamar/Kamar41" unique_id=2067616680 instance=ExtResource("43_kqrg6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.326597, 9.951791, -11.294516)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 2.049303, 9.967569, -11.186924)
+starting_item = ExtResource("42_aa8k8")
 
 [node name="Kamar42" parent="Kamar" unique_id=36057220 instance=ExtResource("38_k2e45")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03675461, -9.827902, 18.610352)
@@ -14603,10 +14566,10 @@ transform = Transform3D(-1, -8.742278e-08, -3.1786506e-08, -8.742278e-08, 1, -2.
 [node name="lemari3" parent="KamarKiri/kasur4" unique_id=1836434722 instance=ExtResource("25_cbgmd")]
 transform = Transform3D(-0.99999994, -8.742278e-08, -3.1786502e-08, -8.742277e-08, 1, -2.7788644e-15, -3.1786502e-08, 2.1175824e-22, 0.99999994, 2.6209145, -0.0068302155, -0.33982944)
 
-[node name="Kamar10" parent="KamarKiri" unique_id=1699191951 instance=ExtResource("38_k2e45")]
+[node name="Kamar10" parent="KamarKiri" unique_id=1712920446 instance=ExtResource("38_k2e45")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09560752, -3.4817772, -0.033996582)
 
-[node name="Kamar11" parent="KamarKiri" unique_id=743470017 instance=ExtResource("39_536cc")]
+[node name="Kamar11" parent="KamarKiri" unique_id=614710847 instance=ExtResource("39_536cc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0075540543, -3.3137703, -3.6246834)
 
 [node name="Karpet4" parent="KamarKiri/Kamar11" unique_id=2007375040 instance=ExtResource("37_kqrg6")]
@@ -14636,13 +14599,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16854882, -3.4554176, -26.
 [node name="Kamar18" parent="KamarKiri" unique_id=1070962577 instance=ExtResource("38_k2e45")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2940408, -3.4554176, -27.418571)
 
-[node name="kasur3" parent="KamarKiri" unique_id=1471285122 instance=ExtResource("36_aa8k8")]
+[node name="kasur3" parent="KamarKiri" unique_id=1942191134 instance=ExtResource("36_aa8k8")]
 transform = Transform3D(7.5497894e-08, 6.6002357e-15, -1, -8.742278e-08, 1, 0, -1, -8.742278e-08, -7.5497894e-08, 1.3411671, -0.13390827, -31.25435)
 
-[node name="meja2" parent="KamarKiri/kasur3" unique_id=628900719 instance=ExtResource("27_1w6v2")]
+[node name="meja2" parent="KamarKiri/kasur3" unique_id=1720925872 instance=ExtResource("27_1w6v2")]
 transform = Transform3D(-1, -8.742278e-08, -3.1786506e-08, -8.742278e-08, 1, -2.7788646e-15, -3.1786506e-08, 2.1175824e-22, 1, -0.19388956, -0.04109001, 2.9415464)
 
-[node name="lemari3" parent="KamarKiri/kasur3" unique_id=1310994884 instance=ExtResource("25_cbgmd")]
+[node name="lemari3" parent="KamarKiri/kasur3" unique_id=330450701 instance=ExtResource("25_cbgmd")]
 transform = Transform3D(-0.99999994, -8.742278e-08, -3.1786502e-08, -8.742277e-08, 1, -2.7788644e-15, -3.1786502e-08, 2.1175824e-22, 0.99999994, 2.6209145, -0.0068302155, -0.33982944)
 
 [node name="kasur2" parent="KamarKiri" unique_id=1064149236 instance=ExtResource("36_aa8k8")]
@@ -14678,10 +14641,10 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.38
 [node name="Kamar9" parent="KamarKiri" unique_id=894273506 instance=ExtResource("39_536cc")]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.30159664, -0.004712105, -23.793888)
 
-[node name="Karpet4" parent="KamarKiri/Kamar9" unique_id=672170094 instance=ExtResource("37_kqrg6")]
+[node name="Karpet4" parent="KamarKiri/Kamar9" unique_id=1829615844 instance=ExtResource("37_kqrg6")]
 transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.2657299, -0.14537048, -0.07439041)
 
-[node name="Karpet3" parent="KamarKiri/Kamar9" unique_id=1736604972 instance=ExtResource("37_kqrg6")]
+[node name="Karpet3" parent="KamarKiri/Kamar9" unique_id=342032799 instance=ExtResource("37_kqrg6")]
 transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, 0.22944546, -0.12431145, 2.0728016)
 
 [node name="Kamar2" parent="KamarKiri" unique_id=1198486754 instance=ExtResource("39_536cc")]

@@ -17,3 +17,10 @@ extends Resource
 
 ## Nama event sinyal yang dipancarkan saat pilihan ini diklik (misal: "give_key", "trigger_jumpscare")
 @export var trigger_event: String = ""
+
+## Alias kompatibilitas jika dipanggil sebagai event_signal (seperti pada DialogueLine)
+var event_signal: String:
+	get:
+		return trigger_event
+	set(val):
+		trigger_event = val

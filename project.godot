@@ -34,7 +34,6 @@ DebugOverlay="*res://Skrip/debug_overlay.gd"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/mode=0
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -45,6 +44,11 @@ enabled=PackedStringArray("res://addons/awesome_splash/plugin.cfg", "res://addon
 [filesystem]
 
 import/blender/enabled=false
+
+[fusion]
+
+connection/app_id="cf7c0179-b367-4a5b-93f1-079efe3b1d7b"
+connection/default_region="best"
 
 [global_group]
 

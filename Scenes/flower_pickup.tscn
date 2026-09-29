@@ -364,7 +364,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("SphereShape3D_detect")
 
 [node name="VisualRoot" type="Node3D" parent="." unique_id=1766843308]
-transform = Transform3D(0.96990675, 0, 0.24433583, 0, 1, 0, -0.24433583, 0, 0.96990675, 0, -0.099984296, 0)
+transform = Transform3D(-0.9989163, 0, -0.05112122, 0, 1, 0, 0.05112122, 0, -0.9989163, 0, -0.04038943, 0)
 
 [node name="BaseModel" type="Node3D" parent="VisualRoot" unique_id=1293086193]
 
@@ -544,7 +544,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_2xdej")
 [node name="FlowerLight" type="OmniLight3D" parent="VisualRoot" unique_id=1005627244]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0)
 light_color = Color(0.85, 0.95, 1, 1)
-light_energy = 1.1819701
+light_energy = 0.7411592
 omni_range = 3.5
 omni_attenuation = 1.5
 
