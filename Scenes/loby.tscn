@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://3qasobjofhot"]
 
+[ext_resource type="Script" uid="uid://d0vmo48jjvu0d" path="res://Scenes/loby.gd" id="1_loby_script"]
 [ext_resource type="Texture2D" uid="uid://cilv7pg2mrc7k" path="res://Asset/Light/texture_07.png" id="1_rojxd"]
-[ext_resource type="PackedScene" uid="uid://cgy7fi8rrds5r" path="res://Scenes/player.tscn" id="1_vh414"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vh414"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -30,10 +30,10 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1190082247]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.581421, -0.068481445, 8.53846)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.581421, -6.1644278, 8.53846)
 material_override = SubResource("StandardMaterial3D_58yww")
 use_collision = true
 size = Vector3(66.494385, 0.28637695, 59.35959)
 
-[node name="Player" parent="." unique_id=980457211 instance=ExtResource("1_vh414")]
-transform = Transform3D(0.9939302, 0, -0.11001185, 0, 1, 0, 0.11001185, 0, 0.9939302, -3.9577453, 0.7637141, 10.007067)
+[node name="FusionSpawner" type="FusionSpawner" parent="." unique_id=2038084061]
+script = ExtResource("1_loby_script")

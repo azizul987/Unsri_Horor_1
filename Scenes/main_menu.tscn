@@ -48,6 +48,7 @@ grow_vertical = 2
 script = ExtResource("1_menu")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1553080989]
+visible = false
 modulate = Color(1, 1, 1, 0.35686275)
 layout_mode = 1
 anchors_preset = 15
@@ -59,8 +60,8 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=506260282]
 handle_input_locally = false
-size = Vector2i(1152, 648)
-render_target_update_mode = 4
+size = Vector2i(1280, 720)
+render_target_update_mode = 0
 
 [node name="ForestFireZone" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1154134575]
 script = ExtResource("3_cp0ys")
@@ -257,6 +258,15 @@ focus_neighbor_top = NodePath("../PlayButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
 theme_override_fonts/font = ExtResource("7_trj04")
 text = "Lanjutkan"
+
+[node name="OnlineButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=793539878]
+custom_minimum_size = Vector2(260, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../QuitButton")
+focus_neighbor_bottom = NodePath("../ContinueButton")
+theme_override_fonts/font = ExtResource("7_yhxw7")
+text = "Join Online"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=319478611]
 custom_minimum_size = Vector2(260, 44)

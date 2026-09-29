@@ -82,9 +82,17 @@ func _input(event: InputEvent) -> void:
 ## PUBLIC CONTROL METHODS
 ## ============================================================================
 
+## Helper untuk mengecek apakah sedang dalam sesi multiplayer (Photon Fusion)
+func _is_multiplayer_room() -> bool:
+	if Engine.has_singleton("Fusion"):
+		var f = Engine.get_singleton("Fusion")
+		if f and f.has_method("is_in_room") and f.is_in_room():
+			return true
+	return false
+
 ## Memeriksa apakah game saat ini sedang dalam kondisi pause.
 func is_game_paused() -> bool:
-	return get_tree().paused
+	return get_tree().paused or (visible and _is_multiplayer_room())
 
 ## Mengaktifkan atau menonaktifkan kemampuan pause (misal saat cutscene/dialog).
 func set_pause_enabled(enabled: bool) -> void:
@@ -124,7 +132,10 @@ func pause_game() -> void:
 		_saved_mouse_mode = Input.mouse_mode
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	get_tree().paused = true
+	# Hanya bekukan tree jika singleplayer. Di multiplayer, game tetap jalan di background!
+	if not _is_multiplayer_room():
+		get_tree().paused = true
+
 	show()
 	_animate_open()
 	paused.emit()
@@ -141,6 +152,7 @@ func resume_game() -> void:
 			Input.mouse_mode = _saved_mouse_mode
 		resumed.emit()
 	)
+
 
 
 ## ============================================================================

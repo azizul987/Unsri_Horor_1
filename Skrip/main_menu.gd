@@ -6,6 +6,7 @@ extends Control
 
 @onready var play_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PlayButton
 @onready var continue_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContinueButton
+@onready var join_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OnlineButton
 @onready var quit_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/QuitButton
 @onready var ambience_audio: AudioStreamPlayer = $AmbienceAudio
 
@@ -33,8 +34,10 @@ func _ready() -> void:
 
 	play_button.pressed.connect(_on_play_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
+	join_button.pressed.connect(_on_join_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
-
+	
+	
 	_check_save_state()
 	play_button.grab_focus()
 
@@ -119,3 +122,8 @@ func _animate_button(btn: Button) -> void:
 	var tween: Tween = create_tween()
 	tween.tween_property(btn, "scale", Vector2(0.95, 0.95), 0.06)
 	tween.tween_property(btn, "scale", Vector2.ONE, 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _on_join_pressed() -> void:
+	get_tree().change_scene_to_file("res://Scenes/loby.tscn")
+
+	
