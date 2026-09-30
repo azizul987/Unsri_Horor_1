@@ -20,6 +20,62 @@ glow_enabled = true
 albedo_texture = ExtResource("1_rojxd")
 uv1_scale = Vector3(8.785, 8.785, 8.785)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_glowing_zone"]
+size = Vector3(3.6, 2.2, 3.6)
+
+[sub_resource type="Gradient" id="Gradient_color"]
+offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0, 0.2, 0.95, 0.45, 1, 0.1, 0.55, 0.2, 0.8, 0, 0.2, 0.05, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_color"]
+gradient = SubResource("Gradient_color")
+
+[sub_resource type="Curve" id="Curve_scale"]
+_data = [Vector2(0, 0.1), 0.0, 0.0, 0, 0, Vector2(0.4, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_scale"]
+curve = SubResource("Curve_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_edge_x"]
+emission_shape = 3
+emission_box_extents = Vector3(1.8, 0.05, 0.05)
+direction = Vector3(0, 1, 0)
+spread = 8.0
+initial_velocity_min = 0.5
+initial_velocity_max = 1.1
+gravity = Vector3(0, 0.05, 0)
+scale_min = 0.8
+scale_max = 1.3
+scale_curve = SubResource("CurveTexture_scale")
+color_ramp = SubResource("GradientTexture1D_color")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_spark"]
+material = SubResource("StandardMaterial3D_spark")
+size = Vector2(0.12, 0.2)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_edge_z"]
+emission_shape = 3
+emission_box_extents = Vector3(0.05, 0.05, 1.8)
+direction = Vector3(0, 1, 0)
+spread = 8.0
+initial_velocity_min = 0.5
+initial_velocity_max = 1.1
+gravity = Vector3(0, 0.05, 0)
+scale_min = 0.8
+scale_max = 1.3
+scale_curve = SubResource("CurveTexture_scale")
+color_ramp = SubResource("GradientTexture1D_color")
+
 [node name="Loby" type="Node3D" unique_id=164947549]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1317855522]
@@ -27,6 +83,7 @@ environment = SubResource("Environment_58yww")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=238819563]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_energy = 0.0
 shadow_enabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1190082247]
@@ -37,3 +94,47 @@ size = Vector3(66.494385, 0.28637695, 59.35959)
 
 [node name="FusionSpawner" type="FusionSpawner" parent="." unique_id=2038084061]
 script = ExtResource("1_loby_script")
+
+[node name="GlowingZone" type="Area3D" parent="." unique_id=1489201142]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.255232, -4.92, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GlowingZone" unique_id=1738291048]
+shape = SubResource("BoxShape3D_glowing_zone")
+
+[node name="ZoneLight" type="OmniLight3D" parent="GlowingZone" unique_id=1948210394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+light_color = Color(0.18, 0.92, 0.45, 1)
+light_energy = 0.5
+omni_range = 4.0
+
+[node name="EdgeParticlesNorth" type="GPUParticles3D" parent="GlowingZone" unique_id=891023412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.06, -1.8)
+amount = 60
+lifetime = 1.6
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_edge_x")
+draw_pass_1 = SubResource("QuadMesh_spark")
+
+[node name="EdgeParticlesSouth" type="GPUParticles3D" parent="GlowingZone" unique_id=891023413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.06, 1.8)
+amount = 60
+lifetime = 1.6
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_edge_x")
+draw_pass_1 = SubResource("QuadMesh_spark")
+
+[node name="EdgeParticlesWest" type="GPUParticles3D" parent="GlowingZone" unique_id=891023414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, -1.06, 0)
+amount = 60
+lifetime = 1.6
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_edge_z")
+draw_pass_1 = SubResource("QuadMesh_spark")
+
+[node name="EdgeParticlesEast" type="GPUParticles3D" parent="GlowingZone" unique_id=891023415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, -1.06, 0)
+amount = 60
+lifetime = 1.6
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_edge_z")
+draw_pass_1 = SubResource("QuadMesh_spark")
