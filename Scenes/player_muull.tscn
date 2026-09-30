@@ -501,7 +501,7 @@ script = SubResource("GDScript_kqoeu")
 material_override = SubResource("StandardMaterial3D_272bh")
 mesh = SubResource("CapsuleMesh_ig7tw")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=234554141]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=234554141 groups=["player"]]
 transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 9.536743e-07, 0.38961887, -0.049999237)
 near = 0.02
 script = ExtResource("3_eo1pn")
@@ -524,4 +524,3 @@ root_replication_mode = 1
 root_snap_distance = 50.0
 process_priority = -2147483647
 process_physics_priority = -2147483647
-

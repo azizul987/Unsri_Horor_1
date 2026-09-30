@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://d0vmo48jjvu0d" path="res://Scenes/loby.gd" id="1_loby_script"]
 [ext_resource type="Texture2D" uid="uid://cilv7pg2mrc7k" path="res://Asset/Light/texture_07.png" id="1_rojxd"]
+[ext_resource type="Script" uid="uid://cljat1chafke4" path="res://Scenes/glowing_zone.gd" id="3_58yww"]
+[ext_resource type="FontFile" uid="uid://b611dupw2sgjx" path="res://Asset/font/Kisah Horor Sobat.otf" id="4_im8m5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vh414"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -97,6 +99,7 @@ script = ExtResource("1_loby_script")
 
 [node name="GlowingZone" type="Area3D" parent="." unique_id=1489201142]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.255232, -4.92, 0)
+script = ExtResource("3_58yww")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GlowingZone" unique_id=1738291048]
 shape = SubResource("BoxShape3D_glowing_zone")
@@ -138,3 +141,13 @@ lifetime = 1.6
 randomness = 0.3
 process_material = SubResource("ParticleProcessMaterial_edge_z")
 draw_pass_1 = SubResource("QuadMesh_spark")
+
+[node name="Label3D" type="Label3D" parent="GlowingZone" unique_id=2124127351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1215279, 0)
+billboard = 1
+text = "0
+"
+font = ExtResource("4_im8m5")
+font_size = 78
+
+[connection signal="body_entered" from="GlowingZone" to="GlowingZone" method="_on_body_entered"]
